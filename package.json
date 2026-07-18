@@ -1,0 +1,9 @@
+{
+  "name": "growing-women-in-business-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Growing Women in Business — website. Served by a small Node static server, auto-deployed to Railway.",
+  "scripts": {
+    "start": "node index.js"
+  }
+}

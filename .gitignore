@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# Environment / secrets (never commit these — set them in the Railway dashboard)
+.env
+.env.*
+!.env.example
+
+# Build output
+dist/
+build/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
