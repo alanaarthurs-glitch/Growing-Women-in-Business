@@ -74,7 +74,7 @@
         <p class="price">£39/month</p>
         <hr class="divider" />
         <p class="guarantee">Post a Monday commitment for a full month and show up to the live. If you don't feel more able to act than you did on day one, that month's refunded.</p>
-        <a href="#" class="btn">Join The Circle</a>
+        <div id="paypal-button-container-P-9B8548878P2205600NJOPVTA" style="margin-top:1.5rem; max-width:260px; margin-left:auto; margin-right:auto;"></div>
       </div>
     </div>
   </section>
@@ -84,12 +84,26 @@
     <hr class="rule" />
     <h2>Stop doing this by yourself</h2>
     <p>No contract. Cancel any time. Just show up on Monday.</p>
-    <a href="#" class="btn">Join The Circle</a>
+    <a href="#offer" class="btn">Join The Circle</a>
   </section>
 
   <footer>
     <img src="/images/logo.png" alt="Growing Women in Business" class="logo-mark footer-logo" />
     <a href="https://instagram.com/growingwomeninbusiness" class="handle">@growingwomeninbusiness</a>
   </footer>
+
+  <script src="https://www.paypal.com/sdk/js?client-id=AXF2Clz9XuCUFifo8IY2WwSZrm6vjqV_lX-QiNO1z0ZYyqemtEfvdWcd3r8sIEjjIfnyhKKUd_7Th78e&vault=true&intent=subscription" data-sdk-integration-source="button-factory"></script>
+  <script>
+    paypal.Buttons({
+      style: { shape: 'pill', color: 'gold', layout: 'vertical', label: 'subscribe' },
+      createSubscription: function (data, actions) {
+        return actions.subscription.create({ plan_id: 'P-9B8548878P2205600NJOPVTA' });
+      },
+      onApprove: function (data, actions) {
+        var container = document.getElementById('paypal-button-container-P-9B8548878P2205600NJOPVTA');
+        container.outerHTML = '<p style="font-weight:600; margin-top:1.5rem;">You\'re in! Check your email for the receipt, see you Monday.</p>';
+      }
+    }).render('#paypal-button-container-P-9B8548878P2205600NJOPVTA');
+  </script>
 </body>
 </html>
