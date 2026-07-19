@@ -453,6 +453,19 @@ footer .badge { margin: 0 auto 0.8rem; }
 footer .footer-word { text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; font-size: 0.85rem; }
 footer .handle { display: block; margin-top: 0.5rem; font-size: 0.8rem; color: var(--mint); text-decoration: none; }
 
+footer .also-part-of {
+  margin-top: 1.25rem;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+footer .also-part-of a {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: underline;
+}
+
+footer .also-part-of a:hover { color: var(--mint); }
+
 /* ---- Offer cards (home page) ---- */
 .offer-cards {
   display: grid;
