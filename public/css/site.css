@@ -82,13 +82,13 @@ a { color: var(--pink); }
 .topbar-word .accent { color: var(--pink); }
 
 .logo-mark {
-  height: 48px;
+  height: 88px;
   width: auto;
   display: block;
 }
 
 .footer-logo {
-  height: 64px;
+  height: 110px;
   margin: 0 auto 0.8rem;
 }
 
