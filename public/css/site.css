@@ -771,14 +771,36 @@ footer .handle { display: block; margin-top: 0.5rem; font-size: 0.8rem; color: v
   color: var(--pink);
 }
 
-.pay-direct {
+.dual-cta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
   margin-top: 2rem;
-  padding-top: 1.5rem;
+  padding-top: 2rem;
   border-top: 1px solid var(--blush-deep);
-  text-align: center;
 }
 
-.pay-direct .small-line {
+.dual-cta-col {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dual-cta-col:first-child { border-right: 1px solid var(--blush-deep); }
+
+.dual-cta-col .small-line {
   margin-top: 0;
   margin-bottom: 1rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+@media (max-width: 640px) {
+  .dual-cta { grid-template-columns: 1fr; gap: 2rem; }
+  .dual-cta-col:first-child {
+    border-right: none;
+    border-bottom: 1px solid var(--blush-deep);
+    padding-bottom: 2rem;
+  }
 }
