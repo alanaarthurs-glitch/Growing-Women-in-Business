@@ -12,10 +12,26 @@ const NOTION_NEWSLETTER_DB_ID = process.env.NOTION_NEWSLETTER_DB_ID || "";
 const NOTION_CRM_DB_ID = process.env.NOTION_CRM_DB_ID || "";
 const NOTION_VERSION = "2022-06-28";
 
+const RESEND_API_KEY = process.env.RESEND_API_KEY || "";
+const RESEND_FROM_EMAIL = process.env.RESEND_FROM_EMAIL || "";
+const PDF_DIR = path.join(__dirname, "assets", "pdfs");
+
 const KNOWN_ARCHETYPES = [
   "The Wildflower", "The Ember", "The Pearl", "Mademoiselle", "The Late Bloomer",
   "The Firestarter", "The Sage", "The Live Wire", "The Anchor",
 ];
+
+const ARCHETYPE_PDF_KEYS = {
+  "The Wildflower": "wildflower",
+  "The Ember": "ember",
+  "The Pearl": "pearl",
+  "Mademoiselle": "mademoiselle",
+  "The Late Bloomer": "latebloomer",
+  "The Firestarter": "firestarter",
+  "The Sage": "sage",
+  "The Live Wire": "livewire",
+  "The Anchor": "anchor",
+};
 
 const KNOWN_SOURCES = ["Home Quiz", "Circle Welcome", "Cohort Welcome"];
 
@@ -157,6 +173,45 @@ async function upsertCrmContact(email, updates) {
   }
 }
 
+async function sendWelcomeEmail(email, archetype) {
+  if (!RESEND_API_KEY || !RESEND_FROM_EMAIL) return false;
+
+  const pdfKey = ARCHETYPE_PDF_KEYS[archetype];
+  if (!pdfKey) return false;
+
+  const pdfPath = path.join(PDF_DIR, `${pdfKey}.pdf`);
+  const pdfBuffer = await fs.promises.readFile(pdfPath);
+
+  const response = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${RESEND_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      from: RESEND_FROM_EMAIL,
+      to: email,
+      subject: `You're ${archetype} — here's your full guide`,
+      html:
+        `<p>Hi,</p>` +
+        `<p>You just found out you're <strong>${archetype}</strong>. Attached is your full guide: who you are, your specific pain points, and tips and tricks built just for your type.</p>` +
+        `<p>Alana</p>`,
+      attachments: [
+        {
+          filename: `${archetype.replace(/\s+/g, "-")}.pdf`,
+          content: pdfBuffer.toString("base64"),
+        },
+      ],
+    }),
+  });
+
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(`Resend API ${response.status}: ${text}`);
+  }
+  return true;
+}
+
 async function handleApply(req, res) {
   let body;
   try {
@@ -247,6 +302,17 @@ async function handleNewsletter(req, res) {
     await upsertCrmContact(email, crmUpdates);
   } catch (err) {
     console.error("CRM upsert failed (newsletter):", err.message);
+  }
+
+  if (archetype !== "Not from quiz") {
+    try {
+      const sent = await sendWelcomeEmail(email, archetype);
+      if (sent) {
+        await upsertCrmContact(email, { "Welcome Email Sent": { checkbox: true } });
+      }
+    } catch (err) {
+      console.error("Welcome email failed:", err.message);
+    }
   }
 
   sendJSON(res, 200, { ok: true });
