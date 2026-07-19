@@ -97,6 +97,30 @@ function initFutureMakerQuiz(containerId, source) {
         { t: "Someone to put me on my own list for once.", a: "firestarter" },
         { t: "Permission to lean on someone else for a change.", a: "anchor" }
       ]
+    },
+    {
+      q: "What don't people realise about you?",
+      options: [
+        { t: "That I'm not behind. I'm just building at my own pace, and it's about to pay off.", a: "latebloomer" },
+        { t: "That I already have the answer. I just don't say it as loud as I should.", a: "sage" },
+        { t: "That what looks calm on the outside took real pressure to get here.", a: "pearl" }
+      ]
+    },
+    {
+      q: "What does a genuinely good day actually look like for you?",
+      options: [
+        { t: "Everyone I love had a good day, mostly because of something I did.", a: "firestarter" },
+        { t: "Same as any other day. I just keep growing, quietly, wherever I've landed.", a: "wildflower" },
+        { t: "Nobody needed me to hold anything together, for once.", a: "anchor" }
+      ]
+    },
+    {
+      q: "How would you describe your pace right now?",
+      options: [
+        { t: "Slow-burning. Building toward something I haven't said out loud yet.", a: "ember" },
+        { t: "Exactly as fast as I choose. I'm not running anyone else's race.", a: "mademoiselle" },
+        { t: "Fast. Too fast, maybe. I just need to point it somewhere.", a: "livewire" }
+      ]
     }
   ];
 
@@ -106,15 +130,22 @@ function initFutureMakerQuiz(containerId, source) {
   var current = 0;
   var tally = {};
   var emailCaptured = false;
+  var cachedWinner = null;
 
+  // Picking randomly among tied archetypes only makes sense once, right after
+  // the last question — re-running it later (email gate vs. result screen)
+  // could otherwise hand back a different archetype than the one just emailed.
   function getWinner() {
-    var winner = PRIORITY[0];
+    if (cachedWinner) return cachedWinner;
     var best = -1;
     PRIORITY.forEach(function (key) {
       var score = tally[key] || 0;
-      if (score > best) { best = score; winner = key; }
+      if (score > best) best = score;
     });
-    return ARCHETYPES[winner];
+    var tied = PRIORITY.filter(function (key) { return (tally[key] || 0) === best; });
+    var winnerKey = tied[Math.floor(Math.random() * tied.length)];
+    cachedWinner = ARCHETYPES[winnerKey];
+    return cachedWinner;
   }
 
   function render() {
@@ -205,6 +236,7 @@ function initFutureMakerQuiz(containerId, source) {
       current = 0;
       tally = {};
       emailCaptured = false;
+      cachedWinner = null;
       render();
     });
   }
