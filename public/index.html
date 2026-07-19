@@ -178,16 +178,27 @@
       <h2>Once you're through the door</h2>
       <p class="lede" style="text-align:center;">Every application starts the same conversation. Depending on where you're at, you'll land in one of these three rooms.</p>
       <div class="offer-cards">
-        <a href="/cohort.html" class="offer-card">
+        <div class="offer-card">
           <h3>The Future Maker Cohort</h3>
           <p>Six weeks, application-based. The flagship room this page leads to.</p>
           <p class="price">£297</p>
-        </a>
-        <a href="/circle.html" class="offer-card">
+          <a href="/apply.html" class="btn card-btn">Claim your spot</a>
+          <div class="card-pay-direct">
+            <span class="small-line">or pay now</span>
+            <style>.pp-TA72HYXXK745N-home{text-align:center;border:none;border-radius:0.25rem;min-width:11.625rem;padding:0 2rem;height:2.625rem;font-weight:bold;background-color:#FFD140;color:#000000;font-family:"Helvetica Neue",Arial,sans-serif;font-size:1rem;line-height:1.25rem;cursor:pointer;}</style>
+            <form action="https://www.paypal.com/ncp/payment/TA72HYXXK745N" method="post" target="_blank" style="display:inline-grid;justify-items:center;align-content:start;gap:0.4rem;">
+              <input class="pp-TA72HYXXK745N-home" type="submit" value="Pay Now" />
+            </form>
+          </div>
+          <a href="/cohort.html" class="card-details-link">See full details</a>
+        </div>
+        <div class="offer-card">
           <h3>The Circle</h3>
           <p>Ongoing, no end date. The floor under you, before, between or after a cohort.</p>
           <p class="price">£39/month</p>
-        </a>
+          <div id="paypal-button-container-home" style="margin-top:0.75rem; max-width:220px; margin-left:auto; margin-right:auto;"></div>
+          <a href="/circle.html" class="card-details-link">See full details</a>
+        </div>
         <a href="/push.html" class="offer-card paused">
           <span class="status">Currently paused</span>
           <h3>The Push</h3>
@@ -408,6 +419,20 @@
 
     render();
   })();
+  </script>
+
+  <script src="https://www.paypal.com/sdk/js?client-id=AXF2Clz9XuCUFifo8IY2WwSZrm6vjqV_lX-QiNO1z0ZYyqemtEfvdWcd3r8sIEjjIfnyhKKUd_7Th78e&vault=true&intent=subscription" data-sdk-integration-source="button-factory"></script>
+  <script>
+    paypal.Buttons({
+      style: { shape: 'pill', color: 'gold', layout: 'vertical', label: 'subscribe' },
+      createSubscription: function (data, actions) {
+        return actions.subscription.create({ plan_id: 'P-9B8548878P2205600NJOPVTA' });
+      },
+      onApprove: function (data, actions) {
+        var container = document.getElementById('paypal-button-container-home');
+        container.outerHTML = '<p style="font-weight:600; margin-top:0.75rem;">You\'re in! Check your email for the receipt.</p>';
+      }
+    }).render('#paypal-button-container-home');
   </script>
 </body>
 </html>
