@@ -561,7 +561,6 @@ footer .also-part-of a:hover { color: var(--mint); }
   padding: 2rem;
 }
 
-.for-col.not-for { background: transparent; border-style: dashed; }
 
 .for-col h3 {
   font-family: 'Inter', sans-serif;
