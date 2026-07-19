@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apply — Growing Women in Business</title>
+  <meta name="description" content="Tell me a bit about where you're at, then book a call. Two minutes, no payment." />
+  <link rel="stylesheet" href="/css/site.css" />
+</head>
+<body>
+  <div class="topbar">
+    <a href="/" class="wordmark">
+      <span class="badge"><span class="dot"></span></span>
+      <span class="topbar-word">Growing Women <span class="accent">in Business</span></span>
+    </a>
+    <ul>
+      <li><a href="/" class="navlink">Back home</a></li>
+    </ul>
+  </div>
+
+  <section class="white" style="padding-top: 3.5rem;">
+    <div class="inner">
+      <div class="step-track">
+        <span class="current">1. Apply</span>
+        <span>—</span>
+        <span>2. Book your call</span>
+      </div>
+      <span class="eyebrow" style="display:block; text-align:center;">Apply to work with me</span>
+      <h2>Tell me where you're at</h2>
+      <p class="lede" style="text-align:center;">No payment here, just a straight answer so I know how to use the call properly. Two minutes.</p>
+
+      <form class="apply-form" id="apply-form">
+        <div>
+          <label for="name">Your name</label>
+          <input type="text" id="name" name="name" required />
+        </div>
+        <div>
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required />
+        </div>
+        <div>
+          <label for="stuck">What's the one thing you keep putting off?</label>
+          <textarea id="stuck" name="stuck" required placeholder="Be specific: the actual number, the actual post, the actual conversation."></textarea>
+        </div>
+        <div>
+          <label for="why-now">Why now?</label>
+          <textarea id="why-now" name="why-now" required placeholder="What's changed, or what's made you finally look this up?"></textarea>
+        </div>
+        <button type="submit" class="btn">Submit and book your call</button>
+      </form>
+
+      <div id="calendar-step" class="calendar-slot" style="display:none;">
+        <strong style="display:block; margin-bottom: 0.5rem; color: var(--ink);">Thank you — now grab a time that works.</strong>
+        Calendar embed goes here (e.g. Calendly or Cal.com). Tell me which booking tool you use and I'll wire up the real embed.
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span class="badge" style="margin:0 auto;"><span class="dot"></span></span>
+    <div class="footer-word">Growing Women in Business</div>
+    <a href="https://instagram.com/growingwomeninbusiness" class="handle">@growingwomeninbusiness</a>
+  </footer>
+
+  <script>
+    document.getElementById('apply-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      document.getElementById('apply-form').style.display = 'none';
+      document.querySelector('.step-track .current').textContent = '';
+      document.querySelectorAll('.step-track span')[2].classList.add('current');
+      document.getElementById('calendar-step').style.display = 'block';
+    });
+  </script>
+</body>
+</html>
