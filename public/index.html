@@ -378,7 +378,25 @@
 
       document.getElementById('quiz-newsletter-form').addEventListener('submit', function (e) {
         e.preventDefault();
-        this.outerHTML = '<p style="margin-top:1rem; font-weight:600;">You\'re on the list — watch your inbox.</p>';
+        var thisForm = this;
+        var emailValue = thisForm.querySelector('input[type="email"]').value;
+        var submitBtn = thisForm.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+
+        fetch('/api/newsletter', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: emailValue, archetype: result.name })
+        })
+          .then(function (r) { return r.json(); })
+          .then(function (data) {
+            thisForm.outerHTML = data.ok
+              ? '<p style="margin-top:1rem; font-weight:600;">You\'re on the list — watch your inbox.</p>'
+              : '<p style="margin-top:1rem;">That didn\'t send, mind trying again?</p>';
+          })
+          .catch(function () {
+            submitBtn.disabled = false;
+          });
       });
       document.getElementById('quiz-retake').addEventListener('click', function (e) {
         e.preventDefault();

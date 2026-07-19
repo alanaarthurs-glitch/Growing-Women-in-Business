@@ -61,12 +61,36 @@
   </footer>
 
   <script>
-    document.getElementById('apply-form').addEventListener('submit', function (e) {
+    var form = document.getElementById('apply-form');
+    form.addEventListener('submit', function (e) {
       e.preventDefault();
-      document.getElementById('apply-form').style.display = 'none';
-      document.querySelector('.step-track .current').textContent = '';
-      document.querySelectorAll('.step-track span')[2].classList.add('current');
-      document.getElementById('calendar-step').style.display = 'block';
+      var button = form.querySelector('button[type="submit"]');
+      button.disabled = true;
+      button.textContent = 'Submitting…';
+
+      fetch('/api/apply', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: document.getElementById('name').value,
+          email: document.getElementById('email').value,
+          stuck: document.getElementById('stuck').value,
+          whyNow: document.getElementById('why-now').value
+        })
+      })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          if (!data.ok) throw new Error(data.error || 'Something went wrong');
+          form.style.display = 'none';
+          document.querySelector('.step-track .current').textContent = '';
+          document.querySelectorAll('.step-track span')[2].classList.add('current');
+          document.getElementById('calendar-step').style.display = 'block';
+        })
+        .catch(function () {
+          button.disabled = false;
+          button.textContent = 'Submit and book your call';
+          alert("That didn't send. Mind trying again in a moment?");
+        });
     });
   </script>
 </body>

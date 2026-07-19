@@ -12,6 +12,9 @@ yarn-error.log*
 dist/
 build/
 
+# Captured leads (ephemeral, per-instance backup; the real record is Notion)
+data/
+
 # OS / editor cruft
 .DS_Store
 Thumbs.db
