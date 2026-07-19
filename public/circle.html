@@ -112,8 +112,7 @@
         return actions.subscription.create({ plan_id: 'P-9B8548878P2205600NJOPVTA' });
       },
       onApprove: function (data, actions) {
-        var container = document.getElementById('paypal-button-container-P-9B8548878P2205600NJOPVTA');
-        container.outerHTML = '<p style="font-weight:600; margin-top:1.5rem;">You\'re in! Check your email for the receipt, see you Monday.</p>';
+        window.location.href = '/welcome.html?offer=circle';
       }
     }).render('#paypal-button-container-P-9B8548878P2205600NJOPVTA');
   </script>

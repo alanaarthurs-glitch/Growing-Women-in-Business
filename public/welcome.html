@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome — Growing Women in Business</title>
+  <meta name="description" content="You're in. Book your discovery call and find out your Future Maker type." />
+  <link rel="stylesheet" href="/css/site.css" />
+</head>
+<body>
+  <div class="topbar">
+    <a href="/" class="wordmark">
+      <img src="/images/logo.png" alt="Growing Women in Business" class="logo-mark" />
+    </a>
+    <ul>
+      <li><a href="/" class="navlink">Home</a></li>
+    </ul>
+  </div>
+
+  <section class="white" style="padding-top: 3.5rem;">
+    <div class="inner">
+      <span class="eyebrow" style="display:block; text-align:center;" id="welcome-eyebrow">You're in</span>
+      <h2 id="welcome-heading">Welcome</h2>
+      <p class="lede" style="text-align:center;" id="welcome-lede">Two quick things, then you're properly set up.</p>
+    </div>
+  </section>
+
+  <section class="blush">
+    <div class="inner">
+      <span class="eyebrow">Step one</span>
+      <h2>Book your discovery call</h2>
+      <p class="lede" style="text-align:center;">A short call with Alana to get you started properly.</p>
+      <div class="calendar-slot">
+        Calendar embed goes here (e.g. Calendly or Cal.com). Tell me which booking tool you use and I'll wire up the real embed.
+      </div>
+    </div>
+  </section>
+
+  <section class="white">
+    <div class="inner">
+      <span class="eyebrow" style="display:block; text-align:center;">Step two</span>
+      <h2>What kind of Future Maker are you?</h2>
+      <p class="lede" style="text-align:center;">Six quick questions, no right answers. This helps Alana see how best to support you too.</p>
+      <div class="quiz-box" id="quiz-box"></div>
+    </div>
+  </section>
+
+  <footer>
+    <img src="/images/logo.png" alt="Growing Women in Business" class="logo-mark footer-logo" />
+    <a href="https://instagram.com/growingwomeninbusiness" class="handle">@growingwomeninbusiness</a>
+    <p class="also-part-of">Also part of Alana's world: <a href="https://www.alanaarthurs.com" target="_blank" rel="noopener">alanaarthurs.com</a> &middot; <a href="https://www.vectorropeaccess.co.uk" target="_blank" rel="noopener">vectorropeaccess.co.uk</a> &middot; <a href="/whats-next.html">what's next</a></p>
+  </footer>
+
+  <script src="/js/quiz.js"></script>
+  <script>
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      var offer = params.get('offer');
+      var source = 'Circle Welcome';
+      var heading = "You're officially in The Circle!";
+      var lede = "Two quick things, then you're properly set up.";
+
+      if (offer === 'cohort') {
+        source = 'Cohort Welcome';
+        heading = "You're officially a Future Maker!";
+        lede = "Two quick things, then your six weeks properly begins.";
+      }
+
+      document.getElementById('welcome-heading').textContent = heading;
+      document.getElementById('welcome-lede').textContent = lede;
+
+      initFutureMakerQuiz('quiz-box', source);
+    })();
+  </script>
+</body>
+</html>

@@ -16,6 +16,8 @@ const KNOWN_ARCHETYPES = [
   "The Firestarter", "The Sage", "The Live Wire", "The Anchor",
 ];
 
+const KNOWN_SOURCES = ["Home Quiz", "Circle Welcome", "Cohort Welcome"];
+
 const MIME_TYPES = {
   ".html": "text/html; charset=utf-8",
   ".css": "text/css; charset=utf-8",
@@ -135,18 +137,21 @@ async function handleNewsletter(req, res) {
   const email = (body.email || "").trim();
   const archetypeRaw = (body.archetype || "").trim();
   const archetype = KNOWN_ARCHETYPES.includes(archetypeRaw) ? archetypeRaw : "Not from quiz";
+  const sourceRaw = (body.source || "").trim();
+  const source = KNOWN_SOURCES.includes(sourceRaw) ? sourceRaw : "Home Quiz";
 
   if (!email) {
     return sendJSON(res, 400, { ok: false, error: "Missing email" });
   }
 
-  appendLocalLead("newsletter.jsonl", { email, archetype, signedUpAt: new Date().toISOString() });
+  appendLocalLead("newsletter.jsonl", { email, archetype, source, signedUpAt: new Date().toISOString() });
 
   if (NOTION_API_KEY && NOTION_NEWSLETTER_DB_ID) {
     try {
       await createNotionPage(NOTION_NEWSLETTER_DB_ID, {
         "Email": { title: [{ text: { content: email } }] },
         "Quiz Archetype": { select: { name: archetype } },
+        "Source": { select: { name: source } },
       });
     } catch (err) {
       console.error("Notion write failed (newsletter):", err.message);
