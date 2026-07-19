@@ -475,25 +475,6 @@ footer .handle { display: block; margin-top: 0.5rem; font-size: 0.8rem; color: v
 .offer-card p { color: var(--soft-ink); }
 .offer-card .price { font-size: 1.5rem; }
 
-.offer-card .card-btn {
-  margin-top: 0.5rem;
-  padding: 0.7rem 1.5rem;
-  font-size: 0.75rem;
-}
-
-.offer-card .card-pay-direct {
-  margin-top: 0.75rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.4rem;
-}
-
-.offer-card .card-pay-direct .small-line {
-  margin-top: 0;
-  font-size: 0.75rem;
-}
-
 .offer-card .card-details-link {
   display: block;
   margin-top: 1rem;
