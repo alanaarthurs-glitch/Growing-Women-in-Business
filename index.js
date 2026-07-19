@@ -9,6 +9,7 @@ const DATA_DIR = path.join(__dirname, "data");
 const NOTION_API_KEY = process.env.NOTION_API_KEY || "";
 const NOTION_APPLICATIONS_DB_ID = process.env.NOTION_APPLICATIONS_DB_ID || "";
 const NOTION_NEWSLETTER_DB_ID = process.env.NOTION_NEWSLETTER_DB_ID || "";
+const NOTION_CRM_DB_ID = process.env.NOTION_CRM_DB_ID || "";
 const NOTION_VERSION = "2022-06-28";
 
 const KNOWN_ARCHETYPES = [
@@ -90,6 +91,72 @@ async function createNotionPage(databaseId, properties) {
   return response.json();
 }
 
+async function findNotionPageByEmail(databaseId, email) {
+  const response = await fetch(`https://api.notion.com/v1/databases/${databaseId}/query`, {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${NOTION_API_KEY}`,
+      "Notion-Version": NOTION_VERSION,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      filter: { property: "Email", email: { equals: email } },
+      page_size: 1,
+    }),
+  });
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(`Notion API ${response.status}: ${text}`);
+  }
+  const data = await response.json();
+  return data.results[0] || null;
+}
+
+async function updateNotionPage(pageId, properties) {
+  const response = await fetch(`https://api.notion.com/v1/pages/${pageId}`, {
+    method: "PATCH",
+    headers: {
+      "Authorization": `Bearer ${NOTION_API_KEY}`,
+      "Notion-Version": NOTION_VERSION,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ properties }),
+  });
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(`Notion API ${response.status}: ${text}`);
+  }
+  return response.json();
+}
+
+// Creates a CRM contact if the email is new, or merges these updates onto
+// their existing row if it isn't (checkboxes are OR'd, never un-ticked here).
+async function upsertCrmContact(email, updates) {
+  if (!NOTION_API_KEY || !NOTION_CRM_DB_ID) return;
+
+  const existing = await findNotionPageByEmail(NOTION_CRM_DB_ID, email);
+
+  if (existing) {
+    const merged = { ...updates };
+    for (const key of ["Quiz Completed", "Newsletter Subscribed", "Applied For Cohort"]) {
+      if (key in merged) {
+        const wasAlreadyTrue = existing.properties[key] && existing.properties[key].checkbox;
+        merged[key] = { checkbox: wasAlreadyTrue || merged[key].checkbox };
+      }
+    }
+    // Never overwrite a real name with a blank one from a later, name-less touchpoint.
+    if (merged.Name && !merged.Name.title[0].text.content) delete merged.Name;
+    await updateNotionPage(existing.id, merged);
+  } else {
+    await createNotionPage(NOTION_CRM_DB_ID, {
+      "Name": { title: [{ text: { content: (updates.Name && updates.Name.title[0].text.content) || email } }] },
+      "Email": { email },
+      "Stage": { select: { name: "New" } },
+      ...updates,
+    });
+  }
+}
+
 async function handleApply(req, res) {
   let body;
   try {
@@ -121,6 +188,16 @@ async function handleApply(req, res) {
     } catch (err) {
       console.error("Notion write failed (application):", err.message);
     }
+  }
+
+  try {
+    await upsertCrmContact(email, {
+      "Name": { title: [{ text: { content: name } }] },
+      "Applied For Cohort": { checkbox: true },
+      "Source": { select: { name: "Application" } },
+    });
+  } catch (err) {
+    console.error("CRM upsert failed (application):", err.message);
   }
 
   sendJSON(res, 200, { ok: true });
@@ -156,6 +233,20 @@ async function handleNewsletter(req, res) {
     } catch (err) {
       console.error("Notion write failed (newsletter):", err.message);
     }
+  }
+
+  try {
+    const crmUpdates = {
+      "Newsletter Subscribed": { checkbox: true },
+      "Source": { select: { name: source } },
+    };
+    if (archetype !== "Not from quiz") {
+      crmUpdates["Quiz Completed"] = { checkbox: true };
+      crmUpdates["Archetype"] = { select: { name: archetype } };
+    }
+    await upsertCrmContact(email, crmUpdates);
+  } catch (err) {
+    console.error("CRM upsert failed (newsletter):", err.message);
   }
 
   sendJSON(res, 200, { ok: true });
