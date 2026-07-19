@@ -328,13 +328,63 @@
     var box = document.getElementById('quiz-box');
     var current = 0;
     var tally = {};
+    var emailCaptured = false;
+
+    function getWinner() {
+      var winner = PRIORITY[0];
+      var best = -1;
+      PRIORITY.forEach(function (key) {
+        var score = tally[key] || 0;
+        if (score > best) { best = score; winner = key; }
+      });
+      return ARCHETYPES[winner];
+    }
 
     function render() {
       if (current < QUESTIONS.length) {
         renderQuestion();
+      } else if (!emailCaptured) {
+        renderEmailGate();
       } else {
         renderResult();
       }
+    }
+
+    function renderEmailGate() {
+      var html = '<div class="quiz-progress">Almost there</div>';
+      html += '<div class="quiz-question"><h3>Pop your email in to see your result</h3>';
+      html += '<p class="lede" style="text-align:center; margin-bottom:1.5rem;">You\'ll get your Future Maker type straight away, plus the odd note from the newsletter.</p>';
+      html += '<form id="quiz-email-gate-form" style="display:flex; flex-direction:column; gap:0.75rem; align-items:center;">';
+      html += '<input type="email" placeholder="you@email.com" required style="width:100%; max-width:320px; font-family:\'Inter\',sans-serif; padding:0.8rem 1rem; border:1px solid var(--blush-deep);" />';
+      html += '<button type="submit" class="btn">See my result</button>';
+      html += '</form></div>';
+      box.innerHTML = html;
+
+      document.getElementById('quiz-email-gate-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var thisForm = this;
+        var emailValue = thisForm.querySelector('input[type="email"]').value;
+        var submitBtn = thisForm.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Just a sec…';
+
+        var result = getWinner();
+        fetch('/api/newsletter', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: emailValue, archetype: result.name })
+        })
+          .then(function (r) { return r.json(); })
+          .then(function () {
+            emailCaptured = true;
+            render();
+          })
+          .catch(function () {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'See my result';
+            alert("That didn't send. Mind trying again?");
+          });
+      });
     }
 
     function renderQuestion() {
@@ -359,13 +409,7 @@
     }
 
     function renderResult() {
-      var winner = PRIORITY[0];
-      var best = -1;
-      PRIORITY.forEach(function (key) {
-        var score = tally[key] || 0;
-        if (score > best) { best = score; winner = key; }
-      });
-      var result = ARCHETYPES[winner];
+      var result = getWinner();
 
       var html = '<div class="quiz-result">';
       html += '<div class="quiz-progress">Your result</div>';
@@ -374,41 +418,16 @@
       html += '<p class="archetype-cta">' + result.cta + '</p>';
       html += '<a href="/circle.html" class="btn">Join The Circle</a>';
       html += '<p class="guarantee" style="margin-top:1rem;">Post a Monday commitment for a full month and show up to the live. If you don\'t feel more able to act than day one, that month\'s refunded.</p>';
-      html += '<hr class="quiz-divider" />';
-      html += '<div class="quiz-fallback">';
-      html += 'Not ready for The Circle yet? Just get the newsletter instead.';
-      html += '<form id="quiz-newsletter-form"><input type="email" placeholder="you@email.com" required /><button type="submit" class="btn">Send it to me</button></form>';
-      html += '</div>';
+      html += '<p style="margin-top:1.5rem; font-size:0.85rem; color:var(--soft-ink);">You\'re on the newsletter too — watch your inbox.</p>';
       html += '<a href="#" class="quiz-retake" id="quiz-retake">Retake the quiz</a>';
       html += '</div>';
       box.innerHTML = html;
 
-      document.getElementById('quiz-newsletter-form').addEventListener('submit', function (e) {
-        e.preventDefault();
-        var thisForm = this;
-        var emailValue = thisForm.querySelector('input[type="email"]').value;
-        var submitBtn = thisForm.querySelector('button[type="submit"]');
-        submitBtn.disabled = true;
-
-        fetch('/api/newsletter', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: emailValue, archetype: result.name })
-        })
-          .then(function (r) { return r.json(); })
-          .then(function (data) {
-            thisForm.outerHTML = data.ok
-              ? '<p style="margin-top:1rem; font-weight:600;">You\'re on the list — watch your inbox.</p>'
-              : '<p style="margin-top:1rem;">That didn\'t send, mind trying again?</p>';
-          })
-          .catch(function () {
-            submitBtn.disabled = false;
-          });
-      });
       document.getElementById('quiz-retake').addEventListener('click', function (e) {
         e.preventDefault();
         current = 0;
         tally = {};
+        emailCaptured = false;
         render();
       });
     }
