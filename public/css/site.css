@@ -292,6 +292,67 @@ p.lede { color: var(--soft-ink); }
 .panel h3 { font-size: 1.2rem; margin: 0 0 0.5rem; font-weight: 600; }
 .panel p { color: var(--soft-ink); margin: 0; }
 
+/* ---- CLIMB method: letters spell the word ---- */
+.climb-word {
+  display: flex;
+  justify-content: center;
+  gap: 0.4rem;
+  margin: 2.5rem 0 0.5rem;
+  flex-wrap: wrap;
+}
+
+.climb-letter-big {
+  font-family: 'Playfair Display', serif;
+  font-size: 4rem;
+  font-weight: 700;
+  color: var(--pink);
+  line-height: 1;
+}
+
+.climb-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1px;
+  background: var(--blush-deep);
+  border: 1px solid var(--blush-deep);
+  margin-top: 1rem;
+}
+
+.climb-step {
+  background: var(--white);
+  padding: 1.75rem 1.25rem;
+  text-align: center;
+}
+
+.climb-step .letter {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.75rem;
+  font-weight: 700;
+  color: var(--pink);
+  line-height: 1;
+  display: block;
+  margin-bottom: 0.8rem;
+}
+
+.climb-step h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 0.6rem;
+}
+
+.climb-step p {
+  font-size: 0.92rem;
+  color: var(--soft-ink);
+  margin: 0;
+}
+
+@media (max-width: 720px) {
+  .climb-grid { grid-template-columns: 1fr; }
+  .climb-step { display: flex; align-items: center; gap: 1.25rem; text-align: left; padding: 1.25rem 1.5rem; }
+  .climb-step .letter { margin-bottom: 0; flex: 0 0 auto; }
+  .climb-letter-big { font-size: 2.6rem; }
+}
+
 /* ---- Offer ---- */
 .offer-box {
   background: var(--white);
