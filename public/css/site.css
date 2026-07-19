@@ -723,3 +723,31 @@ footer .handle { display: block; margin-top: 0.5rem; font-size: 0.8rem; color: v
   letter-spacing: 0.05em;
   color: var(--soft-ink);
 }
+
+/* ---- Founder pull-quote ---- */
+.founder-quote {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.founder-quote blockquote {
+  margin: 0 auto;
+  max-width: 680px;
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 1.5rem;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.founder-quote cite {
+  display: block;
+  margin-top: 1.25rem;
+  font-family: 'Inter', sans-serif;
+  font-style: normal;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--pink);
+}
