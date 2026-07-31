@@ -33,7 +33,7 @@ const ARCHETYPE_PDF_KEYS = {
   "The Anchor": "anchor",
 };
 
-const KNOWN_SOURCES = ["Home Quiz", "Circle Welcome", "Cohort Welcome"];
+const KNOWN_SOURCES = ["Home Quiz", "Circle Welcome", "Cohort Welcome", "Free Newsletter Card"];
 
 const MIME_TYPES = {
   ".html": "text/html; charset=utf-8",
