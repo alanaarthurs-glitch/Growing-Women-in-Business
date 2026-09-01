@@ -30,6 +30,30 @@ function deriveBareHost(origin) {
 }
 const BARE_HOST = deriveBareHost(SITE_ORIGIN);
 
+// Content Security Policy. Locks scripts, frames, images, fonts and form
+// targets to this site plus PayPal (the buttons and checkout) and Google
+// Fonts. Inline scripts and styles stay allowed because the pages carry small
+// inline scripts and the PayPal SDK injects its own; anything else off-site
+// is blocked by the browser. To add a new third party, add its origin to the
+// relevant directive here.
+const CONTENT_SECURITY_POLICY = [
+  "default-src 'self'",
+  "base-uri 'self'",
+  "object-src 'none'",
+  "frame-ancestors 'self'",
+  "form-action 'self' https://*.paypal.com",
+  "script-src 'self' 'unsafe-inline' https://*.paypal.com https://*.paypalobjects.com",
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://*.paypal.com https://*.paypalobjects.com",
+  "font-src 'self' data: https://fonts.gstatic.com",
+  "img-src 'self' data: https://*.paypal.com https://*.paypalobjects.com",
+  "frame-src https://*.paypal.com",
+  "connect-src 'self' https://*.paypal.com https://*.paypalobjects.com",
+  "upgrade-insecure-requests",
+].join("; ");
+
+// One year of HSTS, covering subdomains. Only sent on HTTPS responses.
+const STRICT_TRANSPORT_SECURITY = "max-age=31536000; includeSubDomains";
+
 const KNOWN_ARCHETYPES = [
   "The Wildflower", "The Ember", "The Pearl", "Mademoiselle", "The Late Bloomer",
   "The Firestarter", "The Sage", "The Live Wire", "The Anchor",
@@ -500,7 +524,26 @@ async function handleNewsletter(req, res) {
 }
 
 const server = http.createServer((req, res) => {
+  // Encryption in transit. Railway terminates TLS at its edge and passes the
+  // original scheme in X-Forwarded-Proto. Anything that arrived over plain
+  // HTTP is sent to the HTTPS version of the same URL (the edge already does
+  // this too; this is the belt to its braces), and every HTTPS response
+  // carries HSTS so browsers stop trying HTTP at all. Local previews have no
+  // X-Forwarded-Proto header, so neither branch fires there.
+  const hostHeader = req.headers.host || "";
+  const forwardedProto = (req.headers["x-forwarded-proto"] || "").split(",")[0].trim().toLowerCase();
+  const isLocalHost = hostHeader.indexOf("localhost") === 0 || hostHeader.indexOf("127.0.0.1") === 0;
+  if (forwardedProto === "http" && hostHeader && !isLocalHost) {
+    res.writeHead(301, { Location: "https://" + hostHeader + req.url });
+    res.end();
+    return;
+  }
+  if (forwardedProto === "https") {
+    res.setHeader("Strict-Transport-Security", STRICT_TRANSPORT_SECURITY);
+  }
+
   // Security headers on every response, no matter how it's handled below.
+  res.setHeader("Content-Security-Policy", CONTENT_SECURITY_POLICY);
   res.setHeader("X-Content-Type-Options", "nosniff");
   res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
   res.setHeader("X-Frame-Options", "SAMEORIGIN");
@@ -509,7 +552,6 @@ const server = http.createServer((req, res) => {
   // Canonical host redirect. Only fires on an exact match against the bare
   // (non-www) host, so localhost and Railway's own *.up.railway.app host
   // are never touched.
-  const hostHeader = req.headers.host || "";
   if (hostHeader === BARE_HOST) {
     res.writeHead(301, { Location: SITE_ORIGIN + req.url });
     res.end();

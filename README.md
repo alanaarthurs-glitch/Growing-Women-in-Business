@@ -113,3 +113,14 @@ git push
 ```
 
 Railway detects the push and redeploys automatically. Watch it in the Railway dashboard → Deployments.
+
+## Security and encryption
+
+- **HTTPS everywhere.** Railway terminates TLS with an automatically renewed certificate for `www.growingwomeninbusiness.com`. Its edge redirects plain HTTP to HTTPS, and `index.js` does the same again using `X-Forwarded-Proto`, so no page is ever served unencrypted.
+- **HSTS.** Every HTTPS response carries `Strict-Transport-Security: max-age=31536000; includeSubDomains`, so browsers that have visited once refuse to try HTTP for a year.
+- **Content Security Policy.** Scripts, styles, fonts, images, frames, network calls and form targets are locked to this site plus PayPal (`*.paypal.com`, `*.paypalobjects.com`) and Google Fonts (`fonts.googleapis.com`, `fonts.gstatic.com`). Anything else a browser is asked to load is blocked. `upgrade-insecure-requests` turns any stray `http://` asset into `https://`. To add a new third party (an analytics tag, a booking widget), add its origin to the matching directive in `CONTENT_SECURITY_POLICY` in `index.js`.
+- **Other headers.** `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `X-Frame-Options: SAMEORIGIN`, a restrictive `Permissions-Policy`.
+- **Secrets.** Notion and Resend keys live only in Railway's Variables, never in this repo. The PayPal client ID and plan IDs in the pages are public identifiers by design. The site sets no cookies.
+- **Data in transit to third parties.** Notion, Resend and PayPal are all called over HTTPS.
+- **Local lead log.** `data/*.jsonl` is a plain-text fallback copy of form submissions on the Railway container's disk (ephemeral, wiped on redeploy). Notion is the record of truth. If you'd rather keep no plain-text copy at all, remove the `appendLocalLead` calls in `index.js`.
+- **Still to do outside the code.** The bare domain `growingwomeninbusiness.com` (no www) still serves GoDaddy's page. Set a permanent forward to `https://www.growingwomeninbusiness.com` in GoDaddy (Domain settings, Forwarding), or add the bare domain as a second custom domain in Railway. Until then the redirect in `index.js` never sees that traffic.
