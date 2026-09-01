@@ -3,73 +3,231 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome — Growing Women in Business</title>
-  <meta name="description" content="You're in. Book your discovery call and find out your Future Maker type." />
+  <title>Welcome | Growing Women in Business</title>
+  <meta name="description" content="You're in. Two quick things, then you're properly set up." />
+  <link rel="canonical" href="https://www.growingwomeninbusiness.com/welcome.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Growing Women in Business" />
+  <meta property="og:title" content="Welcome | Growing Women in Business" />
+  <meta property="og:description" content="You're in. Two quick things, then you're properly set up." />
+  <meta property="og:url" content="https://www.growingwomeninbusiness.com/welcome.html" />
+  <meta property="og:image" content="https://www.growingwomeninbusiness.com/images/og.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="theme-color" content="#fdf9f1" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="/css/site.css" />
 </head>
 <body>
-  <div class="topbar">
-    <a href="/" class="wordmark">
-      <img src="/images/logo.png" alt="Growing Women in Business" class="logo-mark" />
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="topbar">
+    <a href="/" class="wordmark" aria-label="Growing Women in Business, home">
+      <img src="/images/logo.png" alt="Growing Women in Business" class="logo-mark" width="512" height="512" />
     </a>
-    <ul>
-      <li><a href="/" class="navlink">Home</a></li>
-    </ul>
-  </div>
-
-  <section class="white" style="padding-top: 3.5rem;">
-    <div class="inner">
-      <span class="eyebrow" style="display:block; text-align:center;" id="welcome-eyebrow">You're in</span>
-      <h2 id="welcome-heading">Welcome</h2>
-      <p class="lede" style="text-align:center;" id="welcome-lede">Two quick things, then you're properly set up.</p>
+    <div class="topbar-actions">
+      <a href="/circle.html#offer" class="btn btn-nav">Join The Circle</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
     </div>
-  </section>
+    <nav id="site-nav" class="site-nav" aria-label="Main">
+      <ul>
+        <li><a href="/" class="navlink">Home</a></li>
+        <li><a href="/circle.html" class="navlink">The Circle</a></li>
+        <li><a href="/cohort.html" class="navlink">The Cohort</a></li>
+        <li><a href="/#quiz" class="navlink navlink-quiz">Take the quiz</a></li>
+      </ul>
+    </nav>
+  </header>
 
-  <section class="blush">
-    <div class="inner">
-      <span class="eyebrow">Step one</span>
-      <h2>Book your discovery call</h2>
-      <p class="lede" style="text-align:center;">A short call with Alana to get you started properly.</p>
-      <div class="calendar-slot">
-        Calendar embed goes here (e.g. Calendly or Cal.com). Tell me which booking tool you use and I'll wire up the real embed.
+  <main id="main">
+    <section class="white">
+      <div class="inner">
+        <span class="eyebrow" id="welcome-eyebrow">You're in</span>
+        <h2 id="welcome-heading">Welcome</h2>
+        <p class="lede" id="welcome-lede">Two quick things, then you're properly set up.</p>
       </div>
+    </section>
+
+    <div id="circle-flow" hidden>
+      <section class="blush">
+        <div class="inner">
+          <span class="eyebrow">Step one</span>
+          <h2>Book your discovery call</h2>
+          <div id="circle-booking-cta"></div>
+          <div id="circle-community-cta"></div>
+        </div>
+      </section>
+
+      <section class="white">
+        <div class="inner">
+          <span class="eyebrow">Step two</span>
+          <h2>What kind of Future Maker are you?</h2>
+          <p class="lede">Nine quick questions, no right answers. This helps Alana see how best to support you too.</p>
+          <div class="quiz-box" id="quiz-box-circle"></div>
+        </div>
+      </section>
     </div>
+
+    <div id="cohort-flow" hidden>
+      <section class="blush">
+        <div class="inner">
+          <span class="eyebrow">Step one</span>
+          <h2>Your first action, right now</h2>
+          <div class="quote-block">
+            <p>You're in. Properly in. Welcome to The Future Maker Cohort.</p>
+            <p>Before you do anything else, before you overthink it, I want one thing from you and one thing only.</p>
+            <p>In one sentence, tell me the one big action you're here to take. The pricing you keep not doing, the post you keep not posting, the conversation you keep not having, whatever it is for you. One sentence. Voice note or text, whichever's easier, doesn't matter, it just has to be honest.</p>
+            <p>Reply to this now. Don't tidy it up. Don't make it sound clever. Just say the true thing.</p>
+            <p>That's it. That's the first action, and you've basically already taken it. I'll call you within 48 hours.</p>
+            <p>Alana x</p>
+          </div>
+          <form class="apply-form" id="action-form">
+            <div>
+              <label for="action-email">Email</label>
+              <input type="email" id="action-email" name="email" required autocomplete="email" />
+            </div>
+            <div>
+              <label for="action-text">In one sentence, the one big action you're here to take</label>
+              <textarea id="action-text" name="action" required></textarea>
+            </div>
+            <button type="submit" class="btn">Send it to Alana</button>
+          </form>
+          <div id="action-success" class="calendar-slot" hidden>
+            <p>Got it. That's the first action, and you've basically already taken it. Alana will call you within 48 hours.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="white">
+        <div class="inner">
+          <span class="eyebrow">Step two</span>
+          <h2>Book your welcome call</h2>
+          <div id="cohort-booking-cta"></div>
+        </div>
+      </section>
+
+      <section class="blush">
+        <div class="inner">
+          <span class="eyebrow">Step three</span>
+          <h2>What kind of Future Maker are you?</h2>
+          <p class="lede">Nine quick questions, no right answers. This helps Alana see how best to support you too.</p>
+          <div class="quiz-box" id="quiz-box-cohort"></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <section class="newsletter-panel" aria-labelledby="nl-heading">
+    <span class="eyebrow">The newsletter</span>
+    <h2 id="nl-heading">The Only Way Is Up</h2>
+    <p class="lede">Alana's newsletter, every other Sunday. One true story about fear and what it actually costs, and one thing you can do before Monday morning to stop shrinking.</p>
+    <form class="newsletter-panel-form" data-source="Newsletter Panel">
+      <label for="nl-email" class="visually-hidden">Email address</label>
+      <input id="nl-email" type="email" name="email" placeholder="you@email.com" required autocomplete="email" />
+      <button type="submit" class="btn">Sign up</button>
+    </form>
   </section>
 
-  <section class="white">
-    <div class="inner">
-      <span class="eyebrow" style="display:block; text-align:center;">Step two</span>
-      <h2>What kind of Future Maker are you?</h2>
-      <p class="lede" style="text-align:center;">Nine quick questions, no right answers. This helps Alana see how best to support you too.</p>
-      <div class="quiz-box" id="quiz-box"></div>
-    </div>
-  </section>
-
-  <footer>
-    <img src="/images/logo.png" alt="Growing Women in Business" class="logo-mark footer-logo" />
-    <a href="https://instagram.com/growingwomeninbusiness" class="handle">@growingwomeninbusiness</a>
+  <footer class="site-footer">
+    <img src="/images/logo.png" alt="Growing Women in Business" class="logo-mark footer-logo" width="512" height="512" />
+    <a href="https://instagram.com/growingwomeninbusiness" class="handle" target="_blank" rel="noopener">@growingwomeninbusiness</a>
     <p class="also-part-of">Also part of Alana's world: <a href="https://www.alanaarthurs.com" target="_blank" rel="noopener">alanaarthurs.com</a> &middot; <a href="https://www.vectorropeaccess.co.uk" target="_blank" rel="noopener">vectorropeaccess.co.uk</a> &middot; <a href="/whats-next.html">what's next</a></p>
+    <p class="legal">&copy; 2026 Growing Women in Business &middot; Alana Arthurs</p>
   </footer>
 
+  <script src="/js/config.js"></script>
   <script src="/js/quiz.js"></script>
+  <script src="/js/nav.js"></script>
+  <script src="/js/newsletter-panel.js"></script>
   <script>
     (function () {
       var params = new URLSearchParams(window.location.search);
       var offer = params.get('offer');
-      var source = 'Circle Welcome';
-      var heading = "You're officially in The Circle!";
-      var lede = "Two quick things, then you're properly set up.";
+      var emailParam = params.get('email') || '';
+      var isCohort = offer === 'cohort';
+      var config = window.GWIB_CONFIG || { bookingUrl: '', communityUrl: '' };
 
-      if (offer === 'cohort') {
-        source = 'Cohort Welcome';
-        heading = "You're officially a Future Maker!";
-        lede = "Two quick things, then your six weeks properly begins.";
+      document.getElementById('welcome-eyebrow').textContent = "You're in";
+
+      function renderBookingCta(containerId, fallbackText) {
+        var container = document.getElementById(containerId);
+        if (!container) return;
+        if (config.bookingUrl) {
+          var a = document.createElement('a');
+          a.href = config.bookingUrl;
+          a.target = '_blank';
+          a.rel = 'noopener';
+          a.className = 'btn';
+          a.textContent = 'Book your call';
+          container.appendChild(a);
+        } else {
+          var p = document.createElement('p');
+          p.className = 'lede';
+          p.textContent = fallbackText;
+          container.appendChild(p);
+        }
       }
 
-      document.getElementById('welcome-heading').textContent = heading;
-      document.getElementById('welcome-lede').textContent = lede;
+      if (isCohort) {
+        document.getElementById('welcome-heading').textContent = "You're officially a Future Maker";
+        document.getElementById('welcome-lede').textContent = "Two quick things, then your six weeks properly begins.";
+        document.getElementById('cohort-flow').hidden = false;
 
-      initFutureMakerQuiz('quiz-box', source);
+        if (emailParam) {
+          document.getElementById('action-email').value = emailParam;
+        }
+
+        renderBookingCta('cohort-booking-cta', "Alana will be in touch within 48 hours to lock in your welcome call.");
+
+        var actionForm = document.getElementById('action-form');
+        actionForm.addEventListener('submit', function (e) {
+          e.preventDefault();
+          var button = actionForm.querySelector('button[type="submit"]');
+          button.disabled = true;
+          button.textContent = 'Sending…';
+
+          fetch('/api/first-action', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              email: document.getElementById('action-email').value,
+              action: document.getElementById('action-text').value
+            })
+          })
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+              if (!data.ok) throw new Error(data.error || 'Something went wrong');
+              actionForm.hidden = true;
+              document.getElementById('action-success').hidden = false;
+            })
+            .catch(function () {
+              button.disabled = false;
+              button.textContent = 'Send it to Alana';
+              alert("That didn't send. Mind trying again in a moment?");
+            });
+        });
+
+        initFutureMakerQuiz('quiz-box-cohort', 'Cohort Welcome');
+      } else {
+        document.getElementById('welcome-heading').textContent = "You're officially in The Circle";
+        document.getElementById('welcome-lede').textContent = "Two quick things, then you're properly set up.";
+        document.getElementById('circle-flow').hidden = false;
+
+        renderBookingCta('circle-booking-cta', "Alana will call you within 48 hours to welcome you in and get you paired with your fear buddy.");
+
+        if (config.communityUrl) {
+          var container = document.getElementById('circle-community-cta');
+          var a2 = document.createElement('a');
+          a2.href = config.communityUrl;
+          a2.target = '_blank';
+          a2.rel = 'noopener';
+          a2.className = 'btn';
+          a2.textContent = 'Go to The Circle';
+          container.appendChild(a2);
+        }
+
+        initFutureMakerQuiz('quiz-box-circle', 'Circle Welcome');
+      }
     })();
   </script>
 </body>

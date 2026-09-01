@@ -226,7 +226,7 @@ function initFutureMakerQuiz(containerId, source) {
     html += '<p class="archetype-cta">' + result.cta + '</p>';
     html += '<a href="/circle.html" class="btn">Join The Circle</a>';
     html += '<p class="guarantee" style="margin-top:1rem;">Post a Monday commitment for a full month and show up to the live. If you don\'t feel more able to act than day one, that month\'s refunded.</p>';
-    html += '<p style="margin-top:1.5rem; font-size:0.85rem; color:var(--soft-ink);">You\'re on the newsletter too — watch your inbox.</p>';
+    html += '<p style="margin-top:1.5rem; font-size:0.85rem; color:var(--soft-ink);">You\'re on the newsletter too. Watch your inbox.</p>';
     html += '<a href="#" class="quiz-retake">Retake the quiz</a>';
     html += '</div>';
     box.innerHTML = html;

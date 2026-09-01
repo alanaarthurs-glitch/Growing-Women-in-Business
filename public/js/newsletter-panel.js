@@ -1,17 +1,22 @@
 document.addEventListener('DOMContentLoaded', function () {
-  // Supports any number of newsletter forms on one page (id="newsletter-panel-form"
-  // for the first/only one, class="newsletter-panel-form" for any others).
-  var forms = document.querySelectorAll('#newsletter-panel-form, .newsletter-panel-form');
+  // Supports any number of newsletter forms on one page: class="newsletter-panel-form"
+  // for any of them, id="newsletter-panel-form" for a page with just one.
+  var forms = document.querySelectorAll('.newsletter-panel-form, #newsletter-panel-form');
 
   forms.forEach(function (form) {
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       var input = form.querySelector('input[type="email"]');
       var button = form.querySelector('button[type="submit"]');
-      var email = input.value;
+      var email = input ? input.value : '';
       var source = form.getAttribute('data-source') || undefined;
-      button.disabled = true;
-      button.textContent = 'Sending…';
+      var isWaitlist = form.getAttribute('data-source') === 'Push Waitlist';
+      var originalButtonText = button ? button.textContent : '';
+
+      if (button) {
+        button.disabled = true;
+        button.textContent = 'Sending…';
+      }
 
       fetch('/api/newsletter', {
         method: 'POST',
@@ -20,13 +25,22 @@ document.addEventListener('DOMContentLoaded', function () {
       })
         .then(function (r) { return r.json(); })
         .then(function (data) {
-          form.outerHTML = data.ok
-            ? '<p class="confirm">You\'re on the list — watch your inbox.</p>'
-            : '<p class="confirm">That didn\'t send, mind trying again?</p>';
+          if (data.ok) {
+            form.outerHTML = isWaitlist
+              ? '<p class="confirm">You\'re on the waitlist. I\'ll message you the moment it reopens.</p>'
+              : '<p class="confirm">You\'re on the list. Watch your inbox.</p>';
+          } else {
+            if (button) {
+              button.disabled = false;
+              button.textContent = originalButtonText;
+            }
+          }
         })
         .catch(function () {
-          button.disabled = false;
-          button.textContent = 'Sign up';
+          if (button) {
+            button.disabled = false;
+            button.textContent = originalButtonText;
+          }
         });
     });
   });

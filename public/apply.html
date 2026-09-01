@@ -3,107 +3,159 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Apply — Growing Women in Business</title>
-  <meta name="description" content="Tell me a bit about where you're at, then book a call. Two minutes, no payment." />
+  <title>Apply | Growing Women in Business</title>
+  <meta name="description" content="Tell me where you're at, then we'll talk. Two minutes, no payment." />
+  <link rel="canonical" href="https://www.growingwomeninbusiness.com/apply.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Growing Women in Business" />
+  <meta property="og:title" content="Apply | Growing Women in Business" />
+  <meta property="og:description" content="Tell me where you're at, then we'll talk. Two minutes, no payment." />
+  <meta property="og:url" content="https://www.growingwomeninbusiness.com/apply.html" />
+  <meta property="og:image" content="https://www.growingwomeninbusiness.com/images/og.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="theme-color" content="#fdf9f1" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="/css/site.css" />
 </head>
 <body>
-  <div class="topbar">
-    <a href="/" class="wordmark">
-      <img src="/images/logo.png" alt="Growing Women in Business" class="logo-mark" />
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="topbar">
+    <a href="/" class="wordmark" aria-label="Growing Women in Business, home">
+      <img src="/images/logo.png" alt="Growing Women in Business" class="logo-mark" width="512" height="512" />
     </a>
-    <ul>
-      <li><a href="/" class="navlink">Back home</a></li>
-    </ul>
-  </div>
-
-  <section class="white" style="padding-top: 3.5rem;">
-    <div class="inner">
-      <div class="step-track">
-        <span class="current">1. Apply</span>
-        <span>—</span>
-        <span>2. Book your call</span>
-      </div>
-      <span class="eyebrow" style="display:block; text-align:center;">Apply to work with me</span>
-      <h2>Tell me where you're at</h2>
-      <p class="lede" style="text-align:center;">No payment here, just a straight answer so I know how to use the call properly. Two minutes.</p>
-
-      <form class="apply-form" id="apply-form">
-        <div>
-          <label for="name">Your name</label>
-          <input type="text" id="name" name="name" required />
-        </div>
-        <div>
-          <label for="email">Email</label>
-          <input type="email" id="email" name="email" required />
-        </div>
-        <div>
-          <label for="stuck">What's the one thing you keep putting off?</label>
-          <textarea id="stuck" name="stuck" required placeholder="Be specific: the actual number, the actual post, the actual conversation."></textarea>
-        </div>
-        <div>
-          <label for="why-now">Why now?</label>
-          <textarea id="why-now" name="why-now" required placeholder="What's changed, or what's made you finally look this up?"></textarea>
-        </div>
-        <button type="submit" class="btn">Submit and book your call</button>
-      </form>
-
-      <div id="calendar-step" class="calendar-slot" style="display:none;">
-        <strong style="display:block; margin-bottom: 0.5rem; color: var(--ink);">Thank you — now grab a time that works.</strong>
-        Calendar embed goes here (e.g. Calendly or Cal.com). Tell me which booking tool you use and I'll wire up the real embed.
-      </div>
+    <div class="topbar-actions">
+      <a href="/circle.html#offer" class="btn btn-nav">Join The Circle</a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
     </div>
-  </section>
+    <nav id="site-nav" class="site-nav" aria-label="Main">
+      <ul>
+        <li><a href="/" class="navlink">Home</a></li>
+        <li><a href="/circle.html" class="navlink">The Circle</a></li>
+        <li><a href="/cohort.html" class="navlink">The Cohort</a></li>
+        <li><a href="/#quiz" class="navlink navlink-quiz">Take the quiz</a></li>
+      </ul>
+    </nav>
+  </header>
 
-  <section class="newsletter-panel">
-    <h2>Get the odd good nudge in your inbox</h2>
-    <p class="lede">No fluff, no daily noise. Just the odd note worth reading.</p>
-    <form id="newsletter-panel-form">
-      <input type="email" placeholder="you@email.com" required />
+  <main id="main">
+    <section class="white">
+      <div class="inner">
+        <div class="step-track">
+          <span class="current">1. Tell me where you're at</span>
+          <span>2. We talk</span>
+        </div>
+        <span class="eyebrow">Apply to work with me</span>
+        <h2>Tell me where you're at</h2>
+        <p class="lede">No payment here, just a straight answer so I know how to use the call properly. Two minutes.</p>
+
+        <form class="apply-form" id="apply-form">
+          <div>
+            <label for="name">First name</label>
+            <input type="text" id="name" name="name" required autocomplete="given-name" />
+          </div>
+          <div>
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required autocomplete="email" />
+          </div>
+          <div>
+            <label for="phone">Phone (optional)</label>
+            <input type="tel" id="phone" name="phone" autocomplete="tel" />
+          </div>
+          <fieldset>
+            <legend>Which one are you here for?</legend>
+            <label><input type="radio" name="category" value="Pricing" required /> Pricing</label>
+            <label><input type="radio" name="category" value="Visibility" /> Visibility</label>
+            <label><input type="radio" name="category" value="The Avoided Conversation" /> The Avoided Conversation</label>
+          </fieldset>
+          <div>
+            <label for="stuck">In one sentence, what is it?</label>
+            <textarea id="stuck" name="stuck" required placeholder="Don't tidy it up. Just say the true thing: the actual number, the actual post, the actual conversation."></textarea>
+          </div>
+          <div>
+            <label for="why-now">Why now?</label>
+            <textarea id="why-now" name="whyNow" required placeholder="What's changed, or what's made you finally look this up?"></textarea>
+          </div>
+          <button type="submit" class="btn">Send it</button>
+        </form>
+
+        <div id="apply-success" class="calendar-slot" hidden>
+          <p><strong>That's the first brave thing done.</strong></p>
+          <p id="apply-success-line">Alana will be in touch within 48 hours to book your call.</p>
+          <a href="#" id="apply-booking-link" class="btn" target="_blank" rel="noopener" hidden>Book your call</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <section class="newsletter-panel" aria-labelledby="nl-heading">
+    <span class="eyebrow">The newsletter</span>
+    <h2 id="nl-heading">The Only Way Is Up</h2>
+    <p class="lede">Alana's newsletter, every other Sunday. One true story about fear and what it actually costs, and one thing you can do before Monday morning to stop shrinking.</p>
+    <form class="newsletter-panel-form" data-source="Newsletter Panel">
+      <label for="nl-email" class="visually-hidden">Email address</label>
+      <input id="nl-email" type="email" name="email" placeholder="you@email.com" required autocomplete="email" />
       <button type="submit" class="btn">Sign up</button>
     </form>
   </section>
 
-
-  <footer>
-    <img src="/images/logo.png" alt="Growing Women in Business" class="logo-mark footer-logo" />
-    <a href="https://instagram.com/growingwomeninbusiness" class="handle">@growingwomeninbusiness</a>
+  <footer class="site-footer">
+    <img src="/images/logo.png" alt="Growing Women in Business" class="logo-mark footer-logo" width="512" height="512" />
+    <a href="https://instagram.com/growingwomeninbusiness" class="handle" target="_blank" rel="noopener">@growingwomeninbusiness</a>
     <p class="also-part-of">Also part of Alana's world: <a href="https://www.alanaarthurs.com" target="_blank" rel="noopener">alanaarthurs.com</a> &middot; <a href="https://www.vectorropeaccess.co.uk" target="_blank" rel="noopener">vectorropeaccess.co.uk</a> &middot; <a href="/whats-next.html">what's next</a></p>
+    <p class="legal">&copy; 2026 Growing Women in Business &middot; Alana Arthurs</p>
   </footer>
 
-  <script>
-    var form = document.getElementById('apply-form');
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-      var button = form.querySelector('button[type="submit"]');
-      button.disabled = true;
-      button.textContent = 'Submitting…';
-
-      fetch('/api/apply', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: document.getElementById('name').value,
-          email: document.getElementById('email').value,
-          stuck: document.getElementById('stuck').value,
-          whyNow: document.getElementById('why-now').value
-        })
-      })
-        .then(function (r) { return r.json(); })
-        .then(function (data) {
-          if (!data.ok) throw new Error(data.error || 'Something went wrong');
-          form.style.display = 'none';
-          document.querySelector('.step-track .current').textContent = '';
-          document.querySelectorAll('.step-track span')[2].classList.add('current');
-          document.getElementById('calendar-step').style.display = 'block';
-        })
-        .catch(function () {
-          button.disabled = false;
-          button.textContent = 'Submit and book your call';
-          alert("That didn't send. Mind trying again in a moment?");
-        });
-    });
-  </script>
+  <script src="/js/config.js"></script>
+  <script src="/js/nav.js"></script>
   <script src="/js/newsletter-panel.js"></script>
+  <script>
+    (function () {
+      var form = document.getElementById('apply-form');
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var button = form.querySelector('button[type="submit"]');
+        button.disabled = true;
+        button.textContent = 'Sending…';
+
+        var categoryInput = form.querySelector('input[name="category"]:checked');
+
+        fetch('/api/apply', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: document.getElementById('name').value,
+            email: document.getElementById('email').value,
+            phone: document.getElementById('phone').value,
+            category: categoryInput ? categoryInput.value : '',
+            stuck: document.getElementById('stuck').value,
+            whyNow: document.getElementById('why-now').value
+          })
+        })
+          .then(function (r) { return r.json(); })
+          .then(function (data) {
+            if (!data.ok) throw new Error(data.error || 'Something went wrong');
+            form.hidden = true;
+            document.querySelectorAll('.step-track span')[0].classList.remove('current');
+            document.querySelectorAll('.step-track span')[1].classList.add('current');
+
+            var config = window.GWIB_CONFIG || { bookingUrl: '' };
+            if (config.bookingUrl) {
+              var link = document.getElementById('apply-booking-link');
+              link.href = config.bookingUrl;
+              link.hidden = false;
+              document.getElementById('apply-success-line').hidden = true;
+            }
+            document.getElementById('apply-success').hidden = false;
+          })
+          .catch(function () {
+            button.disabled = false;
+            button.textContent = 'Send it';
+            alert("That didn't send. Mind trying again in a moment?");
+          });
+      });
+    })();
+  </script>
 </body>
 </html>
