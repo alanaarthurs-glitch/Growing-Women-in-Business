@@ -73,7 +73,7 @@ const ARCHETYPE_PDF_KEYS = {
 
 const KNOWN_SOURCES = [
   "Home Quiz", "Circle Welcome", "Cohort Welcome", "Free Newsletter Card",
-  "Push Waitlist", "Newsletter Panel",
+  "Push Waitlist", "Newsletter Panel", "Findable Scorecard",
 ];
 
 const KNOWN_APPLY_CATEGORIES = ["Pricing", "Visibility", "The Avoided Conversation"];
@@ -523,6 +523,118 @@ async function handleNewsletter(req, res) {
   sendJSON(res, 200, { ok: true });
 }
 
+
+// The findable scorecard (/scorecard). Saves every finished scorecard,
+// upserts the CRM contact, and emails the result by Resend.
+const SCORECARD_TIERS = ["Findable. Not yet paid.", "Two fixes from findable", "Ready to be found"];
+
+function scorecardEmailHtml(firstName, score, tier, categories, wins) {
+  const name = firstName || "there";
+  const bars = Object.keys(categories || {}).map((k) =>
+    `<li><strong>${k}</strong>: ${categories[k]}%</li>`).join("");
+  const winList = (wins || []).map((w) => `<li>${w}</li>`).join("");
+  let next;
+  if (tier === "Ready to be found") {
+    next = `<p>Every other Sunday I send The Only Way Is Up: one true story about fear and what it costs, and one thing to do before Monday. You're on it now. Reply and tell me the one sentence you said out loud, if you like. I read every one.</p>`;
+  } else {
+    next = `<p>The fastest way through this is a free 30-minute call where we look at your three areas together and pick the one fix. Reply to this email with the word <strong>FOUND</strong> and I'll send you some times. The next Future Maker Cohort starts on 1 October, and this is the conversation that decides whether it's right for you.</p>`;
+  }
+  return `<p>Hi ${name},</p>` +
+    `<p>You scored <strong>${score}%</strong>: <strong>${tier}</strong>.</p>` +
+    `<ul>${bars}</ul>` +
+    `<p>Your top 3 quick wins:</p><ol>${winList}</ol>` +
+    next +
+    `<p>Alana x<br><em>Built everyone else's life. Not yet your own. Let's fix that.</em></p>`;
+}
+
+async function sendScorecardEmail(email, firstName, score, tier, categories, wins) {
+  if (!RESEND_API_KEY || !RESEND_FROM_EMAIL) return false;
+  const response = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: { "Authorization": `Bearer ${RESEND_API_KEY}`, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      from: RESEND_FROM_EMAIL,
+      to: email,
+      subject: `Your findable score: ${score}%, ${tier}`,
+      html: scorecardEmailHtml(firstName, score, tier, categories, wins),
+    }),
+  });
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(`Resend API ${response.status}: ${text}`);
+  }
+  return true;
+}
+
+async function handleScorecard(req, res) {
+  let body;
+  try {
+    body = await readBody(req);
+  } catch (err) {
+    return sendJSON(res, 400, { ok: false, error: "Invalid request body" });
+  }
+
+  const email = (body.email || "").trim();
+  const firstName = truncateRichText((body.firstName || "").trim()).slice(0, 80);
+  const consent = !!body.marketingConsent;
+  const score = Math.max(0, Math.min(100, parseInt(body.scorePercent, 10) || 0));
+  const tier = SCORECARD_TIERS.includes(body.tier) ? body.tier : "Ready to be found";
+  const categories = (body.categories && typeof body.categories === "object") ? body.categories : {};
+  const wins = Array.isArray(body.wins) ? body.wins.slice(0, 3).map((w) => String(w).slice(0, 200)) : [];
+  const hot = !!body.hotLead;
+  const utm = (body.utm && typeof body.utm === "object") ? body.utm : {};
+  const source = "Findable Scorecard";
+
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return sendJSON(res, 400, { ok: false, error: "Missing email" });
+  }
+
+  appendLocalLead("scorecard.jsonl", {
+    email, firstName, consent, score, tier, categories, hot, insights: body.insights || {},
+    utm, completedAt: new Date().toISOString(),
+  });
+
+  if (consent && NOTION_API_KEY && NOTION_NEWSLETTER_DB_ID) {
+    try {
+      await createNotionPage(NOTION_NEWSLETTER_DB_ID, {
+        "Email": { title: [{ text: { content: email } }] },
+        "Quiz Archetype": { select: { name: "Not from quiz" } },
+        "Source": { select: { name: source } },
+      });
+    } catch (err) {
+      console.error("Notion write failed (scorecard):", err.message);
+    }
+  }
+
+  const baseUpdates = {
+    "Name": { title: [{ text: { content: firstName } }] },
+    "Source": { select: { name: source } },
+  };
+  if (consent) baseUpdates["Newsletter Subscribed"] = { checkbox: true };
+  try {
+    // First try with the Lead magnet and Quiz tier fields; if they don't exist
+    // in the CRM yet, Notion rejects the whole write, so fall back without them.
+    await upsertCrmContact(email, {
+      ...baseUpdates,
+      "Lead magnet": { select: { name: "findable-score" } },
+      "Quiz tier": { select: { name: tier } },
+    });
+  } catch (err) {
+    try {
+      await upsertCrmContact(email, baseUpdates);
+    } catch (err2) {
+      console.error("CRM upsert failed (scorecard):", err2.message);
+    }
+  }
+
+  try {
+    await sendScorecardEmail(email, firstName, score, tier, categories, wins);
+  } catch (err) {
+    console.error("Scorecard email failed:", err.message);
+  }
+
+  sendJSON(res, 200, { ok: true });
+}
 const server = http.createServer((req, res) => {
   // Encryption in transit. Railway terminates TLS at its edge and passes the
   // original scheme in X-Forwarded-Proto. Anything that arrived over plain
@@ -588,6 +700,10 @@ const server = http.createServer((req, res) => {
     }
     if (urlPath === "/api/first-action") {
       handleFirstAction(req, res);
+      return;
+    }
+    if (urlPath === "/api/scorecard") {
+      handleScorecard(req, res);
       return;
     }
     sendJSON(res, 404, { ok: false, error: "Not found" });

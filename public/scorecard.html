@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Can anybody actually find what you've built? | Growing Women in Business</title>
+<meta name="description" content="11 quick questions, about 2 minutes. Your findable score out of 100, the one gap costing you customers, and the ten-minute fix to make first.">
+<link rel="canonical" href="https://www.growingwomeninbusiness.com/scorecard">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta property="og:title" content="Can anybody actually find what you've built?">
+<meta property="og:description" content="11 quick questions, about 2 minutes. Your findable score out of 100 and the first thing to fix.">
+<meta property="og:image" content="https://www.growingwomeninbusiness.com/images/og.png">
+<meta property="og:url" content="https://www.growingwomeninbusiness.com/scorecard">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Brand tokens: Growing Women in Business (Brand OS, 22 Jul 2026) */
+    --ink: #0A1F3D;          /* navy: headings and body text */
+    --muted: #4B5566;        /* secondary text (4.5:1+ on cream) */
+    --bg: #FDF9F1;           /* cream page background */
+    --card: #FFFFFF;         /* card background */
+    --accent: #DF8491;       /* rose pink: bars and highlights only (not text) */
+    --button: #B03A4E;       /* deep berry, white text 4.5:1+ */
+    --button-hover: #93303F;
+    --line: #EAD9D3;
+    --focus: #3F6E64;        /* deep sage focus outline */
+    --error: #B42318;
+    --head-font: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+    --body-font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: var(--body-font); font-size: 17px; line-height: 1.55;
+  }
+  .wrap { max-width: 680px; margin: 0 auto; padding: 20px 16px 48px; }
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+    padding: 24px 20px; box-shadow: 0 2px 10px rgba(10, 31, 61, .06);
+  }
+  @media (min-width: 600px) { .card { padding: 36px 40px; } }
+  h1, h2 { font-family: var(--head-font); font-weight: 600; line-height: 1.15; margin: 0 0 12px; }
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.6rem; }
+  @media (min-width: 600px) { h1 { font-size: 2.5rem; } h2 { font-size: 1.9rem; } }
+  h2:focus, h1:focus { outline: none; }
+  p { margin: 0 0 14px; }
+  a { color: var(--ink); }
+  .muted { color: var(--muted); }
+  .small { font-size: .9rem; }
+  .owner { display: flex; align-items: center; gap: 12px; margin: 0 0 20px; }
+  .owner img, .owner .initials {
+    width: 52px; height: 52px; border-radius: 50%; object-fit: cover; flex: none;
+  }
+  .owner .initials {
+    display: grid; place-items: center; background: var(--ink); color: #fff;
+    font-weight: 700; letter-spacing: .5px;
+  }
+  .owner strong { display: block; }
+  .owner em { color: var(--muted); font-style: italic; }
+  .promise { font-size: 1.05rem; color: var(--muted); }
+  label { display: block; font-weight: 600; margin: 16px 0 6px; }
+  input[type="text"], input[type="email"] {
+    width: 100%; min-height: 48px; padding: 10px 14px; font: inherit; color: var(--ink);
+    border: 2px solid var(--line); border-radius: 10px; background: #fff;
+  }
+  input[aria-invalid="true"] { border-color: var(--error); }
+  .field-error { color: var(--error); font-size: .9rem; margin: 6px 0 0; min-height: 1em; }
+  .consent { display: flex; gap: 12px; align-items: flex-start; margin: 18px 0 6px; font-weight: 400; }
+  .consent input { width: 24px; height: 24px; margin: 2px 0 0; flex: none; accent-color: var(--button); }
+  .btn, .cta {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    min-height: 52px; padding: 12px 24px; border: 0; border-radius: 12px;
+    background: var(--button); color: #fff; font: inherit; font-weight: 700;
+    text-decoration: none; cursor: pointer; width: 100%;
+  }
+  @media (min-width: 600px) { .btn, .cta { width: auto; } }
+  .btn:hover, .cta:hover { background: var(--button-hover); }
+  .link-btn {
+    background: none; border: 0; padding: 10px 4px; min-height: 44px; font: inherit;
+    color: var(--ink); text-decoration: underline; cursor: pointer;
+  }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+  .progress-text { display: flex; justify-content: space-between; font-size: .9rem; color: var(--muted); margin: 0 0 8px; }
+  .progress { height: 10px; background: var(--line); border-radius: 99px; overflow: hidden; margin: 0 0 24px; }
+  .progress > div { height: 100%; width: 0; background: var(--accent); border-radius: 99px; transition: width .3s ease; }
+  .qhelp { color: var(--muted); margin-top: -4px; }
+  .answers { display: grid; gap: 10px; margin: 20px 0 8px; }
+  .answer {
+    display: flex; align-items: center; gap: 12px; width: 100%; min-height: 56px;
+    padding: 12px 16px; text-align: left; font: inherit; color: var(--ink);
+    background: #fff; border: 2px solid var(--line); border-radius: 12px; cursor: pointer;
+  }
+  .answer:hover { border-color: var(--accent); }
+  .answer[aria-pressed="true"] { border-color: var(--button); background: #FBEBEA; }
+  .answer .key {
+    flex: none; width: 28px; height: 28px; display: grid; place-items: center;
+    border: 1.5px solid var(--line); border-radius: 8px; font-size: .85rem; color: var(--muted);
+  }
+  .nav { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+  .score-label { font-size: .95rem; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 8px 0 0; }
+  .score {
+    font-family: var(--head-font); font-size: 4.5rem; line-height: 1; margin: 0 0 12px; color: var(--ink);
+  }
+  .headline { font-size: 1.2rem; font-weight: 700; margin: 0 0 10px; }
+  .tier-name {
+    display: inline-block; background: var(--ink); color: #fff; border-radius: 99px;
+    padding: 4px 14px; font-weight: 700; font-size: .95rem; margin: 0 0 16px;
+  }
+  h3 { font-size: 1.15rem; margin: 28px 0 12px; }
+  .bars { list-style: none; padding: 0; margin: 0; display: grid; gap: 16px; }
+  .bar-head { display: flex; justify-content: space-between; font-weight: 600; margin-bottom: 6px; }
+  .track { height: 14px; background: var(--line); border-radius: 99px; overflow: hidden; }
+  .fill { height: 100%; background: var(--accent); border-radius: 99px; }
+  .bar-note { color: var(--muted); font-size: .95rem; margin: 6px 0 0; }
+  .wins { padding-left: 1.3em; margin: 0; display: grid; gap: 10px; }
+  .next { margin-top: 28px; padding: 20px; border-radius: 12px; background: #FBEBEA; }
+  .next p { margin-bottom: 14px; }
+  .disclaimer { margin-top: 20px; font-size: .9rem; color: var(--muted); }
+  footer.foot { text-align: center; margin-top: 20px; font-size: .9rem; color: var(--muted); }
+  footer.foot a { color: var(--ink); }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <main class="card">
+
+    <!-- SCREEN 1: hook + details (captured FIRST) -->
+    <section id="screen-start" class="screen" aria-labelledby="start-title">
+      <div class="owner" id="owner"></div>
+      <h1 id="start-title" tabindex="-1" data-focus></h1>
+      <p class="promise" id="start-promise"></p>
+      <form id="details" novalidate>
+        <label for="first-name">First name</label>
+        <input id="first-name" name="first-name" type="text" autocomplete="given-name" required aria-describedby="first-name-error">
+        <p class="field-error" id="first-name-error" aria-live="polite"></p>
+
+        <label for="email">Email address</label>
+        <input id="email" name="email" type="email" autocomplete="email" inputmode="email" required aria-describedby="email-error">
+        <p class="field-error" id="email-error" aria-live="polite"></p>
+
+        <label class="consent" for="consent">
+          <input id="consent" name="consent" type="checkbox">
+          <span id="consent-text"></span>
+        </label>
+        <p class="small muted" id="privacy-line"></p>
+
+        <button class="btn" type="submit" id="start-btn"></button>
+      </form>
+    </section>
+
+    <!-- SCREEN 2: one question at a time -->
+    <section id="screen-question" class="screen" hidden aria-labelledby="q-text">
+      <div class="progress-text"><span id="q-count"></span><span id="q-time"></span></div>
+      <div class="progress" role="progressbar" aria-label="Quiz progress" aria-valuemin="0" id="progress"><div id="progress-fill"></div></div>
+      <h2 id="q-text" tabindex="-1" data-focus></h2>
+      <p class="qhelp" id="q-help" hidden></p>
+      <div class="answers" role="group" aria-labelledby="q-text" id="answers"></div>
+      <div class="nav">
+        <button type="button" class="link-btn" id="back-btn">&larr; Back</button>
+        <span class="small muted">Tip: press 1&ndash;<span id="key-max">4</span></span>
+      </div>
+    </section>
+
+    <!-- SCREEN 3: result -->
+    <section id="screen-result" class="screen" hidden aria-labelledby="r-greeting">
+      <h2 id="r-greeting" tabindex="-1" data-focus></h2>
+      <div id="r-score-wrap">
+        <p class="score-label">Your score</p>
+        <p class="score" id="r-score"></p>
+      </div>
+      <p class="tier-name" id="r-tier"></p>
+      <p class="headline" id="r-title"></p>
+      <p id="r-means"></p>
+
+      <h3 id="r-bars-title"></h3>
+      <ul class="bars" id="r-bars"></ul>
+
+      <h3>Your top 3 quick wins</h3>
+      <ol class="wins" id="r-wins"></ol>
+
+      <div class="next">
+        <p id="r-next-line"></p>
+        <a class="cta" id="r-cta" href="#"></a>
+      </div>
+
+      <p class="disclaimer" id="r-disclaimer" hidden></p>
+      <p><button type="button" class="link-btn" id="retake-btn">Take it again</button></p>
+    </section>
+
+  </main>
+  <footer class="foot" id="foot"></footer>
+</div>
+
+<script>
+/* =====================================================================
+   CONFIG: the only part you edit. Final copy only, no placeholders.
+   ===================================================================== */
+const CONFIG = {
+  mode: "scorecard",
+  business: "Growing Women in Business",
+  owner: {
+    name: "Alana Arthurs",
+    catchphrase: "Built everyone else's life. Not yet your own. Let's fix that.",
+    photo: "/images/alana-scorecard.jpg",
+    photoAlt: "Photo of Alana Arthurs"
+  },
+  title: "Can anybody actually find what you've built?",
+  promise: "11 quick questions, about 2 minutes. You get your findable score out of 100, the one gap costing you customers, and the ten-minute fix to make first. By tonight, one thing is different.",
+  startButton: "Get my score",
+  consentText: "Yes, send me the odd note from Growing Women in Business with tips and offers. Unsubscribe any time.",
+  privacyUrl: "",
+  secondsPerQuestion: 10,
+  disclaimer: "",
+
+  categories: [
+    { id: "found", name: "Can they find you?",
+      notes: { low: "Right now a stranger with money couldn't reach you if she tried.",
+               mid: "Friends can find you. Strangers still can't. Strangers are where the money is.",
+               high: "A stranger could find you and message you today. Lovely." },
+      tips:  { low: "Tonight: Google your name plus what you do. Whatever comes up first is what a customer sees. Now you know what to fix.",
+               mid: "Put one link everywhere: bio, email signature, WhatsApp status. One address. Nobody should have to hunt for you.",
+               high: "Ask the last three people who found you how they did it. Then do more of that one thing." } },
+    { id: "offer", name: "Is there one thing to buy?",
+      notes: { low: "There's no clear thing with a price on it yet, so nobody can say yes.",
+               mid: "You've got something to sell. It's not yet one sentence with a number on it.",
+               high: "You can say what you sell, who it's for and what it costs in one breath. That's rare." },
+      tips:  { low: "Finish this on paper: I help ___ with ___ for £___. Rough is fine. Written down beats perfect every time.",
+               mid: "Take the thing people ask you for most and put a price next to it this week. Everything else waits.",
+               high: "Say your one sentence out loud to someone who isn't family. Watch their face. That's your next edit." } },
+    { id: "showing", name: "Do you show up?",
+      notes: { low: "The women who'd buy from you haven't seen you yet. Not once.",
+               mid: "You show up in bursts, then it goes quiet. They forget you between bursts.",
+               high: "People see you every week and know exactly what you're about." },
+      tips:  { low: "Today: tell one real person, in one sentence, what you're building. Out loud. A witness makes it real by morning.",
+               mid: "Post one plain thing this week saying what you do and who it's for. No polish. Done beats pretty.",
+               high: "Pick a day and a time and post every week at it. The habit sells more than any single post." } }
+  ],
+  categoryBands: { mid: 40, high: 75 },
+
+  questions: [
+    { category: "found", text: "The Google test. Someone types your name and what you do. What comes up?",
+      answers: [["Me, near the top", 3], ["Me, if they scroll a bit", 2],
+                ["Honestly, no idea", 1], ["Nothing of mine at all", 0]] },
+    { category: "offer", text: "The one-breath test. What do you sell? Say it now, out loud.",
+      answers: [["Not yet. I've got a few ideas", 1], ["Said it, price and all", 3],
+                ["Roughly. It changes depending who's asking", 2], ["Nothing to sell yet", 0]] },
+    { category: "showing", text: "When did you last post something that said what you actually do?",
+      answers: [["This week", 3], ["This month", 2], ["A while back now", 1], ["Never have", 0]] },
+    { category: "found", text: "Someone wants to buy from you or book you. Where do they go?",
+      answers: [["They message me and we sort it out", 1], ["One link I send everyone", 3],
+                ["A page, but it's out of date", 2], ["Nowhere yet", 0]] },
+    { category: "offer", text: "How did you land on your price?",
+      answers: [["Looked at everyone else and went a bit lower", 1], ["Worked out what it's worth to them", 3],
+                ["There isn't a price yet", 0], ["Guessed, and I keep changing it", 2]] },
+    { category: "showing", text: "The dinner party test. Someone asks what you do. What happens?",
+      answers: [["I say it plainly and they get it", 3], ["I mention it, then change the subject", 1],
+                ["I explain, and it comes out long", 2], ["I say my old job, or nothing", 0]] },
+    { category: "found", text: "Your last customer or enquiry. How did she find you?",
+      answers: [["A friend or family member", 1], ["Found me online, never met me", 3],
+                ["Someone I know shared it", 2], ["I haven't had one yet", 0]] },
+    { category: "offer", text: "A stranger lands on your page. Does she know what to do next?",
+      answers: [["Yes. One clear thing to buy or book", 3], ["She'd see what I do, not what to do", 2],
+                ["She'd be a bit confused", 1], ["There's no page", 0]] },
+    { category: "showing", text: "The 11pm test. Putting yourself out there. How does it actually go?",
+      answers: [["Scared, and I do it anyway", 3], ["I plan it at 11pm. It's gone by morning", 1],
+                ["Bursts of brave, then I hide", 2], ["I can't. Not yet", 0]] },
+    { insight: true, key: "timeline", text: "When would you like strangers to be able to find you and buy from you?",
+      answers: [["In the next few weeks", null, { hot: true }], ["Before the end of the year", null],
+                ["Some day", null], ["Just curious for now", null]] },
+    { insight: true, key: "blocker", text: "What's the biggest thing in the way?",
+      answers: [["I don't know what I'd sell", null], ["I don't know how to build the page or the posts", null],
+                ["The fear. I talk myself out of it by morning", null], ["I'd like some help with this", null, { hot: true }]] }
+  ],
+
+  tiers: [
+    { min: 75, name: "Findable. Not yet paid.",
+      headline: "People can find you. The next fix turns that into money.",
+      means: "You've done the bit most women never get to. You show up, you've got a page, you can say what you sell. What's left is small and specific: one offer, said often enough that people say yes. Fix that and this stops being a hobby and starts paying you.",
+      wins: ["Say your one-sentence offer, price included, to three people this week. Count who asks a question back.",
+             "Put a price and one button on the thing you sell most. Take everything else off that page.",
+             "Pick a posting day. Keep it for four weeks, whatever happens."],
+      nextLine: "What you get next: a free 30-minute call with Alana. You leave with the one thing between you and being paid for this, named, and the first step to take that week. Email the word FOUND and she'll send times.",
+      cta: { text: "Email FOUND for call times", href: "mailto:alana@alanaarthurs.com?subject=FOUND" } },
+    { min: 40, name: "Two fixes from findable",
+      headline: "Real foundations. Two gaps stop strangers finding you.",
+      means: "You've built something real. Right now it only reaches people who already know you, and the offer isn't yet one sentence with a number on it. That's the difference between the odd order and a proper income. Once you can see the two gaps, they close fast.",
+      wins: ["Finish this on paper: I help ___ with ___ for £___.",
+             "Put one link everywhere so nobody has to hunt for you.",
+             "Post one plain thing this week saying what you do and who it's for."],
+      nextLine: "What you get next: a free 30-minute call with Alana. You leave knowing which of your three areas to fix first, and exactly how. Email the word FOUND and she'll send times.",
+      cta: { text: "Email FOUND for call times", href: "mailto:alana@alanaarthurs.com?subject=FOUND" } },
+    { min: 0, name: "Ready to be found",
+      headline: "What you've built is real. Nobody can see it yet. Fixable.",
+      means: "This is where nearly everyone starts. It's where Alana started. The capability is there, from years poured into work, kids, or someone else's plans. It just hasn't got a name, a page or a price on it yet. The first step takes ten minutes and costs nothing, and by tonight you'll have done it.",
+      wins: ["Tell one real person today, in one sentence, what you're building.",
+             "Write your receipts list: ten things you've actually run, fixed or held together. That's your skills page.",
+             "Finish this on paper: I help ___ with ___ for £___. Rough is fine."],
+      nextLine: "What you get next: The Only Way Is Up, Alana's newsletter, every other Sunday. One true story about fear and what it costs, and one thing to do before Monday so the week starts with you a step further on.",
+      cta: { text: "Join The Only Way Is Up", href: "https://www.growingwomeninbusiness.com" } }
+  ],
+
+  outcomes: []
+};
+
+/* =====================================================================
+   ENGINE: plain DOM, no libraries, sends nothing anywhere.
+   ===================================================================== */
+(function () {
+  const $ = (id) => document.getElementById(id);
+  const C = CONFIG;
+  const Q = C.questions.map((q) => ({
+    ...q,
+    answers: q.answers.map(([label, points, extra]) => ({ label, points, ...(extra || {}) }))
+  }));
+  const state = { i: 0, picks: new Array(Q.length).fill(null), person: null, utm: {} };
+  const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // UTM tags from the address bar, kept in memory only (for wiring up later)
+  try {
+    const params = new URLSearchParams(window.location.search);
+    ["utm_source", "utm_medium", "utm_campaign"].forEach((k) => { if (params.get(k)) state.utm[k] = params.get(k); });
+  } catch (e) { /* file:// or old browser: fine */ }
+
+  function show(id) {
+    document.querySelectorAll(".screen").forEach((s) => { s.hidden = s.id !== id; });
+    const target = document.querySelector("#" + id + " [data-focus]");
+    window.scrollTo(0, 0);
+    if (target) target.focus();
+  }
+
+  // ---- Screen 1
+  function renderStart() {
+    document.title = C.title + " | " + C.business;
+    $("start-title").textContent = C.title;
+    $("start-promise").textContent = C.promise;
+    $("consent-text").textContent = C.consentText;
+    $("start-btn").textContent = C.startButton;
+    const owner = $("owner");
+    const initials = C.owner.name.split(" ").map((w) => w[0]).join("").slice(0, 2);
+    owner.innerHTML = "";
+    const img = document.createElement("img");
+    img.src = C.owner.photo; img.alt = C.owner.photoAlt; img.width = 52; img.height = 52;
+    img.onerror = () => { const d = document.createElement("span"); d.className = "initials"; d.setAttribute("aria-hidden", "true"); d.textContent = initials; img.replaceWith(d); };
+    const text = document.createElement("div");
+    const s = document.createElement("strong"); s.textContent = C.owner.name;
+    const e = document.createElement("em"); e.textContent = C.owner.catchphrase;
+    text.append(s, e); owner.append(img, text);
+    const priv = $("privacy-line");
+    if (C.privacyUrl) {
+      priv.textContent = "Your result shows on screen as soon as you finish. ";
+      const a = document.createElement("a"); a.href = C.privacyUrl; a.textContent = "How we use your details";
+      priv.append(a, ".");
+    } else { priv.textContent = "Your result shows on screen as soon as you finish."; }
+    const foot = $("foot");
+    foot.textContent = C.owner.name + " · " + C.business + " · " + C.owner.catchphrase;
+  }
+
+  $("details").addEventListener("submit", (ev) => {
+    ev.preventDefault();
+    const name = $("first-name"), email = $("email");
+    let ok = true;
+    const setErr = (input, errId, msg) => {
+      $(errId).textContent = msg; input.setAttribute("aria-invalid", msg ? "true" : "false");
+      if (msg && ok) { input.focus(); ok = false; }
+    };
+    setErr(name, "first-name-error", name.value.trim() ? "" : "Please add your first name.");
+    setErr(email, "email-error", /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.value.trim()) ? "" : "Please add an email address, like name@example.com.");
+    if (!ok) return;
+    state.person = {
+      firstName: name.value.trim().split(" ")[0],
+      email: email.value.trim(),
+      marketingConsent: $("consent").checked
+    };
+    state.i = 0;
+    renderQuestion();
+    show("screen-question");
+  });
+
+  // ---- Screen 2
+  function renderQuestion() {
+    const q = Q[state.i];
+    const n = Q.length;
+    $("q-count").textContent = "Question " + (state.i + 1) + " of " + n;
+    const secsLeft = (n - state.i) * (C.secondsPerQuestion || 10);
+    $("q-time").textContent = secsLeft >= 60 ? "About " + Math.round(secsLeft / 60) + " min left" : "Nearly there";
+    const p = $("progress");
+    p.setAttribute("aria-valuemax", String(n));
+    p.setAttribute("aria-valuenow", String(state.i));
+    p.setAttribute("aria-valuetext", "Question " + (state.i + 1) + " of " + n);
+    $("progress-fill").style.width = Math.round((state.i / n) * 100) + "%";
+    $("q-text").textContent = q.text;
+    const help = $("q-help");
+    help.hidden = !q.help; help.textContent = q.help || "";
+    const box = $("answers");
+    box.innerHTML = "";
+    q.answers.forEach((a, k) => {
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "answer";
+      b.setAttribute("aria-pressed", state.picks[state.i] === k ? "true" : "false");
+      const key = document.createElement("span"); key.className = "key"; key.setAttribute("aria-hidden", "true"); key.textContent = String(k + 1);
+      const lab = document.createElement("span"); lab.textContent = a.label;
+      b.append(key, lab);
+      b.addEventListener("click", () => pick(k, b));
+      box.append(b);
+    });
+    $("key-max").textContent = String(q.answers.length);
+    $("back-btn").style.visibility = state.i === 0 ? "hidden" : "visible";
+  }
+
+  function pick(k, btn) {
+    state.picks[state.i] = k;
+    document.querySelectorAll("#answers .answer").forEach((b) => b.setAttribute("aria-pressed", "false"));
+    if (btn) btn.setAttribute("aria-pressed", "true");
+    const advance = () => {
+      if (state.i < Q.length - 1) { state.i += 1; renderQuestion(); $("q-text").focus(); }
+      else { renderResult(); show("screen-result"); }
+    };
+    reduceMotion ? advance() : setTimeout(advance, 220);
+  }
+
+  $("back-btn").addEventListener("click", () => {
+    if (state.i > 0) { state.i -= 1; renderQuestion(); $("q-text").focus(); }
+  });
+
+  document.addEventListener("keydown", (ev) => {
+    if ($("screen-question").hidden) return;
+    if (ev.target && /^(INPUT|TEXTAREA|SELECT)$/.test(ev.target.tagName)) return;
+    const k = parseInt(ev.key, 10);
+    if (k >= 1 && k <= Q[state.i].answers.length) {
+      ev.preventDefault();
+      pick(k - 1, document.querySelectorAll("#answers .answer")[k - 1]);
+    }
+  });
+
+  // ---- Scoring
+  const picked = (qi) => (state.picks[qi] === null ? null : Q[qi].answers[state.picks[qi]]);
+  const band = (pct) => (pct >= C.categoryBands.high ? "high" : pct >= C.categoryBands.mid ? "mid" : "low");
+
+  function scoreIt() {
+    const hot = Q.some((q, qi) => picked(qi) && picked(qi).hot);
+    const insights = {};
+    Q.forEach((q, qi) => { if (q.insight && picked(qi)) insights[q.key] = picked(qi).label; });
+
+    if (C.mode === "type") {
+      const counts = {}; let total = 0;
+      C.outcomes.forEach((o) => { counts[o.id] = 0; });
+      Q.forEach((q, qi) => { const a = picked(qi); if (a && a.outcome) { counts[a.outcome] += 1; total += 1; } });
+      let best = C.outcomes[0];
+      C.outcomes.forEach((o) => { if (counts[o.id] > counts[best.id]) best = o; }); // ties: earlier outcome wins
+      const mix = C.outcomes.map((o) => ({ id: o.id, name: o.name, pct: total ? Math.round((counts[o.id] / total) * 100) : 0 }));
+      return { mode: "type", outcome: best, mix, hot, insights };
+    }
+
+    let got = 0, max = 0;
+    const cats = C.categories.map((c) => ({ ...c, got: 0, max: 0 }));
+    Q.forEach((q, qi) => {
+      if (q.insight) return;
+      const qMax = Math.max(...q.answers.map((a) => a.points || 0));
+      const a = picked(qi); const pts = a ? (a.points || 0) : 0;
+      got += pts; max += qMax;
+      const cat = cats.find((c) => c.id === q.category);
+      if (cat) { cat.got += pts; cat.max += qMax; }
+    });
+    const pct = max ? Math.round((got / max) * 100) : 0;
+    cats.forEach((c) => { c.pct = c.max ? Math.round((c.got / c.max) * 100) : 0; c.band = band(c.pct); });
+    const tier = C.tiers.find((t) => pct >= t.min && (!t.requiresHot || hot)) || C.tiers[C.tiers.length - 1];
+    // Quick wins: weakest category first, then the tier's own wins to fill to three
+    const wins = [];
+    [...cats].sort((a, b) => a.pct - b.pct).forEach((c) => { const t = c.tips && c.tips[c.band]; if (t && !wins.includes(t)) wins.push(t); });
+    (tier.wins || []).forEach((w) => { if (!wins.includes(w)) wins.push(w); });
+    return { mode: C.mode, pct, got, max, cats, tier, wins: wins.slice(0, 3), hot, insights };
+  }
+
+  // ---- Screen 3
+  function bar(name, pct, note) {
+    const li = document.createElement("li");
+    const head = document.createElement("div"); head.className = "bar-head";
+    const n = document.createElement("span"); n.textContent = name;
+    const v = document.createElement("span"); v.textContent = pct + "%";
+    head.append(n, v);
+    const track = document.createElement("div"); track.className = "track"; track.setAttribute("aria-hidden", "true");
+    const fill = document.createElement("div"); fill.className = "fill"; fill.style.width = Math.max(pct, 2) + "%";
+    track.append(fill); li.append(head, track);
+    if (note) { const p = document.createElement("p"); p.className = "bar-note"; p.textContent = note; li.append(p); }
+    return li;
+  }
+
+  function renderResult() {
+    const r = scoreIt();
+    state.result = r;
+    const who = state.person ? state.person.firstName : "";
+    $("r-greeting").textContent = who ? who + ", here's where you are." : "Here's where you are.";
+    const bars = $("r-bars"); bars.innerHTML = "";
+    const wins = $("r-wins"); wins.innerHTML = "";
+    let block;
+    if (r.mode === "type") {
+      block = r.outcome;
+      $("r-title").textContent = block.headline;
+      $("r-score-wrap").hidden = true;
+      $("r-tier").textContent = "You're " + block.name;
+      $("r-bars-title").textContent = "Your mix";
+      r.mix.forEach((m) => bars.append(bar(m.name, m.pct)));
+      (block.wins || []).slice(0, 3).forEach((w) => { const li = document.createElement("li"); li.textContent = w; wins.append(li); });
+    } else {
+      block = r.tier;
+      $("r-title").textContent = block.headline;
+      $("r-score-wrap").hidden = false;
+      $("r-score").textContent = r.pct + "%";
+      $("r-tier").textContent = block.name;
+      $("r-bars-title").textContent = "Your score by area";
+      r.cats.forEach((c) => bars.append(bar(c.name, c.pct, c.notes && c.notes[c.band])));
+      r.wins.forEach((w) => { const li = document.createElement("li"); li.textContent = w; wins.append(li); });
+    }
+    $("r-means").textContent = block.means;
+    $("r-next-line").textContent = block.nextLine;
+    const cta = $("r-cta"); cta.textContent = block.cta.text; cta.href = block.cta.href;
+    const d = $("r-disclaimer"); d.hidden = !C.disclaimer; d.textContent = C.disclaimer || "";
+    const rec = buildLeadRecord(r);
+    rec.wins = Array.from(document.querySelectorAll("#r-wins li")).map((li) => li.textContent);
+    fetch("/api/scorecard", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(rec) }).catch(() => {});
+  }
+
+  // What a form tool would receive once this is wired up (a later, separate job).
+  function buildLeadRecord(r) {
+    const rec = {
+      firstName: state.person && state.person.firstName,
+      email: state.person && state.person.email,
+      marketingConsent: !!(state.person && state.person.marketingConsent),
+      mode: r.mode, hotLead: r.hot, insights: r.insights,
+      utm: state.utm, completedAt: new Date().toISOString()
+    };
+    if (r.mode === "type") { rec.outcome = r.outcome.name; }
+    else {
+      rec.scorePercent = r.pct; rec.tier = r.tier.name;
+      rec.categories = Object.fromEntries(r.cats.map((c) => [c.name, c.pct]));
+    }
+    return rec;
+  }
+
+  $("retake-btn").addEventListener("click", () => {
+    state.picks.fill(null); state.i = 0; renderQuestion(); show("screen-question");
+  });
+
+  renderStart();
+})();
+</script>
+</body>
+</html>
