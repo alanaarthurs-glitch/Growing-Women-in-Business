@@ -6,7 +6,8 @@ The site for [growingwomeninbusiness.com](https://www.growingwomeninbusiness.com
 
 | Page | Purpose |
 |---|---|
-| `public/index.html` | Home: hero, who it's for, the method, about, the quiz, ways in, final CTA. |
+| `public/index.html` | Home: split hero with photo, proof strip, who it's for, what you leave with, how AI fits, CLIMB, about, the Cohort offer, final CTA. Loads no PayPal SDK. |
+| `public/quiz.html` | The Future Maker archetype quiz, moved off the home page. Loads `/js/config.js` and `/js/quiz.js`. |
 | `public/circle.html` | The Circle, £10 a month, PayPal subscription. |
 | `public/cohort.html` | The Future Maker Cohort, £297 for six weeks, PayPal pay-now. |
 | `public/push.html` | The Push, currently paused, waitlist only, no prices. |
@@ -15,13 +16,13 @@ The site for [growingwomeninbusiness.com](https://www.growingwomeninbusiness.com
 | `public/whats-next.html` | Links out to Alana's wider world (alanaarthurs.com, Vector Rope Access). |
 | `public/404.html` | Not found page. |
 
-Every page shares one head, topbar, footer and newsletter panel pattern, and loads `/js/nav.js` and `/js/newsletter-panel.js` before `</body>`. The apply and welcome pages also load `/js/config.js` first, since they read it.
+Every page shares one head, topbar, footer and newsletter panel pattern, and loads `/js/nav.js` and `/js/newsletter-panel.js` before `</body>`. The apply, welcome and quiz pages also load `/js/config.js` first, since they read it. The topbar button on every page is "Get my score", pointing at `/scorecard`.
 
 ## Integrations
 
 - **Notion**, three databases under 📥 Website Leads: Applications, Newsletter Signups, CRM — Contacts. Every write is best-effort: if the Notion call fails, the request still succeeds and the lead is logged locally.
 - **Resend**, sends the archetype PDF after the quiz, when someone leaves their email against a result.
-- **PayPal**: a subscription button for The Circle, a hosted pay-now button for the Cohort. Both redirect to `welcome.html` on approval. Neither is touched by anything server-side; the plan ID and client ID live in the page markup.
+- **PayPal**: a subscription button for The Circle, a hosted pay-now button for the Cohort. Both redirect to `welcome.html` on approval. Neither is touched by anything server-side; the plan ID and client ID live in the page markup. The home page no longer loads the PayPal SDK: The Circle is a quiet card there that links through to `circle.html`, and the Cohort's pay-now form is a plain POST that needs no SDK.
 - **Local JSONL fallback**, written to `data/` (gitignored), one file per form: `applications.jsonl`, `newsletter.jsonl`, `first-actions.jsonl`. This is a backup, not the record of truth; Notion is.
 
 ## Environment variables
@@ -63,7 +64,7 @@ There's no single source of truth to edit, prices are written into the page copy
 1. `public/circle.html` or `public/cohort.html`: the `.price` line in the offer box, and any small print near it (instalments, "per month", and so on).
 2. The same file's JSON-LD `Product`/`Offer` block in the `<head>`.
 3. The PayPal button: The Circle's subscription plan ID and the Cohort's hosted button ID are set by Alana in the PayPal dashboard, not in this repo. Changing the price shown on the page does not change what PayPal actually charges, the two have to be kept in step by hand.
-4. Check `public/index.html`'s "Ways in" cards, which repeat both prices.
+4. Check `public/index.html`, which repeats the Cohort price in its offer card and The Circle's price in the quiet card under it.
 
 ## The config file
 
