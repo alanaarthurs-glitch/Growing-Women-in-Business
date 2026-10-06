@@ -1224,6 +1224,9 @@ hr.divider {
 
 .offer-note:last-of-type { margin-bottom: 0; }
 
+/* The Cohort waitlist email form, inside the offer card and the offer box. */
+.newsletter-panel-form.offer-waitlist-form { margin-top: 1.5rem; }
+
 .offer-details-link {
   display: inline-block;
   margin-top: 1.25rem;

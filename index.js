@@ -73,7 +73,7 @@ const ARCHETYPE_PDF_KEYS = {
 
 const KNOWN_SOURCES = [
   "Home Quiz", "Circle Welcome", "Cohort Welcome", "Free Newsletter Card",
-  "Push Waitlist", "Newsletter Panel", "Findable Scorecard",
+  "Push Waitlist", "Cohort Waitlist", "Newsletter Panel", "Findable Scorecard",
 ];
 
 const KNOWN_APPLY_CATEGORIES = ["Pricing", "Visibility", "The Avoided Conversation"];
@@ -537,7 +537,7 @@ function scorecardEmailHtml(firstName, score, tier, categories, wins) {
   if (tier === "Ready to be found") {
     next = `<p>Every other Sunday I send The Only Way Is Up: one true story about fear and what it costs, and one thing to do before Monday. You're on it now. Reply and tell me the one sentence you said out loud, if you like. I read every one.</p>`;
   } else {
-    next = `<p>The fastest way through this is a free 30-minute call where we look at your three areas together and pick the one fix. Book it here, pick any time that suits you: <a href="https://calendly.com/alana-arthurs/findable-call?utm_source=scorecard-email&amp;utm_medium=email&amp;utm_campaign=findable-score">calendly.com/alana-arthurs/findable-call</a>. The next Future Maker Cohort starts on 1 October, and this is the conversation that decides whether it's right for you.</p>`;
+    next = `<p>The fastest way through this is a free 30-minute call where we look at your three areas together and pick the one fix. Book it here, pick any time that suits you: <a href="https://calendly.com/alana-arthurs/findable-call?utm_source=scorecard-email&amp;utm_medium=email&amp;utm_campaign=findable-score">calendly.com/alana-arthurs/findable-call</a>. The waitlist for the next Future Maker Cohort is open too, and this is the conversation that decides whether it's right for you.</p>`;
   }
   return `<p>Hi ${name},</p>` +
     `<p>You scored <strong>${score}%</strong>: <strong>${tier}</strong>.</p>` +

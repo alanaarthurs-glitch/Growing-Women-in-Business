@@ -1,5 +1,28 @@
 # The Future Maker Cohort, saved for later
 
+## 6 October 2026: back on the site as a waitlist
+
+Alana asked for the cohort to be a waitlist ("the future maker cohort on the website needs to be a waitlist"). Only part of the 25 September removal ever reached `main`: `public/cohort.html` moved here, but the homepage card, the nav links on every page, the sitemap entry and the scorecard email sentence all stayed, so every "The Cohort" link pointed at a page that no longer existed once commit `6eb6d96` (5 October) deployed. The waitlist version fixes that.
+
+What's live now:
+
+- `public/cohort.html` is a copy of the saved page with the PayPal form, the JSON-LD price and the 1 October date taken out. The offer box (`#waitlist`) has an email form posting to `/api/newsletter` with source `Cohort Waitlist`, and the call button stays as the second option. The Babs proof block now carries the "From my one-to-one mentoring" label, per the Product OS claims rules.
+- The homepage keeps its Cohort card and proof strip, with "Waitlist open" in place of the date, a waitlist form in place of "Pay £297 now", and the "first time I'm running it" line removed (it may not be true of the next intake).
+- The scorecard result email says the waitlist is open instead of "starts on 1 October".
+- Waitlist signups land in the Newsletter Signups database and the CRM with source `Cohort Waitlist`, the same way The Push waitlist does.
+
+`cohort.html` in this folder is still the pay-now version, untouched.
+
+### Opening the next intake
+
+1. Copy the offer box from `cohort.html` here (price, "one payment", PayPal form) over the `#waitlist` box in `public/cohort.html`, and put back the JSON-LD `Product`/`Offer` block in its `<head>`.
+2. Put the start date back in the hero `small-line`, the homepage `facts-row` and the proof strip tile.
+3. Swap the homepage waitlist form back to "Pay £…" using the saved offer card below.
+4. Check the date, seat count and price against the Product OS before it goes live. The Year One Roadmap plans a higher price for the second cohort, so don't assume £297.
+5. Email the waitlist first (Newsletter Signups, filter Source = `Cohort Waitlist`) before the seats go anywhere else. The site promises that.
+
+## 25 September 2026: taken off the site
+
 Taken off the site on 25 September 2026 at Alana's request ("Remove the cohort and have the offer as the AI consultant and the community", then "those need to be saved so that we can add them at a different time"). Nothing in this folder is served. It is here so the cohort can go back up without rebuilding it.
 
 Everything is also in git history: commit `4ffd776` (25 September 2026) is the last version with the cohort live.
