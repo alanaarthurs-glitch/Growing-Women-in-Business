@@ -8,7 +8,7 @@ The site for [growingwomeninbusiness.com](https://www.growingwomeninbusiness.com
 |---|---|
 | `public/index.html` | Home: split hero with photo, proof strip, who it's for, what you leave with, how AI fits, CLIMB, about, the Cohort offer, final CTA. Loads no PayPal SDK. |
 | `public/quiz.html` | The Future Maker archetype quiz, moved off the home page. Loads `/js/config.js` and `/js/quiz.js`. |
-| `public/circle.html` | The Circle, £10 a month, PayPal subscription. |
+| `public/circle.html` | The Circle, £120 for the year, PayPal subscription. |
 | `public/cohort.html` | The Future Maker Cohort, £297 for six weeks, PayPal pay-now. |
 | `public/push.html` | The Push, currently paused, waitlist only, no prices. |
 | `public/apply.html` | The fit-check form for the Cohort. Posts to `/api/apply`. |
@@ -84,7 +84,7 @@ Leave a value empty and the affected page falls back to plain text ("Alana will 
 These aren't blocked on code, they're waiting on Alana:
 
 1. Colour and type direction: keep ink/pink/mint with Cormorant Garamond, or move to the Brand OS's navy/rose/sage with Archivo Black.
-2. Confirm £10 a month is the intended Circle price, and update Notion to match (it still says £39 in places).
+2. The Circle is £120 for the year (Alana, 6 October 2026). The page says so, but the PayPal button still uses the old £10 monthly plan (`P-9B8548878P2205600NJOPVTA`). Create a yearly £120 plan in the PayPal dashboard and swap its plan ID into `public/circle.html` (the container `id`, the `getElementById` call, `plan_id` and the `render` selector) before this goes live.
 3. Where The Circle actually lives (Skool, the Facebook group, or elsewhere) and the join link a new subscriber gets.
 4. A booking tool for the Cohort welcome call and the Circle discovery call.
 5. Whether to add a real instalment payment link for the Cohort's three roughly-£100 payments, or drop the line from the page.
