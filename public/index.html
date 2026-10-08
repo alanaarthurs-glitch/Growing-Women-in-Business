@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en-GB">
+<html lang="en-GB" class="no-js">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -17,8 +17,9 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500;1,600&family=Inter:wght@400;500;600;700&display=swap" />
-  <link rel="stylesheet" href="/css/site.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600;800&family=Instrument+Serif:ital@1&family=Inter:wght@400;600&display=swap" />
+  <link rel="preload" as="image" href="/images/alana-cutout.webp" fetchpriority="high" type="image/webp" />
+  <link rel="stylesheet" href="/css/home.css" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -34,93 +35,136 @@
     ]
   }
   </script>
+  <script>document.documentElement.className = document.documentElement.className.replace('no-js', 'js');</script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
 
   <header class="topbar">
-    <a href="/" class="wordmark" aria-label="Growing Women in Business, home">
-      <img src="/images/logo-168.png" srcset="/images/logo-168.png 1x, /images/logo-336.png 2x" alt="Growing Women in Business" class="logo-mark" width="84" height="84" />
-    </a>
-    <div class="topbar-actions">
-      <a href="/scorecard" class="btn btn-nav">Get my score</a>
+    <div class="topbar-inner">
+      <a href="/" class="wordmark"><img src="/images/mark.svg" alt="" width="36" height="36" class="mark" />growing women in business</a>
+      <nav id="site-nav" class="site-nav" aria-label="Main">
+        <ul>
+          <li><a href="#what-you-get">what you get</a></li>
+          <li><a href="#method">how it works</a></li>
+          <li><a href="#about">about alana</a></li>
+          <li><a href="/cards">draw a card</a></li>
+          <li><a href="#offer">work with me</a></li>
+          <li><a href="/circle.html">the circle</a></li>
+        </ul>
+      </nav>
+      <a href="/scorecard?utm_source=website&amp;utm_medium=hero&amp;utm_campaign=findable-score" class="btn">get my score</a>
       <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
         <span></span><span></span><span></span>
       </button>
     </div>
-    <nav id="site-nav" class="site-nav" aria-label="Main">
-      <ul>
-        <li><a href="#build" class="navlink">What we build</a></li>
-        <li><a href="#ai" class="navlink">How AI fits</a></li>
-        <li><a href="#method" class="navlink">The method</a></li>
-        <li><a href="#about" class="navlink">About Alana</a></li>
-        <li><a href="/cards" class="navlink">Draw a card</a></li>
-        <li><a href="#offer" class="navlink">Work with me</a></li>
-      </ul>
-    </nav>
   </header>
 
   <main id="main">
 
-    <header class="hero hero-home">
-      <div class="hero-blobs" aria-hidden="true">
-        <span class="blob blob-teal"></span><span class="blob blob-gold"></span>
-        <span class="blob blob-pink"></span><span class="blob blob-lilac"></span>
-        <span class="sparks"></span>
-      </div>
-      <div class="hero-split">
-        <div class="hero-copy">
-          <span class="eyebrow">AI consultant and mentor &middot; Cornwall</span>
-          <h1>You made everyone else's thing work. <em>Now build yours, with AI.</em></h1>
-          <p class="subhead">I'm Alana. One to one, I show you how to use AI to build the website, the offer and the posts, and to run the admin that eats your evenings. The Circle is the room of women that keeps you doing it, for &pound;10 a month.</p>
-          <a href="/scorecard?utm_source=website&amp;utm_medium=hero&amp;utm_campaign=findable-score" class="btn">Get my findable score</a>
-          <span class="small-line">Free &middot; 2 minutes &middot; shows the one gap costing you customers</span>
-          <a href="https://calendly.com/alana-arthurs/findable-call?utm_source=website&amp;utm_medium=hero&amp;utm_campaign=findable-call" class="hero-secondary-link" target="_blank" rel="noopener">Or book a free 30-minute call</a>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-grid">
+        <div class="hero-text">
+          <p class="hero-line">ai consultant and mentor, cornwall</p>
+          <h1 id="hero-title">built everyone else's thing. now build <em>yours</em>.</h1>
+          <p class="hero-lede">I'm Alana. One to one, I show you how to use AI to build the website, the offer and the posts, and to run the admin that eats your evenings. The Circle is the room of women that keeps you doing it, for &pound;10 a month.</p>
+          <div class="hero-cta">
+            <a href="/scorecard?utm_source=website&amp;utm_medium=hero&amp;utm_campaign=findable-score" class="btn">get my score</a>
+            <p class="small">free, 2 minutes, shows the one gap costing you customers</p>
+            <a href="https://calendly.com/alana-arthurs/findable-call?utm_source=website&amp;utm_medium=hero&amp;utm_campaign=findable-call" class="hero-call" target="_blank" rel="noopener">or book a free 30-minute call</a>
+          </div>
         </div>
-        <figure class="hero-figure">
-          <img src="/images/alana-hero.webp" alt="Alana Arthurs, founder of Growing Women in Business" class="hero-photo" width="1333" height="2000" fetchpriority="high" />
-          <figcaption class="photo-chip">Alana Arthurs, founder</figcaption>
+        <figure class="hero-media">
+          <picture>
+            <source type="image/webp" srcset="/images/alana-cutout-600.webp 600w, /images/alana-cutout.webp 1000w" sizes="(min-width: 900px) 45vw, 100vw" />
+            <img src="/images/alana-on-cream.jpg" alt="Alana Arthurs, smiling" width="1000" height="1325" fetchpriority="high" />
+          </picture>
+          <figcaption class="hero-label">Alana. Cornwall. (a ten-second hello on video goes here)</figcaption>
         </figure>
       </div>
-    </header>
+    </section>
 
-    <section class="proof-strip">
-      <div class="proof-grid">
-        <div class="proof-tile">
-          <span class="figure">&pound;167,000 a month</span>
-          <p>the rope access firm I helped grow, from the back office</p>
-        </div>
-        <div class="proof-tile">
-          <span class="figure">Built with AI</span>
-          <p>this website, the scorecard and every email you'll get. Made by me in days, not months.</p>
-        </div>
-        <div class="proof-tile">
-          <span class="figure">&pound;10 a month</span>
-          <p>The Circle. A weekly live, a fear buddy and a room that holds you to the brave thing.</p>
-        </div>
-        <div class="proof-tile">
-          <span class="figure">Grew up in care</span>
-          <p>now a company co-director. I know the climb because I've made it.</p>
+    <section id="grid" aria-label="At a glance">
+      <div class="wrap">
+        <div class="bento">
+
+          <div class="tile tile-score reveal">
+            <span class="kicker">the two-minute check</span>
+            <h2>can anybody <em>find</em> what you've built?</h2>
+            <p>Eleven questions. Your score out of 100, the one gap costing you customers, and the first fix to make tonight.</p>
+            <div class="ring-row">
+              <div class="ring" aria-hidden="true">
+                <svg viewBox="0 0 120 120" fill="none">
+                  <circle class="ring-track" cx="60" cy="60" r="52" stroke-width="10" />
+                  <circle class="ring-bar" id="ring-bar" cx="60" cy="60" r="52" stroke-width="10" stroke-linecap="butt" stroke-dasharray="326.7" stroke-dashoffset="326.7" />
+                </svg>
+                <div class="ring-num"><b>73</b><span>example score</span></div>
+              </div>
+              <a href="/scorecard?utm_source=website&amp;utm_medium=grid&amp;utm_campaign=findable-score" class="btn-cream">get my score</a>
+            </div>
+            <p class="small">scores taken so far: shown here once the number is real</p>
+          </div>
+
+          <div class="tile tile-white tile-proof reveal">
+            <div class="figure">&pound;167,000</div>
+            <p>a month, the rope access firm I helped grow from the back office</p>
+          </div>
+
+          <div class="tile tile-ai reveal">
+            <h3>built with AI, in days</h3>
+            <p>This website, the scorecard and every email you'll get. Made by me. If you can type a message to a friend, you can do this.</p>
+            <a href="/ai-consulting.html">see how one-to-one AI consulting works</a>
+          </div>
+
+          <div class="tile tile-white tile-letter reveal">
+            <span class="kicker">the only way is up, every other sunday</span>
+            <h3>you don't need another course</h3>
+            <p>The certificate isn't the thing that's stopping you. One true story about fear and what it costs, and one thing to do before Monday.</p>
+            <form class="newsletter-panel-form nl-row" data-source="Newsletter Panel">
+              <label for="nl-home-email" class="visually-hidden">Email address</label>
+              <input id="nl-home-email" type="email" name="email" placeholder="you@email.com" required autocomplete="email" />
+              <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" />
+              <button type="submit" class="btn">send me the next one</button>
+            </form>
+          </div>
+
+          <div class="tile tile-wins reveal">
+            <span class="kicker">friday wins, from the room</span>
+            <blockquote><p>You are honestly an angel by the way.</p><cite>Amy, on working with Alana</cite></blockquote>
+            <blockquote><p>A great mentor doesn't just share knowledge, they help you see the potential in yourself, even when you can't.</p><cite>Babs, one-to-one mentoring</cite></blockquote>
+            <p class="note">Circle members' Friday wins will land here, dated, first names only, updated weekly. Not every week lands, and that gets said too.</p>
+          </div>
+
+          <div class="tile tile-white tile-cards reveal">
+            <div>
+              <span class="kicker">one small brave thing</span>
+              <h3>draw your <em>card</em></h3>
+              <p>A quote and an easy action, every day. Two decks: the Daily Pep, and the Fear Buddy for when you're stuck.</p>
+            </div>
+            <div class="cohort-actions">
+              <a href="/cards" class="btn">draw a card</a>
+            </div>
+          </div>
+
         </div>
       </div>
     </section>
 
-    <section class="blush" id="who">
-      <div class="inner center-head">
-        <span class="eyebrow">Who this is for</span>
-        <h2>Is this you?</h2>
-        <div class="for-split">
-          <div class="for-col">
-            <h3>This is for you if</h3>
-            <ul>
+    <section id="who" class="section">
+      <div class="wrap reveal">
+        <h2>is this <em>you</em>?</h2>
+        <div class="who-cols">
+          <div>
+            <h3>this is for you if</h3>
+            <ul class="sq">
               <li>You've poured years into a job, your kids, or a partner, and none of it has your name on it yet.</li>
               <li>You've thought about starting more than once, looked things up late at night, then talked yourself out of it by morning.</li>
               <li>You want a push and a room of women, not another course explaining theory you already know.</li>
             </ul>
           </div>
-          <div class="for-col not-for">
-            <h3>This isn't for you if</h3>
-            <ul>
+          <div>
+            <h3>this isn't for you if</h3>
+            <ul class="sq">
               <li>You want it done for you, not something you build yourself.</li>
               <li>You're after a vision board and good vibes, not a room that holds you to the action.</li>
               <li>You're not willing to do one scary thing this month.</li>
@@ -130,194 +174,169 @@
       </div>
     </section>
 
-    <section class="white" id="build">
-      <div class="inner center-head">
-        <span class="eyebrow">What we build</span>
-        <h2>The practical side, with AI doing the heavy lifting</h2>
-        <div class="leave-grid">
-          <div class="leave-card">
-            <h3>A website people can find</h3>
-            <p>Built with you, on a screen you can see, with AI writing the first draft of every page. This site was made the same way.</p>
-          </div>
-          <div class="leave-card">
-            <h3>One thing to buy, with a price on it</h3>
-            <p>Not five ideas. One sentence: I help ___ with ___ for &pound;___. We get it out of your head and on to the page.</p>
-          </div>
-          <div class="leave-card">
-            <h3>A plan for showing up</h3>
-            <p>What to post and when, plus the prompts that write the rough draft, so you only have to be brave, not clever.</p>
-          </div>
-          <div class="leave-card">
-            <h3>A back office that runs itself</h3>
-            <p>Bookings, invoices, follow-ups and the emails you keep putting off, set up once so they stop eating your evenings.</p>
-          </div>
-          <div class="leave-card">
-            <h3>Everything, kept</h3>
-            <p>Every prompt and every recording, so you can do it again without me.</p>
-          </div>
-        </div>
-        <p class="leave-closing">The practical work and the fear work run together, not one after the other. That's the difference from a course.</p>
+    <section id="what-you-get" class="section white">
+      <div class="wrap reveal">
+        <h2>what you leave with is <em>yours</em></h2>
+        <ol class="leave">
+          <li><span class="n">1</span><div><strong>A website people can find</strong><p>Built with you, on a screen you can see, with AI writing the first draft of every page. This site was made the same way.</p></div></li>
+          <li><span class="n">2</span><div><strong>One thing to buy, with a price on it</strong><p>Not five ideas. One sentence: I help ___ with ___ for &pound;___. We get it out of your head and on to the page.</p></div></li>
+          <li><span class="n">3</span><div><strong>A plan for showing up</strong><p>What to post and when, plus the prompts that write the rough draft, so you only have to be brave, not clever.</p></div></li>
+          <li><span class="n">4</span><div><strong>A back office that runs itself</strong><p>Bookings, invoices, follow-ups and the emails you keep putting off, set up once so they stop eating your evenings.</p></div></li>
+          <li><span class="n">5</span><div><strong>Everything, kept</strong><p>Every prompt and every recording, so you can do it again without me.</p></div></li>
+        </ol>
+        <p class="closing">The practical work and the fear work run together, not one after the other. That's the difference from a course.</p>
       </div>
     </section>
 
-    <section class="ai-band" id="ai">
-      <div class="ai-inner">
-        <span class="eyebrow">How AI fits</span>
-        <h2>AI is nothing more than asking for help</h2>
-        <p>You don't need to be technical. You need to know what to ask for, and I'll show you, one prompt at a time, on a screen you can see. I run my whole business this way: the back office of a rope access firm, this website, the scorecard, the emails. If you can type a message to a friend, you can do this.</p>
-        <a href="/scorecard" class="btn btn-secondary">See it work: get my findable score</a>
-        <span class="small-line">Already running a business, or building one on your own? <a href="/ai-consulting.html">See how one-to-one AI consulting works.</a></span>
+    <section id="method" class="section navy">
+      <div class="wrap reveal">
+        <h2>the method underneath: CLIMB</h2>
+        <div class="climb">
+          <div><span class="L">C</span><h3>Calm the Body</h3><p>Bring the nervous system down, together. You can't do the brave thing from fight-or-flight.</p></div>
+          <div><span class="L">L</span><h3>Land It</h3><p>Say the actual thing, out loud, in public. Not the vague version, the actual number, post, or conversation.</p></div>
+          <div><span class="L">I</span><h3>In It Together</h3><p>Never done alone. A fear buddy watches the scary thing happen, and says so.</p></div>
+          <div><span class="L">M</span><h3>Move</h3><p>Do it now. The smallest true version, today. Smaller still counts.</p></div>
+          <div><span class="L">B</span><h3>Bank It</h3><p>Prove it worked. Log it, in public, proof the other side wasn't as bad as it looked.</p></div>
+        </div>
       </div>
     </section>
 
-    <section class="white" id="method">
-      <div class="inner center-head">
-        <span class="eyebrow">The method</span>
-        <h2>The day runs on CLIMB</h2>
-        <p class="lede">Five steps, one day: the mind-body reset, goal setting and life planning, money and financial planning, the business chat, AI wired into your business, and a Q and A before you leave. Each step works on you first, then on the business, because the business grows out of you and not the other way round.</p>
-        <div class="climb-word" aria-hidden="true">
-          <span class="climb-letter-big">C</span>
-          <span class="climb-letter-big">L</span>
-          <span class="climb-letter-big">I</span>
-          <span class="climb-letter-big">M</span>
-          <span class="climb-letter-big">B</span>
+    <section id="about" class="section">
+      <div class="wrap about reveal">
+        <img src="/images/alana-on-cream.jpg" alt="Alana Arthurs" width="1000" height="1325" />
+        <div>
+          <span class="kicker">alana arthurs, ai consultant and mentor</span>
+          <p>I grew up in foster care in Cornwall. Years later I came into my partner's rope access business, found the holes (an accountant, a CRM, Cyber Essentials) and helped grow it to &pound;167,000 a month from the back office. Fixing the holes in one business showed me I could fix them in hundreds. Now I do it for women who've spent years building someone else's thing. The practical side is where AI comes in: the website, the offer, the posts, done in weeks. The other side is the part nobody else touches, the fear that talks you out of it by morning.</p>
+          <p class="about-close">I'm not stood above you explaining. I'm sat beside you pointing.</p>
         </div>
-        <div class="climb-grid">
-          <div class="climb-step">
-            <span class="letter">C</span>
-            <h3>Calm the Body</h3>
-            <p>The mind-body reset. Nothing gets decided from fight-or-flight. A walk or a breath, then an honest look at what you're carrying.</p>
-            <p class="where">Then the business gets the same: the numbers, and what you're actually selling today. Facts, no story.</p>
-          </div>
-          <div class="climb-step">
-            <span class="letter">L</span>
-            <h3>Land It</h3>
-            <p>Goal setting and life planning. What the business is for, and the number that would change things. Then the fear script in its exact words, and whose voice it is.</p>
-            <p class="where">Then one sentence: I help ___ with ___ for &pound;___. Your price, said out loud and tested against what you actually need to live on.</p>
-          </div>
-          <div class="climb-step">
-            <span class="letter">I</span>
-            <h3>In It Together</h3>
-            <p>The business chat. You're not doing this into thin air. The years you gave everyone else's thing, turned into named skills, and an honest talk about what's in the way.</p>
-            <p class="where">Then AI wired into your business, on a screen you can see. Website, offer, posts, back office. You type. You keep every prompt.</p>
-          </div>
-          <div class="climb-step">
-            <span class="letter">M</span>
-            <h3>Move</h3>
-            <p>The scary thing, done in the room, today, with me there. Not next month.</p>
-            <p class="where">The page goes live and the price goes public. Something with your name on it exists before you leave.</p>
-          </div>
-          <div class="climb-step">
-            <span class="letter">B</span>
-            <h3>Bank It</h3>
-            <p>What fear said against what actually happened, written down. Your own ten-minute daily practice, and a Q and A for everything you've been afraid to ask.</p>
-            <p class="where">Then the money plan: what the business must earn by when, and the numbers to watch. Thirty days of check-ins with me, and The Circle as the floor under you.</p>
-          </div>
-        </div>
-        <p class="leave-closing">Mentoring, not therapy. If something comes up on the day that belongs with a specialist, I'll say so, and help you find them.</p>
       </div>
     </section>
 
-    <section class="blush" id="about">
-      <div class="inner">
-        <div class="about-wrap">
-          <img src="/images/alana-hero.webp" alt="Alana Arthurs" class="about-photo" width="1333" height="2000" />
-          <div class="about-text">
-            <span class="name-line">Alana Arthurs &middot; AI consultant and mentor</span>
-            <p>I grew up in foster care in Cornwall. Years later I came into my partner's rope access business, found the holes (an accountant, a CRM, Cyber Essentials) and helped grow it to &pound;167,000 a month from the back office. Fixing the holes in one business showed me I could fix them in hundreds. Now I do it for women who've spent years building someone else's thing. The practical side is where AI comes in: the website, the offer, the posts, done in weeks. The other side is the part nobody else touches, the fear that talks you out of it by morning. I'm not stood above you explaining. I'm sat beside you pointing.</p>
-          </div>
-        </div>
-
-        <span class="proof-label">From my one-to-one mentoring</span>
-        <div class="quote-block">
-          <p>A great mentor doesn't just share knowledge, they help you see the potential in yourself, even when you can't. Alana has had a huge impact on my life. Through her professionalism, leadership, patience and understanding, she helped me grow both personally and professionally. She taught me how to deal with difficult situations, make better decisions and navigate challenges, whether they involved work, finances or everyday life.</p>
-          <cite>Babs</cite>
-        </div>
-        <p class="quote-short">You are honestly an angel by the way.<cite>Amy, on working with Alana</cite></p>
-      </div>
-    </section>
-
-    <section class="white" id="offer">
-      <div class="inner center-head">
-        <span class="eyebrow">Work with me</span>
-        <h2>Three ways in</h2>
+    <section id="offer" class="section white">
+      <div class="wrap reveal">
+        <span class="kicker">work with me</span>
+        <h2>three ways <em>in</em></h2>
         <p class="lede">Pick the one that fits where you are. Each one starts with a real conversation, not a pitch.</p>
-        <div class="ways-grid">
+        <div class="ways">
 
-          <div class="way-card">
-            <span class="eyebrow">One to one</span>
+          <div class="way">
+            <span class="kicker">one to one</span>
             <h3>AI consulting</h3>
             <p>The website, the offer, the posts and the back office, built with you on a screen you can see. We map your real week, hand the first job to AI, and you keep every prompt so you can do the next one without me.</p>
-            <ul class="facts-row">
-              <li>Zoom, or in Cornwall</li>
-              <li>Starts with a free call</li>
-            </ul>
-            <p class="price-note">We agree the work and the price on a free 30-minute call.</p>
-            <a href="https://calendly.com/alana-arthurs/findable-call?utm_source=website&amp;utm_medium=offer-consulting&amp;utm_campaign=ai-consulting" class="btn" target="_blank" rel="noopener">Book a free 30-minute call</a>
-            <a href="/ai-consulting.html" class="offer-details-link">See how it works</a>
-            <a href="/apply.html" class="offer-details-link">Prefer to write first? Tell me where you're at</a>
+            <p class="facts">Zoom, or in Cornwall &middot; starts with a free call</p>
+            <p class="small">We agree the work and the price on a free 30-minute call.</p>
+            <a href="https://calendly.com/alana-arthurs/findable-call?utm_source=website&amp;utm_medium=offer-consulting&amp;utm_campaign=ai-consulting" class="btn" target="_blank" rel="noopener">book a free 30-minute call</a>
+            <a href="/ai-consulting.html" class="way-link">see how it works</a>
+            <a href="/apply.html" class="way-link">prefer to write first? tell me where you're at</a>
           </div>
 
-          <div class="way-card">
-            <span class="eyebrow">One day, then thirty</span>
-            <h3>A day with Alana</h3>
+          <div class="way">
+            <span class="kicker">one day, then thirty</span>
+            <h3>a day with Alana</h3>
             <p>One day, just us, to go deep into you and your business: what you're actually building, what's in the way, and the AI set-up to run it. You leave with it built, not planned, and one scary thing already done. Then thirty days of check-ins with me so it sticks.</p>
-            <ul class="facts-row">
-              <li>One full day</li>
-              <li>Just the two of you</li>
-              <li>Runs on CLIMB</li>
-            </ul>
-            <p class="price-note">Dates and price agreed on a free 30-minute call.</p>
-            <a href="https://calendly.com/alana-arthurs/findable-call?utm_source=website&amp;utm_medium=offer-day&amp;utm_campaign=findable-call" class="btn" target="_blank" rel="noopener">Book a free 30-minute call</a>
-            <a href="#method" class="offer-details-link">See the five steps of the day</a>
+            <p class="facts">One full day &middot; just the two of you &middot; runs on CLIMB</p>
+            <p class="small">Dates and price agreed on a free 30-minute call.</p>
+            <a href="https://calendly.com/alana-arthurs/findable-call?utm_source=website&amp;utm_medium=offer-day&amp;utm_campaign=findable-call" class="btn" target="_blank" rel="noopener">book a free 30-minute call</a>
+            <a href="#method" class="way-link">see the five steps of the day</a>
           </div>
 
-          <div class="way-card way-circle">
-            <span class="eyebrow">The community</span>
-            <h3>The Circle</h3>
+          <div class="way way-circle">
+            <span class="kicker">the community</span>
+            <h3>the Circle</h3>
             <p>The floor under you. A Monday commitment, a midweek live, a Friday wins thread, and a fear buddy so you never do the scary thing alone.</p>
             <p class="price">&pound;10 a month</p>
-            <p class="price-note">Cancel any time. Post a Monday commitment for a full month and show up to the live, and if you don't feel more able to act than on day one, that month's refunded.</p>
-            <a href="/circle.html#offer" class="btn">Join The Circle</a>
-            <a href="/circle.html" class="offer-details-link">See how the week runs</a>
+            <p class="small">Cancel any time. Post a Monday commitment for a full month and show up to the live, and if you don't feel more able to act than on day one, that month's refunded.</p>
+            <a href="/circle.html#offer" class="btn-cream">join the Circle</a>
+            <a href="/circle.html" class="way-link">see how the week runs</a>
           </div>
 
         </div>
       </div>
     </section>
 
-    <section class="final-cta">
-      <div class="inner">
-        <span class="eyebrow">Two minutes</span>
-        <hr class="rule" />
-        <h2>Can anybody find what you've built?</h2>
+    <section class="section berry" aria-labelledby="final-title">
+      <div class="wrap reveal">
+        <img src="/images/mark-cream.svg" alt="" width="56" height="56" class="mark-big" />
+        <h2 id="final-title">two <em>minutes</em>.</h2>
         <p>Eleven questions. Your score out of 100, the one gap costing you customers, and the first fix to make tonight.</p>
-        <a href="/scorecard?utm_source=website&amp;utm_medium=footer-cta&amp;utm_campaign=findable-score" class="btn">Get my findable score</a>
-        <span class="small-line">Prefer a gentler start? <a href="/quiz.html">Find your Future Maker type</a></span>
+        <p><a href="/scorecard?utm_source=website&amp;utm_medium=footer-cta&amp;utm_campaign=findable-score" class="btn-cream">get my score</a></p>
+        <p class="small" style="color:#fff;opacity:.9">prefer a gentler start? <a href="/quiz.html">find your Future Maker type</a></p>
       </div>
     </section>
 
   </main>
 
-  <section class="newsletter-panel" aria-labelledby="nl-heading">
-    <span class="eyebrow">The newsletter</span>
-    <h2 id="nl-heading">The Only Way Is Up</h2>
-    <p class="lede">Alana's newsletter, every other Sunday. One true story about fear and what it actually costs, and one thing you can do before Monday morning to stop shrinking.</p>
-    <form class="newsletter-panel-form" data-source="Newsletter Panel">
-      <label for="nl-email" class="visually-hidden">Email address</label>
-      <input id="nl-email" type="email" name="email" placeholder="you@email.com" required autocomplete="email" />
-      <button type="submit" class="btn">Sign up</button>
-    </form>
-  </section>
-
-  <footer class="site-footer">
-    <img src="/images/logo-168.png" srcset="/images/logo-168.png 1x, /images/logo-336.png 2x" alt="Growing Women in Business" class="logo-mark footer-logo" width="84" height="84" />
-    <a href="https://instagram.com/growingwomeninbusiness" class="handle" target="_blank" rel="noopener">@growingwomeninbusiness</a>
-    <p class="also-part-of">Also part of Alana's world: <a href="https://www.alanaarthurs.com" target="_blank" rel="noopener">alanaarthurs.com</a> &middot; <a href="https://www.vectorropeaccess.co.uk" target="_blank" rel="noopener">vectorropeaccess.co.uk</a> &middot; <a href="/push.html">The Push (paused)</a> &middot; <a href="/whats-next.html">what's next</a></p>
-    <p class="legal">&copy; 2026 Growing Women in Business &middot; Alana Arthurs &middot; <a href="/privacy.html">Privacy</a></p>
+  <footer class="footer">
+    <div class="wrap">
+      <span class="wordmark"><img src="/images/mark.svg" alt="" width="36" height="36" class="mark" />growing women in business</span>
+      <ul>
+        <li><a href="https://instagram.com/growingwomeninbusiness" target="_blank" rel="noopener">instagram</a></li>
+        <li><a href="https://www.alanaarthurs.com" target="_blank" rel="noopener">alanaarthurs.com</a></li>
+        <li><a href="https://www.vectorropeaccess.co.uk" target="_blank" rel="noopener">vectorropeaccess.co.uk</a></li>
+        <li><a href="/cards">draw a card</a></li>
+        <li><a href="/push.html">the push (paused)</a></li>
+        <li><a href="/whats-next.html">what's next</a></li>
+        <li><a href="/privacy.html">privacy</a></li>
+        <li><a href="/circle.html">the circle</a></li>
+      </ul>
+      <p class="small">&copy; 2026 Growing Women in Business &middot; Alana Arthurs</p>
+    </div>
   </footer>
+
+  <nav class="mbar" id="mbar" aria-hidden="true" aria-label="Quick action">
+    <span>2 minutes, free</span>
+    <a href="/scorecard?utm_source=website&amp;utm_medium=sticky&amp;utm_campaign=findable-score" class="btn-cream" tabindex="-1">get my score</a>
+  </nav>
 
   <script src="/js/nav.js"></script>
   <script src="/js/newsletter-panel.js"></script>
+  <script>
+  (function () {
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Reveal on entering the viewport, off under reduced motion.
+    var els = document.querySelectorAll('.reveal');
+    if (reduce || !('IntersectionObserver' in window)) {
+      els.forEach(function (el) { el.classList.add('is-in'); });
+    } else {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
+        });
+      }, { threshold: 0.12 });
+      els.forEach(function (el) { io.observe(el); });
+    }
+
+    // Example score ring: fills to 73% once, when visible.
+    var bar = document.getElementById('ring-bar');
+    if (bar) {
+      var full = 326.7, target = full * (1 - 0.73);
+      if (reduce || !('IntersectionObserver' in window)) {
+        bar.style.strokeDashoffset = target;
+      } else {
+        var ro = new IntersectionObserver(function (entries) {
+          if (entries[0].isIntersecting) { bar.style.strokeDashoffset = target; ro.disconnect(); }
+        }, { threshold: 0.5 });
+        ro.observe(bar);
+      }
+    }
+
+    // Sticky bar on phones once the hero has scrolled past.
+    var mbar = document.getElementById('mbar');
+    var hero = document.querySelector('.hero-cta .btn');
+    if (mbar && hero) {
+      var link = mbar.querySelector('a');
+      function update() {
+        var on = window.innerWidth < 900 && hero.getBoundingClientRect().bottom < 0;
+        mbar.classList.toggle('is-on', on);
+        mbar.setAttribute('aria-hidden', on ? 'false' : 'true');
+        if (link) link.tabIndex = on ? 0 : -1;
+      }
+      window.addEventListener('scroll', update, { passive: true });
+      window.addEventListener('resize', update);
+      update();
+    }
+  })();
+  </script>
 </body>
 </html>
