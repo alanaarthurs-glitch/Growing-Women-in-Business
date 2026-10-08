@@ -41,6 +41,14 @@
     key: '<circle cx="18" cy="32" r="9"/><circle cx="18" cy="32" r="3"/><path d="M27 32h29M48 32v8M54 32v6"/>',
     medal: '<circle cx="32" cy="24" r="14"/><path d="M32 16l2.4 5h5.4l-4.3 3.4 1.6 5.4-5.1-3.2-5.1 3.2 1.6-5.4-4.3-3.4h5.4z"/><path d="M24 36l-6 20 8-4 4 7 2-9M40 36l6 20-8-4-4 7-2-9"/>',
     stairs: '<path d="M8 54h12V44h12V34h12V24h12"/><path d="M50 18V6M45 11l5-5 5 5"/>',
+    sea: '<circle cx="32" cy="22" r="8"/><path d="M32 7v4M19 13l2.5 2.5M45 13l-2.5 2.5"/><path d="M8 38c4-4 8-4 12 0s8 4 12 0 8-4 12 0 8 4 12 0"/><path d="M8 47c4-4 8-4 12 0s8 4 12 0 8-4 12 0 8 4 12 0"/><path d="M14 56h36"/>',
+    note: '<circle cx="22" cy="46" r="6"/><path d="M28 46V12l18 6v8l-18-6"/><path d="M50 36v6M47 39h6"/>',
+    notes: '<circle cx="18" cy="48" r="5"/><circle cx="42" cy="42" r="5"/><path d="M23 48V18l24-6v30"/><path d="M23 26l24-6"/><path d="M8 14l4 4M56 52l-4-4M54 16l-3 3"/>',
+    chair: '<path d="M20 30V10h24v20"/><path d="M16 30h32v6H16z"/><path d="M18 36v18M46 36v18M20 46h24"/>',
+    question: '<circle cx="32" cy="32" r="24"/><path d="M24 22a8 8 0 1 1 11.3 7.3c-2.3 1.4-3.3 3.6-3.3 6.7v4"/><circle cx="32" cy="47" r="1.8"/>',
+    phone: '<rect x="18" y="8" width="24" height="48" rx="4"/><path d="M27 50h6"/><path d="M48 24a10 10 0 0 1 0 14M53 19a17 17 0 0 1 0 24"/>',
+    camera: '<rect x="8" y="20" width="48" height="32" rx="4"/><path d="M22 20l4-6h12l4 6"/><circle cx="32" cy="36" r="9"/><circle cx="32" cy="36" r="4"/>',
+    no: '<circle cx="32" cy="32" r="20"/><path d="M18 46L46 18"/>',
     seed: '<path d="M12 50h40"/><path d="M32 50V34"/><path d="M32 38c-8 0-12-6-12-12 7 0 12 5 12 12z"/><path d="M32 34c0-8 5-13 12-13 0 7-5 13-12 13z"/><ellipse cx="32" cy="55" rx="5" ry="2.5"/>'
   };
 
@@ -110,7 +118,25 @@
       action: "Ask one person for one specific thing today. Be clear about what you need." },
     { n: "XXI", name: "The Mountain", motif: "mountain",
       message: "Hard things get easier the more you do them. You've done hard things before.",
-      action: "Give the hardest job on your list twenty minutes first thing. You're allowed to stop after that." }
+      action: "Give the hardest job on your list twenty minutes first thing. You're allowed to stop after that." },
+    { n: "XXII", name: "The Raise", motif: "stairs",
+      message: "Your price speaks before you've said a word. Practise saying a bigger number.",
+      action: "Write your price 20% higher and read it out loud until it stops sounding scary. You don't have to charge it yet." },
+    { n: "XXIII", name: "The Stretch Room", motif: "bridge",
+      message: "If you're the most experienced person in every room, you've stopped growing. Find a bigger room.",
+      action: "Find one free event or networking group this month where you'd normally feel out of your depth, and book your place." },
+    { n: "XXIV", name: "The Dawn", motif: "sea",
+      message: "A sunrise doesn't ask anything of you. It just reminds you that every day gets a fresh start.",
+      action: "Set an alarm for sunrise one morning this week and watch it, phone in your pocket." },
+    { n: "XXV", name: "The Volunteer", motif: "rings",
+      message: "Giving your skill away for an hour reminds you how much it's worth.",
+      action: "Offer one hour of what you're good at to a local cause or charity this month." },
+    { n: "XXVI", name: "The Speech", motif: "echo",
+      message: "You'd stand up for a friend's talent in a heartbeat. Do the same for your own.",
+      action: "Stand in front of the mirror and say ‘I'm good at what I do, and here's why’ out loud, three times." },
+    { n: "XXVII", name: "The Phone Call", motif: "phone",
+      message: "A text is easy to hide behind. A voice is how people know you meant it.",
+      action: "Ring someone you've been meaning to thank or make up with, instead of sending a text." }
   ];
 
   var FEAR = [
@@ -152,7 +178,46 @@
       action: "Pick tomorrow's scary thing now, while you still feel brave, and write it down." },
     { n: "XIII", name: "The Not Yet", motif: "seed",
       message: "Didn't do it today? That isn't failure, it's information. We go again tomorrow.",
-      action: "Write down the exact moment you backed off. That's the bit we'll make smaller." }
+      action: "Write down the exact moment you backed off. That's the bit we'll make smaller." },
+    { n: "XIV", name: "The Sea", motif: "sea",
+      message: "Cold water is loud for about thirty seconds. After that you're just a woman in the sea, grinning.",
+      action: "Get in the sea this week, somewhere safe and with someone on the shore. Count to thirty out loud, then tell me how it felt." },
+    { n: "XV", name: "The Silly One", motif: "smile",
+      message: "Nobody is watching you as closely as you think. The ones who are wish they had the nerve.",
+      action: "Do one daft thing in public today. Skip a few steps down the street or wave at a stranger, and let yourself look silly." },
+    { n: "XVI", name: "The Dance", motif: "notes",
+      message: "Your body remembers how to be free. Loud music gets it there faster than thinking does.",
+      action: "Put your favourite song on loud and dance round the kitchen like nobody's in. Then do it again with somebody in." },
+    { n: "XVII", name: "The Song", motif: "note",
+      message: "Loud and proud. A voice that's allowed to sing is a voice that's allowed to ask for the sale.",
+      action: "Sing one whole song at full volume today, in the car or the shower. Bonus point if someone hears you." },
+    { n: "XVIII", name: "The Compliment", motif: "heart",
+      message: "Kindness out loud takes more nerve than you'd think. It also makes two people's day.",
+      action: "Tell a stranger one thing you genuinely like about them, then walk on. No waiting for a reaction." },
+    { n: "XIX", name: "The Front Row", motif: "chair",
+      message: "The back row feels safe because nobody can see you. That's exactly the problem.",
+      action: "At the next talk, class or meeting, sit right at the front." },
+    { n: "XX", name: "The Question", motif: "question",
+      message: "Half the room wants to ask the same thing. Be the one who does.",
+      action: "Put your hand up and ask one question in a room full of people. Then tell me what you asked." },
+    { n: "XXI", name: "The Live", motif: "phone",
+      message: "You know this stuff. Two minutes of you talking about it beats a perfect post you never make.",
+      action: "Go live on Instagram for two minutes about something you know. No script, no retakes." },
+    { n: "XXII", name: "The No", motif: "no",
+      message: "Every guilty yes costs time you could spend on your own thing. No is a full sentence.",
+      action: "Say no to one thing you'd normally agree to out of guilt. Don't explain it." },
+    { n: "XXIII", name: "The Selfie", motif: "camera",
+      message: "People buy from people. Let them see the woman behind the business.",
+      action: "Post a photo of yourself, no filter, with one line about what you do." },
+    { n: "XXIV", name: "The Big Ask", motif: "envelope",
+      message: "The people you admire were all beginners once. Most of them remember it.",
+      action: "Email someone you look up to with one specific question. The worst they can do is not reply." },
+    { n: "XXV", name: "The Dream Out Loud", motif: "star",
+      message: "A goal kept in your head stays a wish. Said out loud, it starts to become a plan.",
+      action: "Tell one person the big goal you've never said out loud. Say it plainly, no laughing it off." },
+    { n: "XXVI", name: "The Pitch", motif: "bell",
+      message: "Someone out there is waiting for exactly what you sell. They can't say yes to an offer they never hear.",
+      action: "Send one message today offering your thing to someone who could actually buy it." }
   ];
 
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -167,11 +232,11 @@
     };
   }
 
-  // 7 shares no factor with 22, so this walks the whole deck in a mixed-up
-  // order before any card comes round again.
+  // 11 shares no factor with 28, so this walks the whole deck in a mixed-up
+  // order before any card comes round again. Change it if the deck size does.
   function pepForToday() {
     var n = PEP.length;
-    return PEP[((today().dayNumber * 7 + 3) % n + n) % n];
+    return PEP[((today().dayNumber * 11 + 3) % n + n) % n];
   }
 
   var fearQueue = [];
