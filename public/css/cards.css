@@ -1,0 +1,433 @@
+/* The two oracle decks on /cards: The Daily Pep and The Fear Buddy.
+   Loaded after site.css on cards.html only, and uses its tokens. */
+
+.site-nav a.navlink[aria-current="page"] { color: var(--pink); }
+
+/* ==========================================================================
+   1. The table: a navy night-sky band the decks sit on
+   ========================================================================== */
+
+.oracle-table {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 0%, rgba(176, 58, 78, 0.42), transparent 70%),
+    radial-gradient(ellipse 60% 40% at 50% 100%, rgba(63, 110, 100, 0.28), transparent 70%),
+    var(--ink);
+  color: var(--white);
+  padding: 4.5rem 1.5rem 5rem;
+}
+
+.oracle-table .sparks { opacity: 0.6; }
+
+@media (max-width: 560px) {
+  .oracle-table { padding: 3.25rem 1rem 3.75rem; }
+}
+
+.oracle-decks {
+  position: relative;
+  z-index: 1;
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4.5rem;
+}
+
+.deck {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.75rem;
+  text-align: center;
+  min-width: 0;
+}
+
+/* Two decks side by side: a subgrid keeps both cards on one line even when
+   the intro paragraphs run to different lengths. */
+@media (min-width: 840px) {
+  .oracle-decks {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: auto auto auto;
+    column-gap: 3rem;
+    row-gap: 0;
+  }
+
+  .deck {
+    display: grid;
+    grid-row: span 3;
+    grid-template-rows: subgrid;
+    justify-items: center;
+    align-items: start;
+    row-gap: 1.75rem;
+  }
+}
+
+.deck-head { max-width: 30em; }
+
+.deck-head .eyebrow {
+  color: var(--mint);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: none;
+}
+
+.deck-head h2 {
+  color: var(--white);
+  margin: 0 0 0.6rem;
+}
+
+.deck-head p {
+  color: rgba(255, 255, 255, 0.84);
+  margin: 0;
+}
+
+.deck-foot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.deck-note {
+  font-family: var(--font-sans);
+  font-size: 0.92rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+  max-width: 26em;
+}
+
+.deck-again {
+  background: var(--white);
+  color: var(--ink);
+  box-shadow: 0 10px 24px -8px rgba(0, 0, 0, 0.45);
+}
+
+.deck-again:hover {
+  background: var(--mint);
+  color: var(--ink);
+}
+
+@media (max-width: 600px) {
+  .deck-again { width: auto; }
+}
+
+.oracle-table :focus-visible { outline-color: var(--rose); }
+
+/* ==========================================================================
+   2. The card: a stack of backs underneath, one card that turns over
+   ========================================================================== */
+
+.oracle-card {
+  position: relative;
+  isolation: isolate;
+  width: min(300px, 100%);
+  perspective: 1600px;
+}
+
+/* Two more card backs peeking out underneath, so it reads as a deck. */
+.oracle-card::before,
+.oracle-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: 14px;
+  background: var(--ink);
+  border: 1px solid rgba(223, 132, 145, 0.45);
+  box-shadow: 0 18px 36px -18px rgba(0, 0, 0, 0.6);
+}
+
+.oracle-card::before { transform: rotate(-4deg) translate(-6px, 4px); }
+.oracle-card::after { transform: rotate(3deg) translate(6px, 2px); }
+
+.oracle-flipper {
+  display: grid;
+  aspect-ratio: 7 / 12;
+  transform-style: preserve-3d;
+  transition: transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.oracle-card:not(.is-flipped) .oracle-flipper:hover {
+  transform: translateY(-6px) rotate(-1deg);
+}
+
+.oracle-card.is-flipped .oracle-flipper { transform: rotateY(180deg); }
+
+.oracle-face {
+  grid-area: 1 / 1;
+  align-self: stretch;
+  justify-self: stretch;
+  position: relative;
+  border-radius: 14px;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* ==========================================================================
+   3. The back: navy, two fine borders, a scatter of stars, the deck emblem
+   ========================================================================== */
+
+.oracle-back {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  -webkit-appearance: none;
+  appearance: none;
+  font: inherit;
+  color: var(--rose);
+  cursor: pointer;
+  border: 1px solid rgba(223, 132, 145, 0.6);
+  background:
+    radial-gradient(1.4px 1.4px at 18% 16%, rgba(255, 255, 255, 0.9), transparent),
+    radial-gradient(1.2px 1.2px at 80% 22%, rgba(255, 255, 255, 0.8), transparent),
+    radial-gradient(1.6px 1.6px at 30% 78%, rgba(255, 255, 255, 0.85), transparent),
+    radial-gradient(1.2px 1.2px at 74% 70%, rgba(255, 255, 255, 0.75), transparent),
+    radial-gradient(1.3px 1.3px at 58% 12%, rgba(255, 255, 255, 0.7), transparent),
+    radial-gradient(1.2px 1.2px at 14% 52%, rgba(255, 255, 255, 0.7), transparent),
+    radial-gradient(1.4px 1.4px at 88% 50%, rgba(255, 255, 255, 0.8), transparent),
+    radial-gradient(1.1px 1.1px at 46% 88%, rgba(255, 255, 255, 0.7), transparent),
+    radial-gradient(circle at 50% 46%, rgba(223, 132, 145, 0.32), transparent 52%),
+    radial-gradient(ellipse at 50% 115%, rgba(176, 58, 78, 0.55), transparent 62%),
+    var(--ink);
+  box-shadow: 0 26px 50px -20px rgba(0, 0, 0, 0.65);
+}
+
+.oracle-back::before,
+.oracle-back::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  border-radius: 9px;
+}
+
+.oracle-back::before { inset: 10px; border: 1px solid rgba(223, 132, 145, 0.75); }
+.oracle-back::after { inset: 16px; border: 1px solid rgba(253, 249, 241, 0.22); }
+
+.oracle-card.is-flipped .oracle-back { pointer-events: none; }
+
+.ob-emblem {
+  width: 46%;
+  max-width: 136px;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 0 14px rgba(223, 132, 145, 0.45));
+}
+
+.ob-title {
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--cream);
+}
+
+.ob-hint {
+  position: absolute;
+  bottom: 30px;
+  left: 0;
+  right: 0;
+  font-family: var(--font-sans);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(253, 249, 241, 0.7);
+}
+
+.ob-star {
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  margin-left: -4px;
+  background: var(--rose);
+  transform: rotate(45deg);
+}
+
+/* ==========================================================================
+   4. The face: cream paper, a berry double border, numeral, motif, words
+   ========================================================================== */
+
+.oracle-front {
+  transform: rotateY(180deg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1.7rem 1.45rem 1.35rem;
+  color: var(--ink);
+  border: 1px solid var(--blush-deep);
+  background:
+    radial-gradient(circle at 50% 0%, var(--white) 0%, transparent 65%),
+    var(--cream);
+  box-shadow: 0 26px 50px -20px rgba(0, 0, 0, 0.6);
+}
+
+.oracle-front::before,
+.oracle-front::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  border-radius: 9px;
+}
+
+.oracle-front::before { inset: 8px; border: 1.5px solid var(--pink); }
+.oracle-front::after { inset: 13px; border: 1px solid rgba(176, 58, 78, 0.3); }
+
+.oc-corner {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  background: var(--rose);
+  transform: rotate(45deg);
+}
+
+.oc-tl { top: 4px; left: 4px; }
+.oc-tr { top: 4px; right: 4px; }
+.oc-bl { bottom: 4px; left: 4px; }
+.oc-br { bottom: 4px; right: 4px; }
+
+.oc-numeral {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: var(--pink);
+  line-height: 1;
+}
+
+.oc-motif {
+  display: grid;
+  place-items: center;
+  width: 78px;
+  height: 78px;
+  margin: 0.8rem 0 0.75rem;
+  border-radius: 50%;
+  border: 1px solid var(--rose);
+  box-shadow: 0 0 0 4px var(--cream), 0 0 0 5px rgba(223, 132, 145, 0.45);
+  color: var(--pink-deep);
+  flex: 0 0 auto;
+}
+
+.oc-motif svg {
+  width: 48px;
+  height: 48px;
+  display: block;
+}
+
+.oc-name {
+  font-family: var(--font-heading);
+  font-size: 1.28rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1.15;
+  margin: 0 0 0.6rem;
+}
+
+.oc-name:focus { outline: none; }
+
+.oc-message {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 1.14rem;
+  line-height: 1.38;
+  /* Shares the spare height with .oc-foot, so short cards sit centred. */
+  margin: auto 0 0;
+}
+
+.oc-divider {
+  position: relative;
+  display: block;
+  width: 70%;
+  height: 1px;
+  margin: 0.95rem 0 0.8rem;
+  background: linear-gradient(90deg, transparent, var(--rose), transparent);
+  flex: 0 0 auto;
+}
+
+.oc-divider::before {
+  content: "";
+  position: absolute;
+  top: -3px;
+  left: 50%;
+  width: 7px;
+  height: 7px;
+  margin-left: -3.5px;
+  background: var(--cream);
+  border: 1px solid var(--pink);
+  transform: rotate(45deg);
+}
+
+.oc-action-label {
+  font-family: var(--font-sans);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--pink);
+  margin: 0 0 0.35rem;
+}
+
+.oc-action {
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--ink);
+  margin: 0;
+}
+
+.oc-foot {
+  margin-top: auto;
+  padding-top: 0.9rem;
+  font-family: var(--font-heading);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--soft-ink);
+}
+
+@media (max-width: 360px) {
+  .oracle-front { padding: 1.5rem 1.15rem 1.15rem; }
+  .oc-message { font-size: 1.06rem; }
+  .oc-action { font-size: 0.86rem; }
+}
+
+/* Shown once a card is turned, pointing down to the Keep going section. */
+.deck-next {
+  font-family: var(--font-sans);
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--white);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.deck-next:hover { color: var(--mint); }
+
+/* ==========================================================================
+   5. Keep going: The Circle or the newsletter
+   ========================================================================== */
+
+.cards-next { text-align: center; }
+.cards-next p.lede { max-width: 36em; margin: 0 auto; }
+.cards-next .offer-cards { text-align: center; }
+
+/* Buttons and the sign-up box sit on one line across both cards. */
+.cards-next .offer-card .btn,
+.cards-next .offer-card form { margin-top: auto; }
+
+.cards-next .offer-card .price { font-variant-numeric: lining-nums; }
+.cards-next .offer-card .price-note { margin-bottom: 1.25rem; }

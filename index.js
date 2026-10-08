@@ -93,7 +93,7 @@ const ARCHETYPE_PDF_KEYS = {
 
 const KNOWN_SOURCES = [
   "Home Quiz", "Circle Welcome", "Cohort Welcome", "Free Newsletter Card",
-  "Push Waitlist", "Cohort Waitlist", "Newsletter Panel", "Findable Scorecard",
+  "Push Waitlist", "Cohort Waitlist", "Newsletter Panel", "Findable Scorecard", "Draw a Card",
 ];
 
 const KNOWN_APPLY_CATEGORIES = ["Pricing", "Visibility", "The Avoided Conversation"];
@@ -105,6 +105,7 @@ const MIME_TYPES = {
   ".json": "application/json; charset=utf-8",
   ".png": "image/png",
   ".jpg": "image/jpeg",
+  ".webp": "image/webp",
   ".jpeg": "image/jpeg",
   ".gif": "image/gif",
   ".svg": "image/svg+xml",
@@ -242,6 +243,12 @@ async function serveStatic(req, res, urlPath) {
   if (req.method !== "GET" && req.method !== "HEAD") {
     res.writeHead(405, { "Allow": "GET, HEAD", "Content-Type": "text/plain; charset=utf-8" });
     res.end("Method not allowed");
+    return;
+  }
+  // The Future Maker Cohort came off the site on 25 September 2026. Old links land on the offers.
+  if (urlPath === "/cohort" || urlPath === "/cohort.html") {
+    res.writeHead(301, { Location: "/#offer" });
+    res.end();
     return;
   }
 
@@ -851,7 +858,7 @@ function scorecardEmailHtml(firstName, score, tier, categories, wins, opts) {
       next += `<p>You said you'd like a hand. There's a free 30-minute call for that. Pick any time that suits you: ${callLink}.${cohortLine}</p>`;
     }
   } else {
-    next = `<p>The fastest way through this is a free 30-minute call where we look at your three areas together and pick the one fix. Book it here, pick any time that suits you: ${callLink}. It's also the conversation that decides whether the Future Maker Cohort is right for you.${cohortLine}</p>`;
+    next = `<p>The fastest way through this is a free 30-minute call where we look at your three areas together and pick the one fix. Book it here, pick any time that suits you: ${callLink}. That's also where we work out how I can help, if you want it: one to one, a day together, or The Circle at &pound;10 a month.</p>`;
   }
   return `<p>Hi ${name},</p>` +
     `<p>You scored <strong>${pct}%</strong>: <strong>${escapeHtml(tierName)}</strong>.</p>` +

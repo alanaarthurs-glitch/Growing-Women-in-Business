@@ -6,24 +6,25 @@ The site for [growingwomeninbusiness.com](https://www.growingwomeninbusiness.com
 
 | Page | Purpose |
 |---|---|
-| `public/index.html` | Home: split hero with photo, proof strip, who it's for, what you leave with, how AI fits, CLIMB, about, the Cohort offer, final CTA. Loads no PayPal SDK. |
+| `public/index.html` | Home: split hero with photo, proof strip, who it's for, what we build, how AI fits, CLIMB (the method behind the day, five steps with a life lane and a business lane each), about, three ways to work with Alana (AI consulting, a day plus thirty days of follow-through, The Circle), final CTA. Loads no PayPal SDK. |
 | `public/quiz.html` | The Future Maker archetype quiz, moved off the home page. Loads `/js/config.js` and `/js/quiz.js`. |
 | `public/circle.html` | The Circle, £10 a month, PayPal subscription. |
-| `public/cohort.html` | The Future Maker Cohort, £297 for six weeks, PayPal pay-now. |
+| `public/ai-consulting.html` | AI consulting, one to one: the full offer page behind the homepage card. No price on the page, it is agreed on the free 30-minute call (Calendly findable-call, `utm_campaign=ai-consulting`). |
+| `public/cards.html` | Draw a card (`/cards`): two oracle-style decks on a navy band. The Daily Pep (22 cards, 0 to XXI) shows one card per calendar day, the same for everyone; The Fear Buddy (13 cards) draws at random whenever she needs it. Every card has a motivational line and one easy action. Under the decks, "Keep going" offers The Circle (button to `circle.html#offer`) or the newsletter (sign-up tagged source "Draw a Card"); that section replaces the usual newsletter panel on this page. Card copy lives in `/js/cards.js`, styles in `/css/cards.css`. |
 | `public/push.html` | The Push, currently paused, waitlist only, no prices. |
-| `public/apply.html` | The fit-check form for the Cohort. Posts to `/api/apply`. |
-| `public/welcome.html` | Post-payment page for both offers (`?offer=circle` or `?offer=cohort`). The Cohort side posts to `/api/first-action`. |
+| `public/apply.html` | The "tell me where you're at" form for one-to-one work. Posts to `/api/apply`. |
+| `public/welcome.html` | Post-payment page for The Circle (`?offer=circle`). The `?offer=cohort` branch is dormant since the Cohort came off the site on 25 September 2026. |
 | `public/whats-next.html` | Links out to Alana's wider world (alanaarthurs.com, Vector Rope Access). |
 | `public/404.html` | Not found page. Not indexed. |
 | `public/privacy.html` | Plain-English privacy notice (a draft for Alana to check). Linked from every footer and the scorecard. |
 
-Every page shares one head, topbar, footer and newsletter panel pattern, and loads `/js/nav.js` and `/js/newsletter-panel.js` before `</body>`. The apply, welcome and quiz pages also load `/js/config.js` first, since they read it. The topbar button on every page is "Get my score", pointing at `/scorecard`.
+Every page shares one head, topbar, footer and newsletter panel pattern, and loads `/js/nav.js` and `/js/newsletter-panel.js` before `</body>`. The apply, welcome and quiz pages also load `/js/config.js` first, since they read it. The topbar button on every page is "Get my score", pointing at `/scorecard`. Every menu carries "Draw a card" (`/cards`) just before "Work with me"; the standalone scorecard page has no menu.
 
 ## Integrations
 
 - **Notion**, three databases under 📥 Website Leads: Applications, Newsletter Signups, CRM — Contacts. Every write is best-effort: if the Notion call fails, the request still succeeds and the lead is logged locally.
 - **Resend**, sends the archetype PDF after the quiz, when someone leaves their email against a result.
-- **PayPal**: a subscription button for The Circle, a hosted pay-now button for the Cohort. Both redirect to `welcome.html` on approval. Neither is touched by anything server-side; the plan ID and client ID live in the page markup. The home page no longer loads the PayPal SDK: The Circle is a quiet card there that links through to `circle.html`, and the Cohort's pay-now form is a plain POST that needs no SDK.
+- **PayPal**: a subscription button for The Circle on `circle.html`, redirecting to `welcome.html` on approval. Nothing server-side touches it; the plan ID and client ID live in the page markup. The home page loads no PayPal SDK and links through to `circle.html` to join.
 - **Local JSONL fallback**, written to `data/` (gitignored), one file per form: `applications.jsonl`, `newsletter.jsonl`, `first-actions.jsonl`. This is a backup, not the record of truth; Notion is.
 
 ## Environment variables
@@ -76,10 +77,10 @@ powershell -ExecutionPolicy Bypass -File tools\serve.ps1
 
 There's no single source of truth to edit, prices are written into the page copy directly. To change one:
 
-1. `public/circle.html` or `public/cohort.html`: the `.price` line in the offer box, and any small print near it (instalments, "per month", and so on).
+1. `public/circle.html`: the `.price` line in the offer box, and any small print near it ("per month", the refund line).
 2. The same file's JSON-LD `Product`/`Offer` block in the `<head>`.
-3. The PayPal button: The Circle's subscription plan ID and the Cohort's hosted button ID are set by Alana in the PayPal dashboard, not in this repo. Changing the price shown on the page does not change what PayPal actually charges, the two have to be kept in step by hand.
-4. Check `public/index.html`, which repeats the Cohort price in its offer card and The Circle's price in the quiet card under it.
+3. The PayPal button: The Circle's subscription plan ID is set by Alana in the PayPal dashboard, not in this repo. Changing the price shown on the page does not change what PayPal actually charges, the two have to be kept in step by hand.
+4. Check `public/index.html`, which repeats The Circle's price in the hero, the proof strip and the Circle card. The consulting and day offers show no price: it is agreed on the call.
 
 ## The config file
 
