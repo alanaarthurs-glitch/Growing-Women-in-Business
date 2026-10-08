@@ -73,7 +73,7 @@ const ARCHETYPE_PDF_KEYS = {
 
 const KNOWN_SOURCES = [
   "Home Quiz", "Circle Welcome", "Cohort Welcome", "Free Newsletter Card",
-  "Push Waitlist", "Newsletter Panel", "Findable Scorecard",
+  "Push Waitlist", "Newsletter Panel", "Findable Scorecard", "Draw a Card",
 ];
 
 const KNOWN_APPLY_CATEGORIES = ["Pricing", "Visibility", "The Avoided Conversation"];
@@ -85,6 +85,7 @@ const MIME_TYPES = {
   ".json": "application/json; charset=utf-8",
   ".png": "image/png",
   ".jpg": "image/jpeg",
+  ".webp": "image/webp",
   ".jpeg": "image/jpeg",
   ".gif": "image/gif",
   ".svg": "image/svg+xml",
@@ -168,6 +169,13 @@ function serveFile(req, res, filePath, statusCode) {
 // (served as index.html) first, then, for an extension-less path, a clean
 // URL match against "<path>.html". Anything left over is a 404.
 function serveStatic(req, res, urlPath) {
+  // The Future Maker Cohort came off the site on 25 September 2026. Old links land on the offers.
+  if (urlPath === "/cohort" || urlPath === "/cohort.html") {
+    res.writeHead(301, { Location: "/#offer" });
+    res.end();
+    return;
+  }
+
   let filePath = path.join(PUBLIC_DIR, urlPath === "/" ? "index.html" : urlPath);
 
   if (!filePath.startsWith(PUBLIC_DIR)) {
@@ -537,7 +545,7 @@ function scorecardEmailHtml(firstName, score, tier, categories, wins) {
   if (tier === "Ready to be found") {
     next = `<p>Every other Sunday I send The Only Way Is Up: one true story about fear and what it costs, and one thing to do before Monday. You're on it now. Reply and tell me the one sentence you said out loud, if you like. I read every one.</p>`;
   } else {
-    next = `<p>The fastest way through this is a free 30-minute call where we look at your three areas together and pick the one fix. Book it here, pick any time that suits you: <a href="https://calendly.com/alana-arthurs/findable-call?utm_source=scorecard-email&amp;utm_medium=email&amp;utm_campaign=findable-score">calendly.com/alana-arthurs/findable-call</a>. The next Future Maker Cohort starts on 1 October, and this is the conversation that decides whether it's right for you.</p>`;
+    next = `<p>The fastest way through this is a free 30-minute call where we look at your three areas together and pick the one fix. Book it here, pick any time that suits you: <a href="https://calendly.com/alana-arthurs/findable-call?utm_source=scorecard-email&amp;utm_medium=email&amp;utm_campaign=findable-score">calendly.com/alana-arthurs/findable-call</a>. That's also where we work out how I can help, if you want it: one to one, a day together, or The Circle at £10 a month.</p>`;
   }
   return `<p>Hi ${name},</p>` +
     `<p>You scored <strong>${score}%</strong>: <strong>${tier}</strong>.</p>` +
