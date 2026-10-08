@@ -1,0 +1,105 @@
+/* 2027 skin for the inner pages. Loaded after site.css and home.css:
+   flat colour, no blobs, no shadows, left-aligned, same type as the homepage. */
+body{background:var(--cream);color:var(--navy);font-family:Inter,system-ui,sans-serif;padding-bottom:0}
+.hero-blobs,.blob,.sparks{display:none!important}
+main{display:block}
+
+/* Hero: flat cream, left aligned */
+.hero{background:var(--cream);padding:64px 0 48px;border:0;min-height:0}
+.hero-panel,.hero-copy{max-width:var(--max);margin:0 auto;padding:0 var(--gutter);background:none;box-shadow:none;border:0;border-radius:0;text-align:left;backdrop-filter:none}
+.hero .eyebrow,.hero .subhead,.hero .small-line,.hero h1{text-align:left;margin-left:0;margin-right:0}
+.hero h1,.as-h2,h1.as-h2{font-family:var(--head);font-weight:800;letter-spacing:-.03em;font-size:clamp(2.6rem,6vw,4.6rem);line-height:.98;text-align:left}
+.hero .subhead,.lede{max-width:44rem;font-size:1.15rem}
+.hero .btn{margin-top:8px}
+.small-line{display:block;margin-top:10px;font-size:.9rem;color:rgba(10,31,61,.72)}
+
+/* Eyebrows: plain kicker, not a pill */
+.eyebrow,.tag,.proof-label,.name-line{display:block;background:none!important;border:0;box-shadow:none;padding:0;border-radius:0;color:var(--sage);font-family:var(--body);font-weight:600;font-size:.95rem;letter-spacing:0;text-transform:none;margin-bottom:.75rem;text-align:left}
+
+/* Sections: flat bands, left aligned */
+.inner,.ai-inner{max-width:var(--max);margin:0 auto;padding:72px var(--gutter)}
+@media(min-width:900px){.inner,.ai-inner{padding:104px var(--gutter)}}
+.blush{background:var(--cream)}
+.white{background:var(--white)}
+.center-head,.center-head *{text-align:left}
+.center-head .lede,.center-head .for-split{margin-left:0}
+section h2{font-size:clamp(2rem,5vw,3.4rem);text-align:left}
+section h3{font-family:var(--head);font-weight:800;letter-spacing:-.02em}
+
+/* Cards and panels: outline, no shadow */
+.panel,.leave-card,.climb-step,.way-card,.offer-box,.quiz-box,.proof-tile,.for-col,.guarantee,.calendar-slot,.apply-form,.pain-col,.quote-block,.price-box{
+  background:var(--cream);border:1.5px solid var(--navy);border-radius:12px;box-shadow:none;text-align:left}
+.white .panel,.white .leave-card,.white .climb-step{background:var(--cream)}
+.panel::before,.panel::after,.climb-step::before,.leave-card::before{display:none}
+.quote-block{border-left:1.5px solid var(--navy)}
+.way-card .btn,.offer-box .btn{margin:8px 0 12px}
+
+/* CLIMB / ORBIT letters */
+.climb-word,.orbit-word{text-align:left}
+.climb-letter-big,.letter{font-family:var(--serif);font-style:italic;font-weight:400;color:var(--berry)}
+
+/* Dark bands */
+.ai-band,.final-cta{background:var(--berry);color:var(--white)}
+.ai-band h2,.final-cta h2,.ai-band .eyebrow,.final-cta .eyebrow,.final-cta p,.ai-band p,.final-cta .small-line,.final-cta a:not(.btn){color:var(--white)}
+.ai-band .btn,.final-cta .btn{background:var(--cream);color:var(--navy)}
+.final-cta .rule{display:none}
+
+/* Newsletter band */
+.newsletter-panel{background:var(--navy);color:var(--cream);padding:72px var(--gutter);text-align:left}
+.newsletter-panel>*{max-width:var(--max);margin-left:auto;margin-right:auto}
+.newsletter-panel h2,.newsletter-panel .eyebrow{color:var(--cream)}
+.newsletter-panel .eyebrow{color:var(--rose)}
+.newsletter-panel-form{display:flex;flex-wrap:wrap;gap:10px;max-width:var(--max)}
+.newsletter-panel-form input[type=email]{flex:1 1 220px;max-width:420px;min-height:48px;padding:12px 14px;border-radius:8px;border:1px solid rgba(253,249,241,.4);font:inherit}
+
+/* Forms */
+input,select,textarea{font:inherit;border-radius:8px}
+.btn{box-shadow:none;background-image:none}
+.btn-secondary{background:transparent;color:var(--navy);border:1.5px solid var(--navy)}
+.ai-band .btn-secondary{color:var(--cream);border-color:var(--cream);background:transparent}
+.footer .wrap{text-align:left}
+
+/* Specificity fixes against site.css */
+section{padding:0}
+section .inner,section .ai-inner,.final-cta .inner{max-width:var(--max);margin:0 auto;padding:72px var(--gutter)}
+@media(min-width:900px){section .inner,section .ai-inner,.final-cta .inner{padding:104px var(--gutter)}}
+section>.inner>p.lede,.newsletter-panel p.lede{text-align:left;margin-left:0;margin-right:0;max-width:44rem}
+section>.inner>.eyebrow{display:block}
+.final-cta,.ai-band{text-align:left}
+.final-cta .inner{max-width:var(--max)}
+.final-cta .btn{background:var(--cream);color:var(--navy)}
+.offer-box{overflow:visible;text-align:left;padding:32px;max-width:520px;margin-left:0}
+.offer-box::before{display:none}
+.offer-box .price,.price{font-family:var(--head);font-weight:800;color:var(--navy);font-size:2.4rem}
+.offer-box p{text-align:left}
+.panel,.climb-step,.leave-card,.way-card{overflow:visible}
+.panels{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.newsletter-panel p,.newsletter-panel p.lede{color:rgba(253,249,241,.88)}
+.newsletter-panel{padding:72px 0}
+.newsletter-panel>*{padding-left:var(--gutter);padding-right:var(--gutter)}
+.newsletter-panel-form{margin-left:auto;margin-right:auto}
+.quote-short{text-align:left}
+.quote-short cite{display:block}
+.climb-word{display:none}
+.hero-panel .eyebrow{display:block}
+
+.panel,.climb-step,.leave-card{box-shadow:none!important}
+.newsletter-panel-form{margin-left:0;margin-right:0;max-width:var(--max);width:100%}
+.final-cta .eyebrow{border:0;background:none;padding:0}
+.offer-box .price-note,.offer-box .guarantee{border:0;background:none;padding:0;box-shadow:none;text-align:left;border-radius:0}
+
+/* Header layout on inner pages, and the full menu */
+.topbar{display:block;padding:0;max-width:none;margin:0;gap:0}
+.topbar .wordmark{order:0}
+.topbar-inner>*{order:0}
+.topbar-inner>.btn{order:3}
+.proof-strip{background:var(--navy);color:var(--white)}
+.proof-tile{background:none;border:0;border-top:2px solid var(--rose);border-radius:0;padding:14px 0 0}
+.proof-tile .figure,.proof-tile p{color:var(--white)}
+@media(min-width:1440px){
+  .site-nav ul{flex-wrap:nowrap;gap:18px}
+  .site-nav li{white-space:nowrap}
+  .site-nav a{font-size:.88rem}
+  .site-nav li:nth-child(4){display:none}
+}
+.topbar .btn{white-space:nowrap;flex:0 0 auto}.topbar .wordmark{flex:0 0 auto}

@@ -18,30 +18,33 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500;1,600&family=Inter:wght@400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600;800&family=Instrument+Serif:ital@1&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500;1,600&family=Inter:wght@400;500;600;700&display=swap" />
   <link rel="stylesheet" href="/css/site.css" />
+  <link rel="stylesheet" href="/css/home.css" />
+  <link rel="stylesheet" href="/css/skin.css" />
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="topbar">
-    <a href="/" class="wordmark" aria-label="Growing Women in Business, home">
-      <img src="/images/logo-168.png" srcset="/images/logo-168.png 1x, /images/logo-336.png 2x" alt="Growing Women in Business" class="logo-mark" width="84" height="84" />
-    </a>
-    <div class="topbar-actions">
-      <a href="/scorecard" class="btn btn-nav">Get my score</a>
+    <div class="topbar-inner">
+      <a href="/" class="wordmark"><img src="/images/mark.svg" alt="" width="36" height="36" class="mark" />growing women in business</a>
+      <nav id="site-nav" class="site-nav" aria-label="Main">
+        <ul>
+          <li><a href="/#what-you-get">what you get</a></li>
+          <li><a href="/#method">how it works</a></li>
+          <li><a href="/#about">about alana</a></li>
+          <li><a href="/scorecard">get my score</a></li>
+          <li><a href="/quiz.html">find your future maker type</a></li>
+          <li><a href="/cards#fear-buddy">fear buddy cards</a></li>
+          <li><a href="/#offer">work with me</a></li>
+          <li><a href="/circle.html">the circle</a></li>
+        </ul>
+      </nav>
+      <a href="/scorecard" class="btn">get my score</a>
       <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
         <span></span><span></span><span></span>
       </button>
     </div>
-    <nav id="site-nav" class="site-nav" aria-label="Main">
-      <ul>
-        <li><a href="/" class="navlink">Home</a></li>
-        <li><a href="/circle.html" class="navlink">The Circle</a></li>
-        <li><a href="/cards" class="navlink">Draw a card</a></li>
-        <li><a href="/#offer" class="navlink">Work with me</a></li>
-        <li><a href="/quiz.html" class="navlink navlink-quiz">Take the quiz</a></li>
-      </ul>
-    </nav>
   </header>
 
   <main id="main">
@@ -133,11 +136,21 @@
     </form>
   </section>
 
-  <footer class="site-footer">
-    <img src="/images/logo-168.png" srcset="/images/logo-168.png 1x, /images/logo-336.png 2x" alt="Growing Women in Business" class="logo-mark footer-logo" width="84" height="84" />
-    <a href="https://instagram.com/growingwomeninbusiness" class="handle" target="_blank" rel="noopener">@growingwomeninbusiness</a>
-    <p class="also-part-of">Also part of Alana's world: <a href="https://www.alanaarthurs.com" target="_blank" rel="noopener">alanaarthurs.com</a> &middot; <a href="https://www.vectorropeaccess.co.uk" target="_blank" rel="noopener">vectorropeaccess.co.uk</a> &middot; <a href="/whats-next.html">what's next</a></p>
-    <p class="legal">&copy; 2026 Growing Women in Business &middot; Alana Arthurs &middot; <a href="/privacy.html">Privacy</a></p>
+  <footer class="footer">
+    <div class="wrap">
+      <span class="wordmark"><img src="/images/mark.svg" alt="" width="36" height="36" class="mark" />growing women in business</span>
+      <ul>
+        <li><a href="https://instagram.com/growingwomeninbusiness" target="_blank" rel="noopener">instagram</a></li>
+        <li><a href="https://www.alanaarthurs.com" target="_blank" rel="noopener">alanaarthurs.com</a></li>
+        <li><a href="https://www.vectorropeaccess.co.uk" target="_blank" rel="noopener">vectorropeaccess.co.uk</a></li>
+        <li><a href="/cards">draw a card</a></li>
+        <li><a href="/push.html">the push (paused)</a></li>
+        <li><a href="/whats-next.html">what's next</a></li>
+        <li><a href="/privacy.html">privacy</a></li>
+        <li><a href="/circle.html">the circle</a></li>
+      </ul>
+      <p class="small">&copy; 2026 Growing Women in Business &middot; Alana Arthurs</p>
+    </div>
   </footer>
 
   <script src="/js/config.js"></script>
