@@ -343,8 +343,13 @@
   font-weight: 500;
   font-size: 1.14rem;
   line-height: 1.38;
-  /* Shares the spare height with .oc-foot, so short cards sit centred. */
-  margin: auto 0 0;
+  /* Takes the spare height and centres the quote in it, so short cards
+     don't leave a gap above the words. */
+  margin: 0;
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .oc-divider {
