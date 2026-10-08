@@ -25,8 +25,9 @@
     --sage: #3F6E64;         /* deep sage, third brand colour */
     --button: #B03A4E;       /* deep berry, white text 4.5:1+ */
     --button-hover: #7E2836;
-    --grad: linear-gradient(135deg, #B03A4E 0%, #DF8491 100%);
-    --grad-deep: linear-gradient(135deg, #0A1F3D 0%, #B03A4E 130%);
+    /* Both gradient ends carry white text at 4.5:1 or better (the old rose end did not) */
+    --grad: linear-gradient(135deg, #7E2836 0%, #B03A4E 100%);
+    --grad-deep: linear-gradient(135deg, #0A1F3D 0%, #7E2836 130%);
     --line: #EAD9D3;
     --focus: #3F6E64;        /* deep sage focus outline */
     --error: #B42318;
@@ -68,7 +69,9 @@
   h1, h2 { font-family: var(--head-font); font-weight: 600; line-height: 1.12; margin: 0 0 12px; letter-spacing: -.01em; }
   h1 { font-size: 2.1rem; }
   h2 { font-size: 1.6rem; }
-  @media (min-width: 600px) { h1 { font-size: 2.7rem; } h2 { font-size: 1.9rem; } }
+  /* The question and the result greeting are h1s (one per screen) but keep the old h2 size */
+  #q-text, #r-greeting { font-size: 1.6rem; }
+  @media (min-width: 600px) { h1 { font-size: 2.7rem; } h2 { font-size: 1.9rem; } #q-text, #r-greeting { font-size: 1.9rem; } }
   h2:focus, h1:focus { outline: none; }
   p { margin: 0 0 14px; }
   a { color: var(--ink); }
@@ -95,6 +98,7 @@
   input[type="text"]:focus, input[type="email"]:focus { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(223, 132, 145, .18); }
   input[aria-invalid="true"] { border-color: var(--error); }
   .field-error { color: var(--error); font-size: .9rem; margin: 6px 0 0; min-height: 1em; }
+  .field-error:empty { margin: 0; min-height: 0; }
   .consent { display: flex; gap: 12px; align-items: flex-start; margin: 18px 0 6px; font-weight: 400; }
   .consent input { width: 24px; height: 24px; margin: 2px 0 0; flex: none; accent-color: var(--button); }
   .btn, .cta {
@@ -106,6 +110,23 @@
     transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
   }
   @media (min-width: 600px) { .btn, .cta { width: auto; } }
+  /* Long button labels wrap between words instead of overflowing */
+  .btn, .cta { max-width: 100%; white-space: normal; text-align: center; text-wrap: balance; overflow-wrap: break-word; }
+  /* Brand bar at the top of the card: logo and name, links home */
+  .brand { margin: 0 0 14px; }
+  .brand a { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; color: var(--ink); text-decoration: none; font-weight: 700; font-size: .92rem; letter-spacing: .02em; }
+  .brand a:hover span { text-decoration: underline; }
+  .brand img { width: 40px; height: 40px; flex: none; }
+  /* Honeypot: hidden from people and screen readers, bots fill it in */
+  .hp { position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+  /* Primary next step, straight under the tier name */
+  .cta-top { text-align: center; margin: 0 0 22px; }
+  .cta-top .lead { font-weight: 600; margin: 0 0 10px; }
+  .signup-done { font-weight: 700; color: var(--sage); margin: 0; }
+  .share-row { text-align: center; margin: 8px 0 0; }
+  .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+  .secondary { background: #fff; color: var(--button); border: 2px solid var(--button); box-shadow: none; }
+  .secondary:hover { background: #FBEBEA; }
   .btn:hover, .cta:hover { transform: translateY(-2px); box-shadow: 0 16px 30px -8px rgba(176, 58, 78, .55); filter: brightness(1.04); }
   .btn:active, .cta:active { transform: translateY(0); }
   .link-btn {
@@ -157,7 +178,9 @@
     box-shadow: 0 8px 18px -10px rgba(10, 31, 61, .45);
   }
   #r-means { text-align: center; max-width: 52ch; margin-left: auto; margin-right: auto; }
-  h3 { font-size: 1.15rem; margin: 30px 0 14px; }
+  h3, h2.sub { font-size: 1.15rem; margin: 30px 0 14px; }
+  /* Result sub-headings are h2s now the greeting is the h1, but look as they did */
+  h2.sub { font-family: var(--body-font); font-weight: 700; line-height: 1.2; letter-spacing: 0; }
   .bars { list-style: none; padding: 0; margin: 0; display: grid; gap: 18px; }
   .bar-head { display: flex; justify-content: space-between; font-weight: 600; margin-bottom: 6px; }
   .track { height: 14px; background: var(--line); border-radius: 99px; overflow: hidden; }
@@ -180,6 +203,21 @@
   .disclaimer { margin-top: 20px; font-size: .9rem; color: var(--muted); }
   footer.foot { text-align: center; margin-top: 24px; font-size: .9rem; color: var(--muted); position: relative; z-index: 1; }
   footer.foot a { color: var(--ink); }
+  @media (pointer: coarse) { .key-tip { display: none; } }
+  /* Phones: tighten the start screen so "Get my score" shows without scrolling at 375 x 812 */
+  @media (max-width: 599px) {
+    .wrap { padding-top: 12px; }
+    .card { padding-top: 18px; }
+    .brand { margin-bottom: 4px; }
+    .brand img { width: 36px; height: 36px; }
+    .owner { margin-bottom: 12px; }
+    .owner em { font-size: .9rem; line-height: 1.35; display: block; }
+    .eyebrow { font-size: .72rem; letter-spacing: .04em; padding: 5px 12px; margin-bottom: 10px; }
+    .promise { font-size: 1rem; }
+    label { margin-top: 12px; }
+    .consent { margin-top: 14px; }
+    .btn, .cta { padding-left: 16px; padding-right: 16px; }
+  }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 </style>
 </head>
@@ -187,6 +225,9 @@
 <div class="bg-decor" aria-hidden="true"><span></span><span></span><span></span></div>
 <div class="wrap">
   <main class="card">
+    <div class="brand">
+      <a href="/"><img src="/images/logo-168.png" srcset="/images/logo-168.png 1x, /images/logo-336.png 2x" alt="" width="40" height="40"><span>Growing Women in Business</span></a>
+    </div>
 
     <!-- SCREEN 1: hook + details (captured FIRST) -->
     <section id="screen-start" class="screen" aria-labelledby="start-title">
@@ -208,6 +249,10 @@
           <span id="consent-text"></span>
         </label>
         <p class="small muted" id="privacy-line"></p>
+        <div class="hp" aria-hidden="true">
+          <label for="website">Leave this empty</label>
+          <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
+        </div>
 
         <button class="btn" type="submit" id="start-btn"></button>
       </form>
@@ -217,18 +262,18 @@
     <section id="screen-question" class="screen" hidden aria-labelledby="q-text">
       <div class="progress-text"><span id="q-count"></span><span id="q-time"></span></div>
       <div class="progress" role="progressbar" aria-label="Quiz progress" aria-valuemin="0" id="progress"><div id="progress-fill"></div></div>
-      <h2 id="q-text" tabindex="-1" data-focus></h2>
+      <h1 id="q-text" tabindex="-1" data-focus></h1>
       <p class="qhelp" id="q-help" hidden></p>
       <div class="answers" role="group" aria-labelledby="q-text" id="answers"></div>
       <div class="nav">
         <button type="button" class="link-btn" id="back-btn">&larr; Back</button>
-        <span class="small muted">Tip: press 1&ndash;<span id="key-max">4</span></span>
+        <span class="small muted key-tip">Tip: press 1&ndash;<span id="key-max">4</span></span>
       </div>
     </section>
 
     <!-- SCREEN 3: result -->
     <section id="screen-result" class="screen" hidden aria-labelledby="r-greeting">
-      <h2 id="r-greeting" tabindex="-1" data-focus></h2>
+      <h1 id="r-greeting" tabindex="-1" data-focus></h1>
       <div id="r-score-wrap">
         <p class="score-label">Your findable score</p>
         <div class="score-ring" id="score-ring" aria-hidden="false">
@@ -236,18 +281,19 @@
         </div>
       </div>
       <p class="tier-name" id="r-tier"></p>
+      <div class="cta-top" id="r-cta-top"></div>
       <p class="headline" id="r-title"></p>
       <p id="r-means"></p>
 
-      <h3 id="r-bars-title"></h3>
+      <h2 class="sub" id="r-bars-title"></h2>
       <ul class="bars" id="r-bars"></ul>
 
-      <h3>Your top 3 quick wins</h3>
+      <h2 class="sub">Your top 3 quick wins</h2>
       <ol class="wins" id="r-wins"></ol>
 
       <div class="next">
         <p id="r-next-line"></p>
-        <a class="cta" id="r-cta" href="#"></a>
+        <div id="r-cta-bottom"></div>
       </div>
 
       <p class="disclaimer" id="r-disclaimer" hidden></p>
@@ -268,16 +314,27 @@ const CONFIG = {
   owner: {
     name: "Alana Arthurs",
     catchphrase: "Built everyone else's life. Not yet your own. Let's fix that.",
-    photo: "/images/alana-scorecard.jpg",
+    photo: "/images/alana-face.jpg",
     photoAlt: "Photo of Alana Arthurs"
   },
   title: "You built it. Can anybody find it?",
   promise: "11 quick questions. 2 minutes. You get a score out of 100, the one thing quietly losing you customers, and a ten-minute fix you can do tonight.",
   startButton: "Get my score",
   consentText: "Yes, send me the odd message from Growing Women in Business. Real tips, no spam, unsubscribe whenever.",
-  privacyUrl: "",
+  privacyUrl: "/privacy.html",
   secondsPerQuestion: 10,
   disclaimer: "",
+
+  // Shown as the main button when someone in the lowest tier says she wants
+  // help soon ("In the next few weeks" or "I'd like some help with this").
+  hotCall: { lead: "You said you'd like a hand.", text: "Book a free 30-minute call",
+             href: "https://calendly.com/alana-arthurs/findable-call?utm_source=scorecard&utm_medium=web&utm_campaign=findable-score-hot" },
+  // The one-tap newsletter sign-up for the lowest tier.
+  signup: { button: "Yes, send me The Only Way Is Up", done: "You're on the list. Watch your inbox.",
+            already: "You're on the list", failed: "That didn't go through. Please try again in a minute." },
+  share: { button: "Share my score", copied: "Copied",
+           text: "I scored {pct}% on the findable score. Can anybody find what you've built? Two minutes:",
+           url: "https://www.growingwomeninbusiness.com/scorecard?utm_source=share&utm_medium=social&utm_campaign=findable-score" },
 
   categories: [
     { id: "found", name: "Can people find you?",
@@ -363,7 +420,7 @@ const CONFIG = {
              "Write your receipts list: ten things you've actually run, fixed or held together. That's your skills page.",
              "Fill this in on paper: I help ___ with ___ for £___. Rough is fine."],
       nextLine: "Next: The Only Way Is Up, Alana's newsletter, every other Sunday. One true story about fear and what it costs, and one thing to do before Monday so the week starts with you a step on.",
-      cta: { text: "Join The Only Way Is Up", href: "https://www.growingwomeninbusiness.com" } }
+      cta: { signup: true } }
   ],
 
   outcomes: []
@@ -379,7 +436,8 @@ const CONFIG = {
     ...q,
     answers: q.answers.map(([label, points, extra]) => ({ label, points, ...(extra || {}) }))
   }));
-  const state = { i: 0, picks: new Array(Q.length).fill(null), person: null, utm: {} };
+  // sent: the result is posted once per page load, so "Take it again" never sends a second email.
+  const state = { i: 0, picks: new Array(Q.length).fill(null), person: null, utm: {}, sent: false, subscribed: false };
   const reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   // UTM tags from the address bar, kept in memory only (for wiring up later)
@@ -420,6 +478,10 @@ const CONFIG = {
     } else { priv.textContent = "Your result shows on screen as soon as you finish."; }
     const foot = $("foot");
     foot.textContent = C.owner.name + " · " + C.business + " · " + C.owner.catchphrase;
+    if (C.privacyUrl) {
+      const pa = document.createElement("a"); pa.href = C.privacyUrl; pa.textContent = "Privacy";
+      foot.append(" · ", pa);
+    }
   }
 
   $("details").addEventListener("submit", (ev) => {
@@ -436,8 +498,10 @@ const CONFIG = {
     state.person = {
       firstName: name.value.trim().split(" ")[0],
       email: email.value.trim(),
-      marketingConsent: $("consent").checked
+      marketingConsent: $("consent").checked,
+      website: $("website").value
     };
+    state.subscribed = state.person.marketingConsent;
     state.i = 0;
     renderQuestion();
     show("screen-question");
@@ -580,11 +644,110 @@ const CONFIG = {
     }
     $("r-means").textContent = block.means;
     $("r-next-line").textContent = block.nextLine;
-    const cta = $("r-cta"); cta.textContent = block.cta.text; cta.href = block.cta.href;
+    renderCtas(r, block);
     const d = $("r-disclaimer"); d.hidden = !C.disclaimer; d.textContent = C.disclaimer || "";
-    const rec = buildLeadRecord(r);
-    rec.wins = Array.from(document.querySelectorAll("#r-wins li")).map((li) => li.textContent);
-    fetch("/api/scorecard", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(rec) }).catch(() => {});
+    if (!state.sent) {
+      state.sent = true;
+      const rec = buildLeadRecord(r);
+      rec.wins = Array.from(document.querySelectorAll("#r-wins li")).map((li) => li.textContent);
+      fetch("/api/scorecard", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(rec) }).catch(() => {});
+    }
+  }
+
+  // ---- Result calls to action
+  function linkCta(text, href, extraClass) {
+    const a = document.createElement("a");
+    a.className = "cta" + (extraClass ? " " + extraClass : "");
+    a.textContent = text; a.href = href;
+    if (/^https?:/.test(href) && href.indexOf(location.origin) !== 0) { a.target = "_blank"; a.rel = "noopener"; }
+    return a;
+  }
+
+  // One-tap newsletter sign-up. Every copy on the page swaps together.
+  function signupCta() {
+    const box = document.createElement("div");
+    box.className = "signup";
+    paintSignup(box);
+    return box;
+  }
+  function paintSignup(box) {
+    box.innerHTML = "";
+    if (state.subscribed) {
+      const p = document.createElement("p"); p.className = "signup-done"; p.setAttribute("role", "status");
+      p.textContent = state.subscribedNow ? C.signup.done : C.signup.already;
+      box.append(p);
+      return;
+    }
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "cta"; b.textContent = C.signup.button;
+    b.addEventListener("click", () => subscribe(b));
+    box.append(b);
+    if (state.signupError) {
+      const e = document.createElement("p"); e.className = "field-error"; e.setAttribute("role", "alert");
+      e.textContent = C.signup.failed; box.append(e);
+    }
+  }
+  function subscribe(btn) {
+    btn.disabled = true;
+    fetch("/api/newsletter", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: state.person.email, source: "Findable Scorecard", website: state.person.website || "" })
+    }).then((res) => {
+      if (!res.ok) throw new Error("status " + res.status);
+      state.subscribed = true; state.subscribedNow = true; state.signupError = false;
+    }).catch(() => { state.signupError = true; })
+      .then(() => { document.querySelectorAll(".signup").forEach(paintSignup); });
+  }
+
+  function shareRow(pct) {
+    const row = document.createElement("p"); row.className = "share-row";
+    const b = document.createElement("button"); b.type = "button"; b.className = "link-btn"; b.id = "share-btn";
+    b.textContent = C.share.button;
+    // The button itself reads "Copied" for 2 seconds; the hidden status tells screen readers.
+    const status = document.createElement("span"); status.className = "share-status visually-hidden"; status.setAttribute("aria-live", "polite");
+    const text = C.share.text.replace("{pct}", pct);
+    b.addEventListener("click", () => {
+      const copy = () => {
+        const all = text + " " + C.share.url;
+        const done = () => {
+          b.textContent = C.share.copied; status.textContent = C.share.copied;
+          setTimeout(() => { b.textContent = C.share.button; status.textContent = ""; }, 2000);
+        };
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(all).then(done, () => { legacyCopy(all); done(); });
+        } else { legacyCopy(all); done(); }
+      };
+      if (navigator.share) {
+        navigator.share({ text: text, url: C.share.url }).catch((err) => { if (!err || err.name !== "AbortError") copy(); });
+      } else { copy(); }
+    });
+    row.append(b, status);
+    return row;
+  }
+  function legacyCopy(t) {
+    const ta = document.createElement("textarea"); ta.value = t; ta.setAttribute("readonly", "");
+    ta.style.position = "absolute"; ta.style.left = "-9999px"; document.body.append(ta);
+    ta.select(); try { document.execCommand("copy"); } catch (e) { /* nothing more to try */ }
+    ta.remove();
+  }
+
+  function renderCtas(r, block) {
+    const top = $("r-cta-top"), bottom = $("r-cta-bottom");
+    top.innerHTML = ""; bottom.innerHTML = "";
+    const hotLow = r.mode !== "type" && block.cta.signup && r.hot;
+    if (hotLow) {
+      // She's in the lowest tier but wants help soon: offer the call first, keep the newsletter second.
+      const lead = document.createElement("p"); lead.className = "lead"; lead.textContent = C.hotCall.lead;
+      top.append(lead, linkCta(C.hotCall.text, C.hotCall.href));
+      bottom.append(signupCta());
+    } else if (block.cta.signup) {
+      top.append(signupCta());
+      bottom.append(signupCta());
+    } else {
+      top.append(linkCta(block.cta.text, block.cta.href));
+      bottom.append(linkCta(block.cta.text, block.cta.href));
+    }
+    if (r.mode !== "type") top.append(shareRow(r.pct));
   }
 
   // What a form tool would receive once this is wired up (a later, separate job).
@@ -594,7 +757,8 @@ const CONFIG = {
       email: state.person && state.person.email,
       marketingConsent: !!(state.person && state.person.marketingConsent),
       mode: r.mode, hotLead: r.hot, insights: r.insights,
-      utm: state.utm, completedAt: new Date().toISOString()
+      utm: state.utm, completedAt: new Date().toISOString(),
+      website: (state.person && state.person.website) || ""   // honeypot, always empty for people
     };
     if (r.mode === "type") { rec.outcome = r.outcome.name; }
     else {

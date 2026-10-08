@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
       var button = form.querySelector('button[type="submit"]');
       var email = input ? input.value : '';
       var source = form.getAttribute('data-source') || undefined;
-      var isWaitlist = form.getAttribute('data-source') === 'Push Waitlist';
+      var isWaitlist = /Waitlist$/.test(form.getAttribute('data-source') || '');
       var originalButtonText = button ? button.textContent : '';
 
       if (button) {

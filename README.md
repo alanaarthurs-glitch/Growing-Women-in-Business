@@ -14,7 +14,8 @@ The site for [growingwomeninbusiness.com](https://www.growingwomeninbusiness.com
 | `public/apply.html` | The fit-check form for the Cohort. Posts to `/api/apply`. |
 | `public/welcome.html` | Post-payment page for both offers (`?offer=circle` or `?offer=cohort`). The Cohort side posts to `/api/first-action`. |
 | `public/whats-next.html` | Links out to Alana's wider world (alanaarthurs.com, Vector Rope Access). |
-| `public/404.html` | Not found page. |
+| `public/404.html` | Not found page. Not indexed. |
+| `public/privacy.html` | Plain-English privacy notice (a draft for Alana to check). Linked from every footer and the scorecard. |
 
 Every page shares one head, topbar, footer and newsletter panel pattern, and loads `/js/nav.js` and `/js/newsletter-panel.js` before `</body>`. The apply, welcome and quiz pages also load `/js/config.js` first, since they read it. The topbar button on every page is "Get my score", pointing at `/scorecard`.
 
@@ -39,6 +40,20 @@ Set these in Railway → your service → Variables. Never commit them.
 | `NOTION_CRM_DB_ID` | The CRM — Contacts database ID. | No CRM upsert happens on any form. |
 | `RESEND_API_KEY` | Resend API key. | The archetype PDF email is skipped. |
 | `RESEND_FROM_EMAIL` | The verified "from" address in Resend. | Same as above. |
+| `NEXT_COHORT_LINE` | One sentence about the next Cohort date for the scorecard email, for example `The next Future Maker Cohort starts on 12 January.` | The email says nothing about dates. |
+| `DATA_DIR` | Where the local JSONL backups go. | `data/` next to `index.js`. |
+
+## The next Cohort date
+
+The date lives in two places, both one line. On the site: `cohortStartLine` in `public/js/config.js` (empty shows "Next cohort: dates announced to the list first"). In the scorecard email: the `NEXT_COHORT_LINE` variable in Railway.
+
+## Tests
+
+```bash
+npm test
+```
+
+Starts the server on a spare port and checks the security fixes (bad requests get 400s rather than crashing the server, cross-site posts get 403, the rate limit kicks in, emails are escaped) and the caching. Needs Node 18 or later and nothing else.
 
 ## Run it locally
 

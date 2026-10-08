@@ -17,6 +17,8 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500;1,600&family=Inter:wght@400;500;600;700&display=swap" />
+  <link rel="preload" as="image" href="/images/alana-about.jpg" fetchpriority="high" />
   <link rel="stylesheet" href="/css/site.css" />
   <script type="application/ld+json">
   {
@@ -39,7 +41,7 @@
 
   <header class="topbar">
     <a href="/" class="wordmark" aria-label="Growing Women in Business, home">
-      <img src="/images/logo.png" alt="Growing Women in Business" class="logo-mark" width="512" height="512" />
+      <img src="/images/logo-168.png" srcset="/images/logo-168.png 1x, /images/logo-336.png 2x" alt="Growing Women in Business" class="logo-mark" width="84" height="84" />
     </a>
     <div class="topbar-actions">
       <a href="/scorecard" class="btn btn-nav">Get my score</a>
@@ -92,8 +94,8 @@
           <p>this website, the scorecard and every email you'll get. Made by me in days, not months.</p>
         </div>
         <div class="proof-tile">
-          <span class="figure">1 October</span>
-          <p>the first Future Maker Cohort starts. Ten seats.</p>
+          <span class="figure" data-cohort-figure>Next cohort</span>
+          <p data-cohort-line>dates announced to the list first</p>
         </div>
         <div class="proof-tile">
           <span class="figure">Grew up in care</span>
@@ -233,25 +235,24 @@
         <h2>The Future Maker Cohort</h2>
         <div class="offer-hero-card">
           <ul class="facts-row">
-            <li>Starts 1 October 2026</li>
-            <li>ten seats</li>
+            <li data-cohort-line>Next cohort: dates announced to the list first</li>
+            <li data-cohort-seats>ten seats</li>
             <li>six weeks</li>
             <li>an hour a week on Zoom</li>
             <li>1:1 help when you're stuck</li>
           </ul>
           <p class="price">&pound;297</p>
-          <p class="price-note">one payment</p>
+          <p class="price-note">one payment, when the next cohort opens</p>
           <p class="offer-note">There's no cash refund. But if you turn up to the kickoff, come to the weekly calls and do the paired work with your buddy, and you still haven't done the one big scary thing you came here to do by day 42, I'll keep working with you 1:1, free, by WhatsApp or email, until you have.</p>
           <p class="offer-note">Bring a friend free. Every paid seat can bring one woman in at no cost.</p>
           <p class="offer-note">This is the first time I'm running it in this shape. I'd rather say that than pretend otherwise.</p>
           <div class="offer-actions">
-            <a href="https://calendly.com/alana-arthurs/findable-call?utm_source=website&amp;utm_medium=offer&amp;utm_campaign=findable-call" class="btn" target="_blank" rel="noopener">Book a free 30-minute call first</a>
-            <form action="https://www.paypal.com/ncp/payment/TA72HYXXK745N" method="post" target="_blank" class="pay-form">
-              <button type="submit" class="btn btn-secondary">Pay &pound;297 now</button>
-              <img src="https://www.paypalobjects.com/images/Debit_Credit_APM.svg" alt="Visa, Mastercard, American Express and PayPal accepted" class="pay-cards" />
-            </form>
+            <a href="https://calendly.com/alana-arthurs/findable-call?utm_source=website&amp;utm_medium=offer&amp;utm_campaign=findable-call" class="btn" target="_blank" rel="noopener">Book a free 30-minute call</a>
+            <a href="/waitlist.html" class="btn btn-secondary">Join the waitlist</a>
+            <!-- PLACEHOLDER: cohort pay button. Hidden until cohortPayUrl is set in /js/config.js. -->
+            <a href="#" id="cohort-pay" class="btn" target="_blank" rel="noopener" hidden>Pay &pound;297 now</a>
           </div>
-          <a href="/cohort.html" class="offer-details-link">See full details</a>
+          <a href="/waitlist.html" class="offer-details-link">Join the cohort waitlist</a>
         </div>
 
         <div class="quiet-row">
@@ -300,12 +301,29 @@
   </section>
 
   <footer class="site-footer">
-    <img src="/images/logo.png" alt="Growing Women in Business" class="logo-mark footer-logo" width="512" height="512" />
+    <img src="/images/logo-168.png" srcset="/images/logo-168.png 1x, /images/logo-336.png 2x" alt="Growing Women in Business" class="logo-mark footer-logo" width="84" height="84" />
     <a href="https://instagram.com/growingwomeninbusiness" class="handle" target="_blank" rel="noopener">@growingwomeninbusiness</a>
     <p class="also-part-of">Also part of Alana's world: <a href="https://www.alanaarthurs.com" target="_blank" rel="noopener">alanaarthurs.com</a> &middot; <a href="https://www.vectorropeaccess.co.uk" target="_blank" rel="noopener">vectorropeaccess.co.uk</a> &middot; <a href="/push.html">The Push (paused)</a> &middot; <a href="/whats-next.html">what's next</a></p>
-    <p class="legal">&copy; 2026 Growing Women in Business &middot; Alana Arthurs</p>
+    <p class="legal">&copy; 2026 Growing Women in Business &middot; Alana Arthurs &middot; <a href="/privacy.html">Privacy</a></p>
   </footer>
 
+  <script src="/js/config.js"></script>
+  <script>
+    // Fills the next Cohort date from /js/config.js (cohortStartLine, cohortSeats).
+    // Empty values leave the fallback text in the page as it is.
+    (function () {
+      var c = window.GWIB_CONFIG || {};
+      function fill(sel, text) {
+        if (!text) return;
+        var els = document.querySelectorAll(sel);
+        for (var i = 0; i < els.length; i++) els[i].textContent = text;
+      }
+      fill('[data-cohort-line]', c.cohortStartLine);
+      fill('[data-cohort-seats]', c.cohortSeats);
+      var pay = document.getElementById('cohort-pay');
+      if (pay && c.cohortPayUrl) { pay.href = c.cohortPayUrl; if (c.cohortPayLabel) pay.textContent = c.cohortPayLabel; pay.hidden = false; }
+    })();
+  </script>
   <script src="/js/nav.js"></script>
   <script src="/js/newsletter-panel.js"></script>
 </body>

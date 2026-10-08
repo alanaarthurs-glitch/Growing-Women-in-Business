@@ -2,10 +2,11 @@ const http = require("http");
 const fs = require("fs");
 const path = require("path");
 const zlib = require("zlib");
+const crypto = require("crypto");
 
 const PORT = process.env.PORT || 3000;
 const PUBLIC_DIR = path.join(__dirname, "public");
-const DATA_DIR = path.join(__dirname, "data");
+const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, "data");
 
 const NOTION_API_KEY = process.env.NOTION_API_KEY || "";
 const NOTION_APPLICATIONS_DB_ID = process.env.NOTION_APPLICATIONS_DB_ID || "";
@@ -17,12 +18,22 @@ const RESEND_API_KEY = process.env.RESEND_API_KEY || "";
 const RESEND_FROM_EMAIL = process.env.RESEND_FROM_EMAIL || "";
 const PDF_DIR = path.join(__dirname, "assets", "pdfs");
 
+// One line about the next Cohort, used in the scorecard email. Set it in
+// Railway (for example "The next Future Maker Cohort starts on 12 January.")
+// and clear it when there is no date. Empty means the email says nothing
+// about dates, so it can never go stale.
+const NEXT_COHORT_LINE = process.env.NEXT_COHORT_LINE || "";
+
+// Every outbound call (Notion, Resend) gives up after this long, so a slow
+// third party can never hold a request open for ever.
+const FETCH_TIMEOUT_MS = 8000;
+
 // The canonical site origin, always the www host. Used both to build the
 // redirect target and, with the protocol and "www." stripped, to recognise
 // the bare (non-www) host that should be redirected. Never matches a
 // localhost or Railway-internal hostname, so previews and health checks
 // are left alone.
-const SITE_ORIGIN = process.env.SITE_ORIGIN || "https://www.growingwomeninbusiness.com";
+const SITE_ORIGIN = (process.env.SITE_ORIGIN || "https://www.growingwomeninbusiness.com").replace(/\/+$/, "");
 function deriveBareHost(origin) {
   const withoutProtocol = origin.replace(/^https?:\/\//i, "");
   const hostOnly = withoutProtocol.split("/")[0];
@@ -51,8 +62,17 @@ const CONTENT_SECURITY_POLICY = [
   "upgrade-insecure-requests",
 ].join("; ");
 
-// One year of HSTS, covering subdomains. Only sent on HTTPS responses.
-const STRICT_TRANSPORT_SECURITY = "max-age=31536000; includeSubDomains";
+// One year of HSTS, covering subdomains, with the preload flag. Only sent on
+// HTTPS responses. The flag on its own does nothing: the domain only joins
+// the browser preload list once it is submitted at hstspreload.org, and that
+// is slow to undo, so only submit once every subdomain is on HTTPS.
+const STRICT_TRANSPORT_SECURITY = "max-age=31536000; includeSubDomains; preload";
+
+// Cross-Origin-Opener-Policy. "same-origin-allow-popups" keeps other sites
+// from scripting our windows but still lets the PayPal checkout popup (used
+// by the Circle subscription button) talk back to the page that opened it.
+// Plain "same-origin" would cut that link and break the PayPal popup.
+const CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups";
 
 const KNOWN_ARCHETYPES = [
   "The Wildflower", "The Ember", "The Pearl", "Mademoiselle", "The Late Bloomer",
@@ -73,7 +93,7 @@ const ARCHETYPE_PDF_KEYS = {
 
 const KNOWN_SOURCES = [
   "Home Quiz", "Circle Welcome", "Cohort Welcome", "Free Newsletter Card",
-  "Push Waitlist", "Newsletter Panel", "Findable Scorecard",
+  "Push Waitlist", "Cohort Waitlist", "Newsletter Panel", "Findable Scorecard",
 ];
 
 const KNOWN_APPLY_CATEGORIES = ["Pricing", "Visibility", "The Avoided Conversation"];
@@ -96,26 +116,12 @@ const MIME_TYPES = {
 
 // Types that are worth gzipping. Anything not in this list (in particular
 // every image type except SVG) is left alone.
-const GZIPPABLE_TYPES = ["application/javascript", "application/json", "image/svg+xml"];
+const GZIPPABLE_TYPES = ["application/javascript", "application/json", "application/xml", "image/svg+xml"];
 
 function isGzippable(contentType) {
   const bareType = contentType.split(";")[0].trim();
   if (bareType.indexOf("text/") === 0) return true;
   return GZIPPABLE_TYPES.indexOf(bareType) !== -1;
-}
-
-// Gzips the body when the client accepts it, the content type is worth
-// compressing and the body clears the 1KB floor. Mutates `headers` to add
-// Content-Encoding and Vary when it does. Returns the body to send.
-function maybeGzip(req, headers, contentType, data) {
-  const acceptEncoding = req.headers["accept-encoding"] || "";
-  if (acceptEncoding.indexOf("gzip") === -1) return data;
-  if (!isGzippable(contentType)) return data;
-  if (data.length <= 1024) return data;
-
-  headers["Content-Encoding"] = "gzip";
-  headers["Vary"] = "Accept-Encoding";
-  return zlib.gzipSync(data);
 }
 
 // HTML is never cached (content changes often and there's no build hash).
@@ -135,102 +141,353 @@ function getCacheControl(filePath, ext) {
   return null;
 }
 
-// Reads and sends a file. If it's missing and this isn't already the 404
-// page, falls back to serving public/404.html with a 404 status. If that
-// itself is missing, falls back to plain text so a request never hangs.
-function serveFile(req, res, filePath, statusCode) {
-  statusCode = statusCode || 200;
-  fs.readFile(filePath, (err, data) => {
-    if (err) {
-      if (statusCode === 404) {
-        res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
-        res.end("Not found");
-        return;
-      }
-      serveFile(req, res, path.join(PUBLIC_DIR, "404.html"), 404);
-      return;
-    }
+// ---------------------------------------------------------------------------
+// Static file cache
+// ---------------------------------------------------------------------------
+// Each file is read and gzipped once, then kept in memory with its ETag.
+// Every request still does a cheap fs.stat, so editing a file on disk is
+// picked up straight away (the mtime or size changes and the entry is
+// rebuilt). Files over MAX_CACHED_FILE_BYTES are read fresh each time.
+const MAX_CACHED_FILE_BYTES = 5 * 1024 * 1024;
+const staticCache = new Map();
 
-    const ext = path.extname(filePath);
-    const contentType = MIME_TYPES[ext] || "application/octet-stream";
-    const headers = { "Content-Type": contentType };
+function buildEntry(filePath, stats, raw) {
+  const ext = path.extname(filePath);
+  const contentType = MIME_TYPES[ext] || "application/octet-stream";
+  const hash = crypto.createHash("sha1").update(raw).digest("base64url").slice(0, 22);
+  const gz = isGzippable(contentType) && raw.length > 1024 ? zlib.gzipSync(raw) : null;
+  return {
+    raw,
+    gz,
+    etag: `W/"${hash}"`,
+    mtimeMs: stats.mtimeMs,
+    size: stats.size,
+    contentType,
+    cacheControl: getCacheControl(filePath, ext),
+  };
+}
 
-    const cacheControl = getCacheControl(filePath, ext);
-    if (cacheControl) headers["Cache-Control"] = cacheControl;
-
-    const body = maybeGzip(req, headers, contentType, data);
-    res.writeHead(statusCode, headers);
-    res.end(body);
+function loadFile(filePath, stats) {
+  const cached = staticCache.get(filePath);
+  if (cached && cached.mtimeMs === stats.mtimeMs && cached.size === stats.size) {
+    return Promise.resolve(cached);
+  }
+  return fs.promises.readFile(filePath).then((raw) => {
+    const entry = buildEntry(filePath, stats, raw);
+    if (raw.length <= MAX_CACHED_FILE_BYTES) staticCache.set(filePath, entry);
+    return entry;
   });
+}
+
+function etagMatches(ifNoneMatch, etag) {
+  if (!ifNoneMatch) return false;
+  const bare = etag.replace(/^W\//, "");
+  return ifNoneMatch.split(",").some((tag) => {
+    const t = tag.trim();
+    return t === "*" || t.replace(/^W\//, "") === bare;
+  });
+}
+
+function sendEntry(req, res, entry, statusCode) {
+  const headers = { "Content-Type": entry.contentType, "ETag": entry.etag };
+  if (entry.cacheControl) headers["Cache-Control"] = entry.cacheControl;
+  if (entry.gz) headers["Vary"] = "Accept-Encoding";
+
+  if (statusCode === 200 && etagMatches(req.headers["if-none-match"], entry.etag)) {
+    res.writeHead(304, headers);
+    res.end();
+    return;
+  }
+
+  const acceptEncoding = req.headers["accept-encoding"] || "";
+  let body = entry.raw;
+  if (entry.gz && /\bgzip\b/.test(acceptEncoding)) {
+    headers["Content-Encoding"] = "gzip";
+    body = entry.gz;
+  }
+  headers["Content-Length"] = body.length;
+  res.writeHead(statusCode, headers);
+  if (req.method === "HEAD") res.end();
+  else res.end(body);
+}
+
+function sendNotFound(req, res) {
+  const notFoundPath = path.join(PUBLIC_DIR, "404.html");
+  fs.promises.stat(notFoundPath)
+    .then((stats) => loadFile(notFoundPath, stats))
+    .then((entry) => sendEntry(req, res, entry, 404))
+    .catch(() => {
+      if (res.headersSent) return;
+      res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
+      res.end("Not found");
+    });
+}
+
+function isInsidePublic(filePath) {
+  return filePath === PUBLIC_DIR || filePath.startsWith(PUBLIC_DIR + path.sep);
+}
+
+async function statFile(filePath) {
+  try {
+    return await fs.promises.stat(filePath);
+  } catch (err) {
+    return null;
+  }
 }
 
 // Resolves a request path against public/: exact files and directories
 // (served as index.html) first, then, for an extension-less path, a clean
 // URL match against "<path>.html". Anything left over is a 404.
-function serveStatic(req, res, urlPath) {
-  let filePath = path.join(PUBLIC_DIR, urlPath === "/" ? "index.html" : urlPath);
+async function serveStatic(req, res, urlPath) {
+  if (req.method !== "GET" && req.method !== "HEAD") {
+    res.writeHead(405, { "Allow": "GET, HEAD", "Content-Type": "text/plain; charset=utf-8" });
+    res.end("Method not allowed");
+    return;
+  }
 
-  if (!filePath.startsWith(PUBLIC_DIR)) {
-    res.writeHead(403);
+  let filePath = path.join(PUBLIC_DIR, urlPath === "/" ? "index.html" : urlPath);
+  if (!isInsidePublic(filePath)) {
+    res.writeHead(403, { "Content-Type": "text/plain; charset=utf-8" });
     res.end("Forbidden");
     return;
   }
 
-  fs.stat(filePath, (err, stats) => {
-    if (!err && stats.isDirectory()) {
-      serveFile(req, res, path.join(filePath, "index.html"));
-      return;
+  let stats = await statFile(filePath);
+  if (stats && stats.isDirectory()) {
+    filePath = path.join(filePath, "index.html");
+    stats = await statFile(filePath);
+  }
+  if (!stats && path.extname(filePath) === "") {
+    const htmlPath = filePath + ".html";
+    if (isInsidePublic(htmlPath)) {
+      filePath = htmlPath;
+      stats = await statFile(filePath);
     }
-    if (!err && stats.isFile()) {
-      serveFile(req, res, filePath);
-      return;
-    }
+  }
+  if (!stats || !stats.isFile()) {
+    sendNotFound(req, res);
+    return;
+  }
 
-    if (path.extname(filePath) === "") {
-      const htmlPath = filePath + ".html";
-      if (htmlPath.startsWith(PUBLIC_DIR)) {
-        fs.stat(htmlPath, (err2, stats2) => {
-          if (!err2 && stats2.isFile()) {
-            serveFile(req, res, htmlPath);
-            return;
-          }
-          serveFile(req, res, path.join(PUBLIC_DIR, "404.html"), 404);
-        });
-        return;
-      }
-    }
-
-    serveFile(req, res, path.join(PUBLIC_DIR, "404.html"), 404);
-  });
+  const entry = await loadFile(filePath, stats);
+  sendEntry(req, res, entry, 200);
 }
 
-function sendJSON(res, status, body) {
+// ---------------------------------------------------------------------------
+// Small helpers
+// ---------------------------------------------------------------------------
+
+function sendJSON(res, status, body, extraHeaders) {
+  if (res.headersSent) return;
   const data = JSON.stringify(body);
-  res.writeHead(status, { "Content-Type": "application/json; charset=utf-8" });
+  res.writeHead(status, { "Content-Type": "application/json; charset=utf-8", ...(extraHeaders || {}) });
   res.end(data);
 }
 
+// Every field from a form goes through this. Anything that is not a string
+// (a number, an array, an object, null) becomes an empty string, so a
+// crafted body can never reach .trim() on the wrong type.
+function str(x) {
+  return typeof x === "string" ? x.trim() : "";
+}
+
+function isPlainObject(x) {
+  return x !== null && typeof x === "object" && !Array.isArray(x) &&
+    Object.getPrototypeOf(x) === Object.prototype;
+}
+
+const EMAIL_PATTERN = /^[^\s@<>"']+@[^\s@<>"']+\.[^\s@<>"']+$/;
+function isEmail(email) {
+  return email.length <= 254 && EMAIL_PATTERN.test(email);
+}
+
+// Escapes the five characters that matter in HTML text and attributes.
+function escapeHtml(value) {
+  return String(value == null ? "" : value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+class HttpError extends Error {
+  constructor(status, message) {
+    super(message);
+    this.status = status;
+  }
+}
+
+// Reads a JSON request body. Refuses anything that is not sent as
+// application/json (415), anything over 32 KB (413) and anything that is not
+// a plain JSON object (400). The forms on the site send a few hundred bytes.
+const MAX_BODY_BYTES = 32 * 1024;
 function readBody(req) {
   return new Promise((resolve, reject) => {
-    let chunks = "";
+    const contentType = (req.headers["content-type"] || "").toLowerCase();
+    if (contentType.indexOf("application/json") !== 0) {
+      req.resume();
+      reject(new HttpError(415, "Send JSON"));
+      return;
+    }
+    const declared = parseInt(req.headers["content-length"] || "0", 10);
+    if (declared > MAX_BODY_BYTES) {
+      req.resume();
+      reject(new HttpError(413, "Too large"));
+      return;
+    }
+
+    const chunks = [];
+    let total = 0;
+    let done = false;
     req.on("data", (chunk) => {
-      chunks += chunk;
-      if (chunks.length > 1e6) req.destroy();
+      if (done) return;
+      total += chunk.length;
+      if (total > MAX_BODY_BYTES) {
+        done = true;
+        reject(new HttpError(413, "Too large"));
+        return;
+      }
+      chunks.push(chunk);
     });
     req.on("end", () => {
+      if (done) return;
+      done = true;
+      let parsed;
       try {
-        resolve(chunks ? JSON.parse(chunks) : {});
+        parsed = JSON.parse(Buffer.concat(chunks).toString("utf8"));
       } catch (err) {
-        reject(err);
+        reject(new HttpError(400, "Invalid request body"));
+        return;
       }
+      if (!isPlainObject(parsed)) {
+        reject(new HttpError(400, "Invalid request body"));
+        return;
+      }
+      resolve(parsed);
     });
-    req.on("error", reject);
+    req.on("error", (err) => {
+      if (done) return;
+      done = true;
+      reject(err);
+    });
   });
 }
 
+// ---------------------------------------------------------------------------
+// Abuse limits (all in memory, reset when the server restarts)
+// ---------------------------------------------------------------------------
+
+// Token bucket per key. Each key starts with `capacity` tokens and earns
+// them back at capacity per windowMs. With 20 per 10 minutes, someone can
+// send 20 forms in a burst, then one every 30 seconds. The Map is pruned on
+// a timer and never grows past maxKeys.
+function createRateLimiter(options) {
+  const capacity = (options && options.capacity) || 20;
+  const windowMs = (options && options.windowMs) || 10 * 60 * 1000;
+  const maxKeys = (options && options.maxKeys) || 10000;
+  const refillPerMs = capacity / windowMs;
+  const buckets = new Map();
+
+  function prune(now) {
+    if (typeof now !== "number") now = Date.now();
+    for (const [key, b] of buckets) {
+      if (now - b.last >= windowMs) buckets.delete(key);
+    }
+  }
+
+  function take(key, now) {
+    if (typeof now !== "number") now = Date.now();
+    let b = buckets.get(key);
+    if (!b) {
+      if (buckets.size >= maxKeys) {
+        prune(now);
+        // Still full: drop the oldest entry (Maps keep insertion order).
+        if (buckets.size >= maxKeys) buckets.delete(buckets.keys().next().value);
+      }
+      b = { tokens: capacity, last: now };
+      buckets.set(key, b);
+    } else {
+      b.tokens = Math.min(capacity, b.tokens + (now - b.last) * refillPerMs);
+      b.last = now;
+    }
+    if (b.tokens >= 1) {
+      b.tokens -= 1;
+      return { ok: true, remaining: Math.floor(b.tokens), retryAfter: 0 };
+    }
+    const retryAfter = Math.max(1, Math.ceil((1 - b.tokens) / refillPerMs / 1000));
+    return { ok: false, remaining: 0, retryAfter };
+  }
+
+  return { take, prune, size: () => buckets.size, capacity, windowMs };
+}
+
+// One email of each kind per address per 24 hours, so the forms can't be
+// used to flood someone's inbox through Resend.
+function createSendGuard(options) {
+  const ttlMs = (options && options.ttlMs) || 24 * 60 * 60 * 1000;
+  const maxKeys = (options && options.maxKeys) || 50000;
+  const sent = new Map();
+
+  function prune(now) {
+    if (typeof now !== "number") now = Date.now();
+    for (const [key, at] of sent) {
+      if (now - at >= ttlMs) sent.delete(key);
+    }
+  }
+
+  // Returns true (and records the send) the first time; false after that.
+  function claim(kind, email, now) {
+    if (typeof now !== "number") now = Date.now();
+    const key = kind + ":" + email.toLowerCase();
+    const at = sent.get(key);
+    if (at !== undefined && now - at < ttlMs) return false;
+    if (sent.size >= maxKeys) {
+      prune(now);
+      if (sent.size >= maxKeys) sent.delete(sent.keys().next().value);
+    }
+    sent.set(key, now);
+    return true;
+  }
+
+  return { claim, prune, size: () => sent.size };
+}
+
+const apiLimiter = createRateLimiter({ capacity: 20, windowMs: 10 * 60 * 1000, maxKeys: 10000 });
+const sendGuard = createSendGuard({ ttlMs: 24 * 60 * 60 * 1000, maxKeys: 50000 });
+setInterval(() => {
+  apiLimiter.prune();
+  sendGuard.prune();
+}, 60 * 1000).unref();
+
+function clientIp(req) {
+  // Railway's edge adds X-Forwarded-For. The first value is the client.
+  const forwarded = (req.headers["x-forwarded-for"] || "").split(",")[0].trim();
+  return forwarded || (req.socket && req.socket.remoteAddress) || "unknown";
+}
+
+// Browsers send an Origin header on every cross-site POST. If there is one,
+// it has to be this site, the request's own host (Railway previews) or a
+// local preview. No Origin header (curl, server-to-server) is allowed
+// through, since the rate limit and the send guard still apply.
+const LOCAL_ORIGIN = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i;
+function originAllowed(req) {
+  const origin = req.headers.origin;
+  if (!origin) return true;
+  if (origin === SITE_ORIGIN) return true;
+  if (LOCAL_ORIGIN.test(origin)) return true;
+  const host = req.headers.host || "";
+  if (host && (origin === "https://" + host || origin === "http://" + host)) return true;
+  return false;
+}
+
 function appendLocalLead(fileName, record) {
-  fs.mkdirSync(DATA_DIR, { recursive: true });
-  fs.appendFileSync(path.join(DATA_DIR, fileName), JSON.stringify(record) + "\n");
+  try {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+    fs.appendFileSync(path.join(DATA_DIR, fileName), JSON.stringify(record) + "\n");
+  } catch (err) {
+    console.error("Local lead write failed:", err.message);
+  }
 }
 
 // Notion rich_text properties have a length ceiling. Keep well under it.
@@ -238,15 +495,20 @@ function truncateRichText(text) {
   return text.length > 1900 ? text.slice(0, 1900) : text;
 }
 
-async function createNotionPage(databaseId, properties) {
-  const response = await fetch("https://api.notion.com/v1/pages", {
-    method: "POST",
+// ---------------------------------------------------------------------------
+// Notion
+// ---------------------------------------------------------------------------
+
+async function notionRequest(url, method, payload) {
+  const response = await fetch(url, {
+    method,
     headers: {
       "Authorization": `Bearer ${NOTION_API_KEY}`,
       "Notion-Version": NOTION_VERSION,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ parent: { database_id: databaseId }, properties }),
+    body: JSON.stringify(payload),
+    signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
   });
   if (!response.ok) {
     const text = await response.text();
@@ -255,42 +517,20 @@ async function createNotionPage(databaseId, properties) {
   return response.json();
 }
 
+async function createNotionPage(databaseId, properties) {
+  return notionRequest("https://api.notion.com/v1/pages", "POST", { parent: { database_id: databaseId }, properties });
+}
+
 async function findNotionPageByEmail(databaseId, email) {
-  const response = await fetch(`https://api.notion.com/v1/databases/${databaseId}/query`, {
-    method: "POST",
-    headers: {
-      "Authorization": `Bearer ${NOTION_API_KEY}`,
-      "Notion-Version": NOTION_VERSION,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      filter: { property: "Email", email: { equals: email } },
-      page_size: 1,
-    }),
+  const data = await notionRequest(`https://api.notion.com/v1/databases/${databaseId}/query`, "POST", {
+    filter: { property: "Email", email: { equals: email } },
+    page_size: 1,
   });
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(`Notion API ${response.status}: ${text}`);
-  }
-  const data = await response.json();
   return data.results[0] || null;
 }
 
 async function updateNotionPage(pageId, properties) {
-  const response = await fetch(`https://api.notion.com/v1/pages/${pageId}`, {
-    method: "PATCH",
-    headers: {
-      "Authorization": `Bearer ${NOTION_API_KEY}`,
-      "Notion-Version": NOTION_VERSION,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ properties }),
-  });
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(`Notion API ${response.status}: ${text}`);
-  }
-  return response.json();
+  return notionRequest(`https://api.notion.com/v1/pages/${pageId}`, "PATCH", { properties });
 }
 
 // Creates a CRM contact if the email is new, or merges these updates onto
@@ -321,38 +561,20 @@ async function upsertCrmContact(email, updates) {
   }
 }
 
-async function sendWelcomeEmail(email, archetype) {
-  if (!RESEND_API_KEY || !RESEND_FROM_EMAIL) return false;
+// ---------------------------------------------------------------------------
+// Resend
+// ---------------------------------------------------------------------------
 
-  const pdfKey = ARCHETYPE_PDF_KEYS[archetype];
-  if (!pdfKey) return false;
-
-  const pdfPath = path.join(PDF_DIR, `${pdfKey}.pdf`);
-  const pdfBuffer = await fs.promises.readFile(pdfPath);
-
+async function resendSend(payload) {
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
       "Authorization": `Bearer ${RESEND_API_KEY}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      from: RESEND_FROM_EMAIL,
-      to: email,
-      subject: `You're ${archetype}: here's your full guide`,
-      html:
-        `<p>Hi,</p>` +
-        `<p>You just found out you're <strong>${archetype}</strong>. Attached is your full guide: who you are, your specific pain points, and tips and tricks built just for your type.</p>` +
-        `<p>Alana</p>`,
-      attachments: [
-        {
-          filename: `${archetype.replace(/\s+/g, "-")}.pdf`,
-          content: pdfBuffer.toString("base64"),
-        },
-      ],
-    }),
+    body: JSON.stringify(payload),
+    signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
   });
-
   if (!response.ok) {
     const text = await response.text();
     throw new Error(`Resend API ${response.status}: ${text}`);
@@ -360,24 +582,55 @@ async function sendWelcomeEmail(email, archetype) {
   return true;
 }
 
-async function handleApply(req, res) {
-  let body;
-  try {
-    body = await readBody(req);
-  } catch (err) {
-    return sendJSON(res, 400, { ok: false, error: "Invalid request body" });
-  }
+function welcomeEmailHtml(archetype) {
+  return `<p>Hi,</p>` +
+    `<p>You just found out you're <strong>${escapeHtml(archetype)}</strong>. Attached is your full guide: who you are, your specific pain points, and tips and tricks built just for your type.</p>` +
+    `<p>Alana</p>`;
+}
 
-  const name = (body.name || body.firstName || "").trim();
-  const email = (body.email || "").trim();
-  const phone = (body.phone || "").trim();
-  const categoryRaw = (body.category || "").trim();
+async function sendWelcomeEmail(email, archetype) {
+  if (!RESEND_API_KEY || !RESEND_FROM_EMAIL) return false;
+
+  const pdfKey = ARCHETYPE_PDF_KEYS[archetype];
+  if (!pdfKey) return false;
+  if (!sendGuard.claim("welcome", email)) return false;
+
+  const pdfPath = path.join(PDF_DIR, `${pdfKey}.pdf`);
+  const pdfBuffer = await fs.promises.readFile(pdfPath);
+
+  return resendSend({
+    from: RESEND_FROM_EMAIL,
+    to: email,
+    subject: `You're ${archetype}: here's your full guide`,
+    html: welcomeEmailHtml(archetype),
+    attachments: [
+      {
+        filename: `${archetype.replace(/\s+/g, "-")}.pdf`,
+        content: pdfBuffer.toString("base64"),
+      },
+    ],
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Form handlers. Each one gets a body that readBody has already checked is a
+// plain object, and treats every field as untrusted.
+// ---------------------------------------------------------------------------
+
+async function handleApply(req, res, body) {
+  const name = (str(body.name) || str(body.firstName)).slice(0, 120);
+  const email = str(body.email);
+  const phone = str(body.phone).slice(0, 40);
+  const categoryRaw = str(body.category);
   const category = KNOWN_APPLY_CATEGORIES.includes(categoryRaw) ? categoryRaw : "Not given";
-  const stuck = (body.stuck || "").trim();
-  const whyNow = (body.whyNow || "").trim();
+  const stuck = truncateRichText(str(body.stuck));
+  const whyNow = truncateRichText(str(body.whyNow));
 
   if (!name || !email || !stuck || !whyNow) {
     return sendJSON(res, 400, { ok: false, error: "Missing required fields" });
+  }
+  if (!isEmail(email)) {
+    return sendJSON(res, 400, { ok: false, error: "Invalid email" });
   }
 
   appendLocalLead("applications.jsonl", {
@@ -419,32 +672,34 @@ async function handleApply(req, res) {
   sendJSON(res, 200, { ok: true });
 }
 
-async function handleFirstAction(req, res) {
-  let body;
-  try {
-    body = await readBody(req);
-  } catch (err) {
-    return sendJSON(res, 400, { ok: false, error: "Invalid request body" });
-  }
-
-  const email = (body.email || "").trim();
-  const action = (body.action || "").trim();
-  const name = (body.name || "").trim();
+async function handleFirstAction(req, res, body) {
+  const email = str(body.email);
+  const action = truncateRichText(str(body.action));
+  const name = str(body.name).slice(0, 120);
 
   if (!email || !action) {
     return sendJSON(res, 400, { ok: false, error: "Missing required fields" });
+  }
+  if (!isEmail(email)) {
+    return sendJSON(res, 400, { ok: false, error: "Invalid email" });
   }
 
   appendLocalLead("first-actions.jsonl", { email, action, name, submittedAt: new Date().toISOString() });
 
   if (NOTION_API_KEY && NOTION_APPLICATIONS_DB_ID) {
     try {
+      // This form is public: anyone who finds welcome.html can post it, so it
+      // must never mark someone as paid. Stage "Welcome page" just records
+      // where the row came from. The trustworthy source for "Paid" is a
+      // PayPal webhook (PAYMENT.CAPTURE.COMPLETED / BILLING.SUBSCRIPTION.
+      // ACTIVATED) verified with PayPal's signature, or Alana checking PayPal
+      // by hand. Notion adds the "Welcome page" option the first time it sees it.
       await createNotionPage(NOTION_APPLICATIONS_DB_ID, {
         "Name": { title: [{ text: { content: name || email } }] },
         "Email": { email },
-        "What they keep putting off": { rich_text: [{ text: { content: truncateRichText(action) } }] },
+        "What they keep putting off": { rich_text: [{ text: { content: action } }] },
         "Why now": { rich_text: [{ text: { content: "First action sent from the Cohort welcome page" } }] },
-        "Stage": { select: { name: "Paid" } },
+        "Stage": { select: { name: "Welcome page" } },
       });
     } catch (err) {
       console.error("Notion write failed (first action):", err.message);
@@ -463,22 +718,18 @@ async function handleFirstAction(req, res) {
   sendJSON(res, 200, { ok: true });
 }
 
-async function handleNewsletter(req, res) {
-  let body;
-  try {
-    body = await readBody(req);
-  } catch (err) {
-    return sendJSON(res, 400, { ok: false, error: "Invalid request body" });
-  }
-
-  const email = (body.email || "").trim();
-  const archetypeRaw = (body.archetype || "").trim();
+async function handleNewsletter(req, res, body) {
+  const email = str(body.email);
+  const archetypeRaw = str(body.archetype);
   const archetype = KNOWN_ARCHETYPES.includes(archetypeRaw) ? archetypeRaw : "Not from quiz";
-  const sourceRaw = (body.source || "").trim();
+  const sourceRaw = str(body.source);
   const source = KNOWN_SOURCES.includes(sourceRaw) ? sourceRaw : "Home Quiz";
 
   if (!email) {
     return sendJSON(res, 400, { ok: false, error: "Missing email" });
+  }
+  if (!isEmail(email)) {
+    return sendJSON(res, 400, { ok: false, error: "Invalid email" });
   }
 
   appendLocalLead("newsletter.jsonl", { email, archetype, source, signedUpAt: new Date().toISOString() });
@@ -524,73 +775,132 @@ async function handleNewsletter(req, res) {
 }
 
 
+// ---------------------------------------------------------------------------
 // The findable scorecard (/scorecard). Saves every finished scorecard,
 // upserts the CRM contact, and emails the result by Resend.
-const SCORECARD_TIERS = ["Findable. Not yet paid.", "Two fixes from findable", "Ready to be found"];
+// ---------------------------------------------------------------------------
 
-function scorecardEmailHtml(firstName, score, tier, categories, wins) {
-  const name = firstName || "there";
-  const bars = Object.keys(categories || {}).map((k) =>
-    `<li><strong>${k}</strong>: ${categories[k]}%</li>`).join("");
-  const winList = (wins || []).map((w) => `<li>${w}</li>`).join("");
+// Highest first. The page uses the same cut-offs (75 and 40).
+const SCORECARD_TIERS = [
+  { min: 75, name: "Findable. Not yet paid." },
+  { min: 40, name: "Two fixes from findable" },
+  { min: 0, name: "Ready to be found" },
+];
+const LOWEST_TIER = SCORECARD_TIERS[SCORECARD_TIERS.length - 1].name;
+
+// The three areas the scorecard measures. Any other key a browser sends is
+// dropped.
+const SCORECARD_CATEGORIES = ["Can they find you?", "Is there one thing to buy?", "Do you show up?"];
+
+const CALL_URL = "https://calendly.com/alana-arthurs/findable-call?utm_source=scorecard-email&utm_medium=email&utm_campaign=findable-score";
+
+function clampPercent(x) {
+  const n = typeof x === "number" ? x : (typeof x === "string" ? parseInt(x, 10) : NaN);
+  if (!Number.isFinite(n)) return null;
+  return Math.max(0, Math.min(100, Math.round(n)));
+}
+
+// The tier always comes from the score, never from what the browser says.
+function computeTier(score) {
+  const s = clampPercent(score) || 0;
+  return (SCORECARD_TIERS.find((t) => s >= t.min) || SCORECARD_TIERS[SCORECARD_TIERS.length - 1]).name;
+}
+
+function cleanCategories(raw) {
+  const out = {};
+  if (!isPlainObject(raw)) return out;
+  for (const name of SCORECARD_CATEGORIES) {
+    if (Object.prototype.hasOwnProperty.call(raw, name)) {
+      const pct = clampPercent(raw[name]);
+      if (pct !== null) out[name] = pct;
+    }
+  }
+  return out;
+}
+
+function cleanWins(raw) {
+  if (!Array.isArray(raw)) return [];
+  return raw.filter((w) => typeof w === "string").map((w) => w.trim().slice(0, 200)).filter(Boolean).slice(0, 3);
+}
+
+// Builds the scorecard email. Every value that came from the browser is
+// escaped, and the categories are rebuilt from the three known names.
+// opts.consent: did she tick the newsletter box. opts.hot: did she say she
+// wants help soon.
+function scorecardEmailHtml(firstName, score, tier, categories, wins, opts) {
+  const o = opts || {};
+  const name = escapeHtml(str(firstName) || "there");
+  const pct = clampPercent(score) || 0;
+  const tierName = SCORECARD_TIERS.some((t) => t.name === tier) ? tier : computeTier(pct);
+  const cats = cleanCategories(categories);
+  const bars = Object.keys(cats).map((k) =>
+    `<li><strong>${escapeHtml(k)}</strong>: ${cats[k]}%</li>`).join("");
+  const winList = cleanWins(wins).map((w) => `<li>${escapeHtml(w)}</li>`).join("");
+  const callLink = `<a href="${escapeHtml(CALL_URL)}">calendly.com/alana-arthurs/findable-call</a>`;
+  const cohortLine = NEXT_COHORT_LINE ? ` ${escapeHtml(NEXT_COHORT_LINE)}` : "";
+
   let next;
-  if (tier === "Ready to be found") {
-    next = `<p>Every other Sunday I send The Only Way Is Up: one true story about fear and what it costs, and one thing to do before Monday. You're on it now. Reply and tell me the one sentence you said out loud, if you like. I read every one.</p>`;
+  if (tierName === LOWEST_TIER) {
+    const intro = `Every other Sunday I send The Only Way Is Up: one true story about fear and what it costs, and one thing to do before Monday.`;
+    if (o.consent) {
+      next = `<p>${intro} You're on it now. Reply and tell me the one sentence you said out loud, if you like. I read every one.</p>`;
+    } else {
+      next = `<p>${intro} If you'd like it, reply to this email with "yes" and I'll add you. Reply and tell me the one sentence you said out loud, if you like. I read every one.</p>`;
+    }
+    if (o.hot) {
+      next += `<p>You said you'd like a hand. There's a free 30-minute call for that. Pick any time that suits you: ${callLink}.${cohortLine}</p>`;
+    }
   } else {
-    next = `<p>The fastest way through this is a free 30-minute call where we look at your three areas together and pick the one fix. Book it here, pick any time that suits you: <a href="https://calendly.com/alana-arthurs/findable-call?utm_source=scorecard-email&amp;utm_medium=email&amp;utm_campaign=findable-score">calendly.com/alana-arthurs/findable-call</a>. The next Future Maker Cohort starts on 1 October, and this is the conversation that decides whether it's right for you.</p>`;
+    next = `<p>The fastest way through this is a free 30-minute call where we look at your three areas together and pick the one fix. Book it here, pick any time that suits you: ${callLink}. It's also the conversation that decides whether the Future Maker Cohort is right for you.${cohortLine}</p>`;
   }
   return `<p>Hi ${name},</p>` +
-    `<p>You scored <strong>${score}%</strong>: <strong>${tier}</strong>.</p>` +
-    `<ul>${bars}</ul>` +
-    `<p>Your top 3 quick wins:</p><ol>${winList}</ol>` +
+    `<p>You scored <strong>${pct}%</strong>: <strong>${escapeHtml(tierName)}</strong>.</p>` +
+    (bars ? `<ul>${bars}</ul>` : "") +
+    (winList ? `<p>Your top 3 quick wins:</p><ol>${winList}</ol>` : "") +
     next +
     `<p>Alana x<br><em>Built everyone else's life. Not yet your own. Let's fix that.</em></p>`;
 }
 
-async function sendScorecardEmail(email, firstName, score, tier, categories, wins) {
+async function sendScorecardEmail(email, firstName, score, tier, categories, wins, opts) {
   if (!RESEND_API_KEY || !RESEND_FROM_EMAIL) return false;
-  const response = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { "Authorization": `Bearer ${RESEND_API_KEY}`, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      from: RESEND_FROM_EMAIL,
-      to: email,
-      subject: `Your findable score: ${score}%, ${tier}`,
-      html: scorecardEmailHtml(firstName, score, tier, categories, wins),
-    }),
+  if (!sendGuard.claim("scorecard", email)) return false;
+  return resendSend({
+    from: RESEND_FROM_EMAIL,
+    to: email,
+    subject: `Your findable score: ${score}%, ${tier}`,
+    html: scorecardEmailHtml(firstName, score, tier, categories, wins, opts),
   });
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(`Resend API ${response.status}: ${text}`);
-  }
-  return true;
 }
 
-async function handleScorecard(req, res) {
-  let body;
-  try {
-    body = await readBody(req);
-  } catch (err) {
-    return sendJSON(res, 400, { ok: false, error: "Invalid request body" });
+function cleanShortMap(raw, maxKeys) {
+  const out = {};
+  if (!isPlainObject(raw)) return out;
+  for (const key of Object.keys(raw).slice(0, maxKeys)) {
+    const v = str(raw[key]);
+    if (v) out[key.slice(0, 40)] = v.slice(0, 200);
   }
+  return out;
+}
 
-  const email = (body.email || "").trim();
-  const firstName = truncateRichText((body.firstName || "").trim()).slice(0, 80);
-  const consent = !!body.marketingConsent;
-  const score = Math.max(0, Math.min(100, parseInt(body.scorePercent, 10) || 0));
-  const tier = SCORECARD_TIERS.includes(body.tier) ? body.tier : "Ready to be found";
-  const categories = (body.categories && typeof body.categories === "object") ? body.categories : {};
-  const wins = Array.isArray(body.wins) ? body.wins.slice(0, 3).map((w) => String(w).slice(0, 200)) : [];
-  const hot = !!body.hotLead;
-  const utm = (body.utm && typeof body.utm === "object") ? body.utm : {};
+async function handleScorecard(req, res, body) {
+  const email = str(body.email);
+  const firstName = str(body.firstName).slice(0, 80);
+  const consent = body.marketingConsent === true;
+  const score = clampPercent(body.scorePercent) || 0;
+  const tier = computeTier(score);
+  const categories = cleanCategories(body.categories);
+  const wins = cleanWins(body.wins);
+  const hot = body.hotLead === true;
+  const insights = cleanShortMap(body.insights, 5);
+  const utm = cleanShortMap(body.utm, 5);
   const source = "Findable Scorecard";
 
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+  if (!email || !isEmail(email)) {
     return sendJSON(res, 400, { ok: false, error: "Missing email" });
   }
 
   appendLocalLead("scorecard.jsonl", {
-    email, firstName, consent, score, tier, categories, hot, insights: body.insights || {},
+    email, firstName, consent, score, tier, categories, hot, insights,
     utm, completedAt: new Date().toISOString(),
   });
 
@@ -628,91 +938,171 @@ async function handleScorecard(req, res) {
   }
 
   try {
-    await sendScorecardEmail(email, firstName, score, tier, categories, wins);
+    await sendScorecardEmail(email, firstName, score, tier, categories, wins, { consent, hot });
   } catch (err) {
     console.error("Scorecard email failed:", err.message);
   }
 
   sendJSON(res, 200, { ok: true });
 }
-const server = http.createServer((req, res) => {
-  // Encryption in transit. Railway terminates TLS at its edge and passes the
-  // original scheme in X-Forwarded-Proto. Anything that arrived over plain
-  // HTTP is sent to the HTTPS version of the same URL (the edge already does
-  // this too; this is the belt to its braces), and every HTTPS response
-  // carries HSTS so browsers stop trying HTTP at all. Local previews have no
-  // X-Forwarded-Proto header, so neither branch fires there.
-  const hostHeader = req.headers.host || "";
-  const forwardedProto = (req.headers["x-forwarded-proto"] || "").split(",")[0].trim().toLowerCase();
-  const isLocalHost = hostHeader.indexOf("localhost") === 0 || hostHeader.indexOf("127.0.0.1") === 0;
-  if (forwardedProto === "http" && hostHeader && !isLocalHost) {
-    res.writeHead(301, { Location: "https://" + hostHeader + req.url });
-    res.end();
-    return;
-  }
-  if (forwardedProto === "https") {
-    res.setHeader("Strict-Transport-Security", STRICT_TRANSPORT_SECURITY);
-  }
 
-  // Security headers on every response, no matter how it's handled below.
-  res.setHeader("Content-Security-Policy", CONTENT_SECURITY_POLICY);
-  res.setHeader("X-Content-Type-Options", "nosniff");
-  res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
-  res.setHeader("X-Frame-Options", "SAMEORIGIN");
-  res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+const API_ROUTES = {
+  "/api/apply": handleApply,
+  "/api/newsletter": handleNewsletter,
+  "/api/first-action": handleFirstAction,
+  "/api/scorecard": handleScorecard,
+};
 
-  // Canonical host redirect. Only fires on an exact match against the bare
-  // (non-www) host, so localhost and Railway's own *.up.railway.app host
-  // are never touched.
-  if (hostHeader === BARE_HOST) {
-    res.writeHead(301, { Location: SITE_ORIGIN + req.url });
-    res.end();
-    return;
+// Every /api/* request runs these checks, in this order, before a handler
+// sees it: method, route, origin, rate limit, content type and size, JSON
+// shape, honeypot.
+async function handleApi(req, res, urlPath) {
+  if (req.method !== "POST") {
+    return sendJSON(res, 405, { ok: false, error: "Method not allowed" }, { "Allow": "POST" });
+  }
+  const handler = API_ROUTES[urlPath];
+  if (!handler) {
+    return sendJSON(res, 404, { ok: false, error: "Not found" });
+  }
+  if (!originAllowed(req)) {
+    req.resume();
+    return sendJSON(res, 403, { ok: false, error: "Forbidden" });
+  }
+  const limit = apiLimiter.take(clientIp(req));
+  if (!limit.ok) {
+    req.resume();
+    return sendJSON(res, 429, { ok: false, error: "Too many requests. Try again shortly." },
+      { "Retry-After": String(limit.retryAfter) });
   }
 
-  let urlPath;
+  let body;
   try {
-    urlPath = decodeURIComponent(req.url.split("?")[0]);
+    body = await readBody(req);
   } catch (err) {
-    res.writeHead(400, { "Content-Type": "text/plain; charset=utf-8" });
-    res.end("Bad request");
-    return;
+    const status = err instanceof HttpError ? err.status : 400;
+    const extra = status === 413 ? { "Connection": "close" } : undefined;
+    return sendJSON(res, status, { ok: false, error: err instanceof HttpError ? err.message : "Invalid request body" }, extra);
   }
 
-  if (req.method === "GET" && urlPath === "/healthz") {
-    res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8" });
-    res.end("ok");
-    return;
+  // Honeypot: a hidden "website" field real people never see or fill. Bots
+  // that fill every field get a normal-looking reply and nothing is saved.
+  if (str(body.website)) {
+    return sendJSON(res, 200, { ok: true });
   }
 
-  if (urlPath.indexOf("/api/") === 0) {
-    if (req.method !== "POST") {
-      sendJSON(res, 405, { ok: false, error: "Method not allowed" });
-      return;
-    }
-    if (urlPath === "/api/apply") {
-      handleApply(req, res);
-      return;
-    }
-    if (urlPath === "/api/newsletter") {
-      handleNewsletter(req, res);
-      return;
-    }
-    if (urlPath === "/api/first-action") {
-      handleFirstAction(req, res);
-      return;
-    }
-    if (urlPath === "/api/scorecard") {
-      handleScorecard(req, res);
-      return;
-    }
-    sendJSON(res, 404, { ok: false, error: "Not found" });
+  return handler(req, res, body);
+}
+
+function sendServerError(res, err) {
+  console.error("Request failed:", err && err.stack ? err.stack : err);
+  if (res.headersSent) {
+    res.destroy();
     return;
   }
+  sendJSON(res, 500, { ok: false, error: "Something went wrong" });
+}
 
-  serveStatic(req, res, urlPath);
+function handleRequest(req, res) {
+  try {
+    // Encryption in transit. Railway terminates TLS at its edge and passes the
+    // original scheme in X-Forwarded-Proto. Anything that arrived over plain
+    // HTTP is sent to the HTTPS canonical site (the edge already does this
+    // too; this is the belt to its braces). The target is always SITE_ORIGIN,
+    // never the Host header, so a forged Host can't turn this into an open
+    // redirect. Every HTTPS response carries HSTS. Local previews have no
+    // X-Forwarded-Proto header, so neither branch fires there.
+    const hostHeader = req.headers.host || "";
+    const forwardedProto = (req.headers["x-forwarded-proto"] || "").split(",")[0].trim().toLowerCase();
+    const isLocalHost = hostHeader.indexOf("localhost") === 0 || hostHeader.indexOf("127.0.0.1") === 0;
+    if (forwardedProto === "http" && hostHeader && !isLocalHost) {
+      res.writeHead(301, { Location: SITE_ORIGIN + req.url });
+      res.end();
+      return;
+    }
+    if (forwardedProto === "https") {
+      res.setHeader("Strict-Transport-Security", STRICT_TRANSPORT_SECURITY);
+    }
+
+    // Security headers on every response, no matter how it's handled below.
+    res.setHeader("Content-Security-Policy", CONTENT_SECURITY_POLICY);
+    res.setHeader("X-Content-Type-Options", "nosniff");
+    res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+    res.setHeader("X-Frame-Options", "SAMEORIGIN");
+    res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
+    res.setHeader("Cross-Origin-Opener-Policy", CROSS_ORIGIN_OPENER_POLICY);
+
+    // Canonical host redirect. Only fires on an exact match against the bare
+    // (non-www) host, so localhost and Railway's own *.up.railway.app host
+    // are never touched.
+    if (hostHeader === BARE_HOST) {
+      res.writeHead(301, { Location: SITE_ORIGIN + req.url });
+      res.end();
+      return;
+    }
+
+    let urlPath;
+    try {
+      urlPath = decodeURIComponent((req.url || "/").split("?")[0]);
+    } catch (err) {
+      res.writeHead(400, { "Content-Type": "text/plain; charset=utf-8" });
+      res.end("Bad request");
+      return;
+    }
+    // A null byte in a path makes fs throw synchronously. Refuse it here.
+    if (urlPath.indexOf("\0") !== -1) {
+      res.writeHead(400, { "Content-Type": "text/plain; charset=utf-8" });
+      res.end("Bad request");
+      return;
+    }
+
+    if ((req.method === "GET" || req.method === "HEAD") && urlPath === "/healthz") {
+      res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8" });
+      res.end(req.method === "HEAD" ? undefined : "ok");
+      return;
+    }
+
+    if (urlPath.indexOf("/api/") === 0) {
+      handleApi(req, res, urlPath).catch((err) => sendServerError(res, err));
+      return;
+    }
+
+    serveStatic(req, res, urlPath).catch((err) => sendServerError(res, err));
+  } catch (err) {
+    sendServerError(res, err);
+  }
+}
+
+// Last line of defence. Log and carry on rather than take the whole site
+// down for one bad request. (Each request is already wrapped above; these
+// catch anything that slips past.)
+process.on("unhandledRejection", (reason) => {
+  console.error("Unhandled rejection:", reason && reason.stack ? reason.stack : reason);
+});
+process.on("uncaughtException", (err) => {
+  console.error("Uncaught exception:", err && err.stack ? err.stack : err);
 });
 
-server.listen(PORT, "0.0.0.0", () => {
-  console.log(`Growing Women in Business site running on port ${PORT}`);
-});
+const server = http.createServer(handleRequest);
+server.headersTimeout = 20000;
+server.requestTimeout = 30000;
+
+if (require.main === module) {
+  server.listen(PORT, "0.0.0.0", () => {
+    console.log(`Growing Women in Business site running on port ${PORT}`);
+  });
+} else {
+  module.exports = {
+    server,
+    escapeHtml,
+    scorecardEmailHtml,
+    welcomeEmailHtml,
+    computeTier,
+    createRateLimiter,
+    rateLimiter: apiLimiter,
+    createSendGuard,
+    sendGuard,
+    originAllowed,
+    str,
+    SCORECARD_TIERS,
+  };
+}

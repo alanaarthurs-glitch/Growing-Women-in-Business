@@ -4,7 +4,8 @@
    component on every page re-skins without a rewrite. Headings use --font-heading,
    which points at Cormorant Garamond. */
 
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500;1,600&family=Inter:wght@400;500;600;700&display=swap');
+/* Fonts are loaded by a <link> in each page's <head> (not @import here),
+   so the browser fetches them in parallel with this file. */
 
 /* ==========================================================================
    1. Tokens
@@ -24,8 +25,11 @@
   --paper: #FBF6F2;
   --cream: #FDF9F1;
 
-  --grad: linear-gradient(135deg, #B03A4E 0%, #DF8491 100%);
-  --grad-deep: linear-gradient(135deg, #0A1F3D 0%, #B03A4E 130%);
+  /* Both ends of each gradient carry white text at 4.5:1 or better
+     (#7E2836 about 9.4:1, #B03A4E about 5.9:1). The old rose end (#DF8491)
+     dropped white text to about 2.7:1. */
+  --grad: linear-gradient(135deg, #7E2836 0%, #B03A4E 100%);
+  --grad-deep: linear-gradient(135deg, #0A1F3D 0%, #7E2836 130%);
 
   --font-serif: 'Cormorant Garamond', 'Iowan Old Style', Georgia, serif;
   --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -661,8 +665,10 @@ p.lede { color: var(--soft-ink); font-size: 1.1rem; }
 @media (max-width: 600px) {
   .btn { width: 100%; }
   .btn-nav,
-  .quiz-retake,
-  .nav-toggle { width: auto; }
+  .quiz-retake { width: auto; }
+  /* The menu button keeps its full 44 x 44 tap area at every width
+     (WCAG 2.2 asks for at least 24 x 24). */
+  .nav-toggle { width: 44px; min-width: 44px; height: 44px; flex: none; }
 }
 
 /* ==========================================================================
@@ -1127,7 +1133,9 @@ hr.divider {
 .pay-cards {
   height: 22px;
   width: auto;
+  max-width: 100%;
   display: block;
+  overflow: hidden; /* if PayPal's image is blocked, the alt text stays inside the box */
 }
 
 /* Keeps the native PayPal button from stretching inside .offer-box or .offer-card. */
@@ -2015,3 +2023,33 @@ body > footer .legal {
 
 /* The hidden attribute must always win, even over display: flex on forms. */
 [hidden] { display: none !important; }
+
+/* ==========================================================================
+   28. Privacy page: long reading text, so left aligned at every width
+   ========================================================================== */
+
+.privacy h1 { font-size: clamp(2.2rem, 5vw, 3.2rem); margin: 0.75rem 0 1rem; }
+.privacy h2 { text-align: left; margin: 2.5rem 0 0.75rem; }
+.privacy h3 { margin: 1.5rem 0 0.4rem; font-size: 1.35rem; }
+section > .inner.privacy > p.lede,
+.privacy p { text-align: left; }
+
+/* ==========================================================================
+   29. Long paragraphs read left aligned on phones. Headings, eyebrows and
+       buttons stay centred; only the multi-line body text changes.
+   ========================================================================== */
+
+@media (max-width: 560px) {
+  .for-col li,
+  .leave-card p,
+  .ai-inner p,
+  .offer-note,
+  .guarantee,
+  .hero .subhead,
+  .final-cta p,
+  section > .inner > p.lede,
+  .newsletter-panel p.lede { text-align: left; }
+}
+
+/* Pages whose first heading was an h2: promoted to h1 for structure, styled the same as before. */
+h1.as-h2 { font-size: clamp(2rem, 4vw, 2.9rem); line-height: 1.1; text-align: center; margin: 0 0 1.5rem; }
