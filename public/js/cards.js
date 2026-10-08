@@ -217,7 +217,100 @@
       action: "Tell one person the big goal you've never said out loud. Say it plainly, no laughing it off." },
     { n: "XXVI", name: "The Pitch", motif: "bell",
       message: "Someone out there is waiting for exactly what you sell. They can't say yes to an offer they never hear.",
-      action: "Send one message today offering your thing to someone who could actually buy it." }
+      action: "Send one message today offering your thing to someone who could actually buy it." },
+    { n: "XXVII", name: "The Other Way", motif: "path",
+      message: "Autopilot keeps you safe and keeps you small. Wake up the part of you that notices.",
+      action: "Take a completely different route to somewhere you go every week. Tell me one thing you saw." },
+    { n: "XXVIII", name: "The Wrong Hand", motif: "mirror",
+      message: "You do most of your day without thinking. Feeling clumsy for a minute shows you how much.",
+      action: "Brush your teeth or make your tea with your other hand today, and laugh at yourself while you do it." },
+    { n: "XXIX", name: "The Swap", motif: "sun",
+      message: "Your best hours go to the easy stuff because it feels productive. Give them to the hard thing instead.",
+      action: "Do your hardest task at the time of day you'd normally save for the easy ones." },
+    { n: "XXX", name: "The Silent Morning", motif: "sunrise",
+      message: "Your own thoughts are hard to hear over everyone else's. Give them a morning.",
+      action: "No phone, radio or podcast until 10am tomorrow. Just you and what you think." },
+    { n: "XXXI", name: "The Yes Day", motif: "sparkle",
+      message: "No keeps you comfortable. Yes takes you somewhere you haven't been.",
+      action: "Say yes to the first new thing anyone suggests today, as long as it's safe and free." },
+    { n: "XXXII", name: "The Opposite", motif: "moon",
+      message: "The things you always say about yourself aren't facts. They're habits.",
+      action: "Write down one thing you always say about yourself, then spend today acting as if the opposite were true." },
+    { n: "XXXIII", name: "The Delete", motif: "feather",
+      message: "Half your to-do list belongs to someone else's idea of who you should be.",
+      action: "Find one ‘should’ on your list that nobody asked you for, and cross it off for good." },
+    { n: "XXXIV", name: "The Stranger's Eyes", motif: "compass",
+      message: "You're too close to your own business to see it clearly. Step back.",
+      action: "Look at your business as if you'd just found it online. Write down the first thing you'd change." },
+    { n: "XXXV", name: "The Fresh Start", motif: "door",
+      message: "Some of what you do is only there because it always has been.",
+      action: "If you started your business again tomorrow, what wouldn't you bother with? Stop one of those things this week." },
+    { n: "XXXVI", name: "The Retired Excuse", motif: "pause",
+      message: "Your favourite excuse has had a long career. Time it retired.",
+      action: "Pick the excuse you use most and retire it out loud: ‘I'm not using that one any more.’ Tell me which one it was." },
+    { n: "XXXVII", name: "The Beginner", motif: "ladder",
+      message: "Being bad at something new keeps you humble and hungry.",
+      action: "Spend twenty minutes learning something you're rubbish at, like a dance or a language." },
+    { n: "XXXVIII", name: "The New Voice", motif: "spiral",
+      message: "If everyone you follow agrees with you, you've stopped learning.",
+      action: "Follow five people who think completely differently from you and read what they post for a week." },
+    { n: "XXXIX", name: "The Wrong Room", motif: "mountain",
+      message: "The best ideas often come from rooms that have nothing to do with your work.",
+      action: "Go to a free event outside your industry and start a conversation with one person there." },
+    { n: "XL", name: "The Unplugged Hour", motif: "tree",
+      message: "Your best ideas are waiting for a quiet moment. Screens never give them one.",
+      action: "Spend one hour with no screen at all. Keep a pen handy for whatever turns up." },
+    { n: "XLI", name: "The Burn It Down", motif: "flame",
+      message: "The thing you'd never change might be the thing holding you back.",
+      action: "Write down the one part of your business you'd never change, then spend ten minutes imagining you've been forced to." }
+  ];
+
+  var LIFT = [
+    { n: "I", name: "The Name", motif: "cup",
+      message: "Most people go a whole day without hearing their name said kindly. You can change that in two seconds.",
+      action: "Use the name of the person who serves you today and thank them properly, eyes up from your phone." },
+    { n: "II", name: "The Note", motif: "envelope",
+      message: "A few kind words from a stranger can carry someone for a week.",
+      action: "Leave a kind note where a stranger will find it, in a library book or on a café table." },
+    { n: "III", name: "The Review", motif: "star",
+      message: "Small businesses live on reviews. Yours could be the one that keeps them going.",
+      action: "Write a glowing review for a small local business you love, and name the person who looked after you." },
+    { n: "IV", name: "The Shout-Out", motif: "echo",
+      message: "Another woman's win takes nothing away from yours. Cheering her on makes the whole room bigger.",
+      action: "Post about another woman's business and tag her. Say exactly what she's brilliant at." },
+    { n: "V", name: "The Voice Note", motif: "phone",
+      message: "Hearing someone say they're proud of you lands differently from reading it.",
+      action: "Send a friend a 30-second voice note telling her why you're proud of her." },
+    { n: "VI", name: "The Introduction", motif: "rings",
+      message: "You know people who should know each other. Connecting them costs you one message.",
+      action: "Introduce two people who should meet, with one line on why you thought of them." },
+    { n: "VII", name: "The Referral", motif: "key",
+      message: "A recommendation from you opens a door she couldn't knock on herself.",
+      action: "Recommend someone's work to a person who could hire her. Copy her in so she knows." },
+    { n: "VIII", name: "The Celebration", motif: "sparkle",
+      message: "Launching something is terrifying. The first person to show up is never forgotten.",
+      action: "Find a woman who's just launched something and be her first comment, share or sale." },
+    { n: "IX", name: "The Open Door", motif: "door",
+      message: "The lesson that cost you a year could save someone else one.",
+      action: "Share one thing you learned the hard way, in a post or a message, so someone else doesn't have to." },
+    { n: "X", name: "The Cheerleader", motif: "heart",
+      message: "Women starting out often post into silence. One real comment can be the reason they keep going.",
+      action: "Comment properly on three posts from women just starting out. A real sentence, not an emoji." },
+    { n: "XI", name: "The Smile Back", motif: "smile",
+      message: "A smile costs nothing and travels further than you'd think.",
+      action: "Smile at five strangers today and count how many smile back." },
+    { n: "XII", name: "The Gratitude Round", motif: "sun",
+      message: "Good things get bigger when you say them out loud together.",
+      action: "At dinner or on a call, ask everyone for one good thing from their day. Go first." },
+    { n: "XIII", name: "The Elder", motif: "tree",
+      message: "Older people carry stories nobody asks about any more. Asking is a gift.",
+      action: "Ring an older relative or neighbour and ask them a question about their life. Then listen." },
+    { n: "XIV", name: "The Lift Home", motif: "path",
+      message: "Someone near you is stretched thin and won't ask. Offer before they have to.",
+      action: "Offer an hour of your time to someone who's struggling, whether that's the school run or a meal." },
+    { n: "XV", name: "The Pass It On", motif: "plane",
+      message: "Kindness grows when it moves. Keep it moving.",
+      action: "When someone helps you today, help someone else before bed and tell them where it came from." }
   ];
 
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -239,9 +332,6 @@
     return PEP[((today().dayNumber * 11 + 3) % n + n) % n];
   }
 
-  var fearQueue = [];
-  var lastFear = -1;
-
   function shuffled(count) {
     var a = [];
     for (var i = 0; i < count; i++) a.push(i);
@@ -252,13 +342,41 @@
     return a;
   }
 
-  function nextFear() {
-    if (!fearQueue.length) {
-      fearQueue = shuffled(FEAR.length);
-      if (fearQueue[0] === lastFear) fearQueue.push(fearQueue.shift());
+  // Draws at random without repeats until the whole deck has been seen.
+  function randomDrawer(deck) {
+    var queue = [];
+    var last = -1;
+    return function () {
+      if (!queue.length) {
+        queue = shuffled(deck.length);
+        if (queue[0] === last) queue.push(queue.shift());
+      }
+      last = queue.shift();
+      return deck[last];
+    };
+  }
+
+  function copyText(text) {
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(text).catch(function () { return copyByHand(text); });
     }
-    lastFear = fearQueue.shift();
-    return FEAR[lastFear];
+    return copyByHand(text);
+  }
+
+  function copyByHand(text) {
+    return new Promise(function (resolve, reject) {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      var ok = false;
+      try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+      document.body.removeChild(ta);
+      if (ok) { resolve(); } else { reject(new Error('copy failed')); }
+    });
   }
 
   function setupDeck(root, draw, onShown) {
@@ -266,6 +384,8 @@
     var back = root.querySelector('.oracle-back');
     var front = root.querySelector('.oracle-front');
     var again = root.querySelector('.deck-again');
+    var share = root.querySelector('.deck-share');
+    var deckName = root.querySelector('.deck-head h2').textContent;
     var slots = {
       n: front.querySelector('.oc-numeral'),
       motif: front.querySelector('.oc-motif'),
@@ -274,8 +394,10 @@
       action: front.querySelector('.oc-action')
     };
     var busy = false;
+    var current = null;
 
     function fill(c) {
+      current = c;
       slots.n.textContent = c.n;
       slots.motif.innerHTML = '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" focusable="false">' + MOTIFS[c.motif] + '</svg>';
       slots.name.textContent = c.name;
@@ -289,6 +411,7 @@
       back.tabIndex = -1;
       front.removeAttribute('aria-hidden');
       slots.name.focus({ preventScroll: true });
+      if (share) share.hidden = false;
       if (onShown) onShown();
     }
 
@@ -297,6 +420,26 @@
       fill(draw());
       faceUp();
     });
+
+    if (share) {
+      var shareLabel = share.textContent;
+      share.addEventListener('click', function () {
+        if (!current) return;
+        var url = location.origin + '/cards' + (root.id ? '#' + root.id : '');
+        var text = deckName + ', ' + current.name + ': “' + current.message + '” ' + current.action + ' Draw your own card here:';
+        if (navigator.share) {
+          navigator.share({ title: current.name + ' | ' + deckName, text: text, url: url }).catch(function () {});
+          return;
+        }
+        copyText(text + ' ' + url).then(function () {
+          share.textContent = 'Copied. Paste it to a friend';
+        }, function () {
+          window.prompt('Copy this and send it to a friend:', text + ' ' + url);
+        }).then(function () {
+          setTimeout(function () { share.textContent = shareLabel; }, 2500);
+        });
+      });
+    }
 
     if (!again) return;
 
@@ -331,6 +474,7 @@
   ready(function () {
     var pep = document.querySelector('[data-deck="pep"]');
     var fear = document.querySelector('[data-deck="fear"]');
+    var lift = document.querySelector('[data-deck="lift"]');
 
     if (pep) {
       setupDeck(pep, pepForToday, function () {
@@ -341,10 +485,18 @@
     }
 
     if (fear) {
-      setupDeck(fear, nextFear, function () {
+      setupDeck(fear, randomDrawer(FEAR), function () {
         fear.querySelector('.deck-note').textContent = 'Do the action, then tell someone you did it.';
         fear.querySelector('.deck-again').hidden = false;
         showNext(fear);
+      });
+    }
+
+    if (lift) {
+      setupDeck(lift, randomDrawer(LIFT), function () {
+        lift.querySelector('.deck-note').textContent = 'Pass it on, then notice how you feel.';
+        lift.querySelector('.deck-again').hidden = false;
+        showNext(lift);
       });
     }
   });

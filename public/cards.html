@@ -4,12 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Draw a card | Growing Women in Business</title>
-  <meta name="description" content="Two small decks for the days you need a nudge. Turn over a card for one easy action and something true to hold on to." />
+  <meta name="description" content="Three small decks for the days you need a nudge. Turn over a card for one easy action and something true to hold on to." />
   <link rel="canonical" href="https://www.growingwomeninbusiness.com/cards" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Growing Women in Business" />
   <meta property="og:title" content="Draw a card | Growing Women in Business" />
-  <meta property="og:description" content="Two small decks for the days you need a nudge. Turn over a card for one easy action and something true to hold on to." />
+  <meta property="og:description" content="Three small decks for the days you need a nudge. Turn over a card for one easy action and something true to hold on to." />
   <meta property="og:url" content="https://www.growingwomeninbusiness.com/cards" />
   <meta property="og:image" content="https://www.growingwomeninbusiness.com/images/og.png" />
   <meta name="twitter:card" content="summary_large_image" />
@@ -54,18 +54,18 @@
       <div class="hero-panel">
         <span class="eyebrow">The Daily Practice</span>
         <h1>One card. <em>One small brave thing.</em></h1>
-        <p class="subhead">Two decks for the days you need a nudge. The Daily Pep gives you a card for today. The Fear Buddy is there whenever something scares you. Every card has one easy action on it and something true to hold on to.</p>
+        <p class="subhead">Three decks for the days you need a nudge. The Daily Pep gives you a card for today. The Fear Buddy is there whenever something scares you. The Lift is for passing good energy on to someone else. Every card has one easy action on it and something true to hold on to.</p>
         <p class="subhead"><strong>Pushing yourself into greatness is a daily ritual.</strong> You can come back every day. Just save this page to your favourites.</p>
         <a href="#decks" class="btn">Draw your card</a>
         <span class="small-line">Free · nothing to sign up for</span>
       </div>
     </header>
 
-    <section class="oracle-table" id="decks" aria-label="The two decks">
+    <section class="oracle-table" id="decks" aria-label="The three decks">
       <div class="hero-blobs" aria-hidden="true"><span class="sparks"></span></div>
       <div class="oracle-decks">
 
-        <div class="deck" data-deck="pep">
+        <div class="deck" id="daily-pep" data-deck="pep">
           <div class="deck-head">
             <span class="eyebrow">One a day</span>
             <h2>The Daily Pep</h2>
@@ -102,6 +102,7 @@
           </div>
           <div class="deck-foot">
             <p class="deck-note">Turn the card over when you're ready.</p>
+            <button class="deck-share" type="button" hidden>Share with a friend</button>
             <a class="deck-next" href="#keep-going" hidden>Keep going: join The Circle or the newsletter</a>
           </div>
         </div>
@@ -145,6 +146,52 @@
           <div class="deck-foot">
             <p class="deck-note">Draw a card when something scares you.</p>
             <button class="btn deck-again" type="button" hidden>Draw another card</button>
+            <button class="deck-share" type="button" hidden>Share with a friend</button>
+            <a class="deck-next" href="#keep-going" hidden>Keep going: join The Circle or the newsletter</a>
+          </div>
+        </div>
+
+        <div class="deck" id="the-lift" data-deck="lift">
+          <div class="deck-head">
+            <span class="eyebrow">For someone else</span>
+            <h2>The Lift</h2>
+            <p>One card for lifting somebody else's day. Every woman who draws one passes the good on.</p>
+          </div>
+          <div class="oracle-card">
+            <div class="oracle-flipper">
+              <button class="oracle-face oracle-back" type="button" aria-label="Draw a Lift card">
+                <span class="ob-star" aria-hidden="true"></span>
+                <svg class="ob-emblem" viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true" focusable="false">
+                  <circle cx="60" cy="60" r="54" stroke-width="1"/>
+                  <circle cx="60" cy="60" r="46" stroke-width="1" stroke-dasharray="1 5"/>
+                  <circle cx="60" cy="52" r="12"/>
+                  <circle cx="60" cy="52" r="5" fill="currentColor"/>
+                  <path d="M60 34V24M47.3 39.3l-7.1-7.1M72.7 39.3l7.1-7.1M43.1 45.8l-9.4-3.4M76.9 45.8l9.4-3.4"/>
+                  <path d="M30 70c8 14 20 20 30 20s22-6 30-20"/>
+                  <path d="M38 72c6 8 14 11 22 11s16-3 22-11"/>
+                  <circle cx="60" cy="98" r="1.6" fill="currentColor"/>
+                </svg>
+                <span class="ob-title" aria-hidden="true">The Lift</span>
+                <span class="ob-hint" aria-hidden="true">Tap to draw</span>
+              </button>
+              <div class="oracle-face oracle-front" aria-hidden="true">
+                <span class="oc-corner oc-tl"></span><span class="oc-corner oc-tr"></span>
+                <span class="oc-corner oc-bl"></span><span class="oc-corner oc-br"></span>
+                <span class="oc-numeral"></span>
+                <span class="oc-motif" aria-hidden="true"></span>
+                <h3 class="oc-name" tabindex="-1"></h3>
+                <p class="oc-message"></p>
+                <span class="oc-divider" aria-hidden="true"></span>
+                <p class="oc-action-label">Pass it on</p>
+                <p class="oc-action"></p>
+                <span class="oc-foot">The Lift</span>
+              </div>
+            </div>
+          </div>
+          <div class="deck-foot">
+            <p class="deck-note">Draw a card and pass the good on.</p>
+            <button class="btn deck-again" type="button" hidden>Draw another card</button>
+            <button class="deck-share" type="button" hidden>Share with a friend</button>
             <a class="deck-next" href="#keep-going" hidden>Keep going: join The Circle or the newsletter</a>
           </div>
         </div>
