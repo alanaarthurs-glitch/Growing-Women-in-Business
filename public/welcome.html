@@ -47,7 +47,7 @@
     </div>
   </header>
 
-  <main id="main">
+  <main id="main" tabindex="-1">
     <section class="white">
       <div class="inner">
         <span class="eyebrow" id="welcome-eyebrow">You're in</span>
@@ -158,6 +158,11 @@
   <script src="/js/nav.js"></script>
   <script src="/js/newsletter-panel.js"></script>
   <script>
+function showFormError(btn, text) {
+  var m = btn.parentNode.querySelector('.form-error');
+  if (!m) { m = document.createElement('p'); m.className = 'form-error'; m.setAttribute('role', 'alert'); btn.parentNode.insertBefore(m, btn.nextSibling); }
+  m.textContent = text;
+}
     (function () {
       var params = new URLSearchParams(window.location.search);
       var offer = params.get('offer');
@@ -221,7 +226,7 @@
             .catch(function () {
               button.disabled = false;
               button.textContent = 'Send it to Alana';
-              alert("That didn't send. Mind trying again in a moment?");
+              showFormError(button, "That didn't send. Check your email address is right and try again in a moment.");
             });
         });
 

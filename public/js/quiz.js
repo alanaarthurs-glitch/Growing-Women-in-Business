@@ -160,7 +160,7 @@ function initFutureMakerQuiz(containerId, source) {
 
   function renderEmailGate() {
     var html = '<div class="quiz-progress">Almost there</div>';
-    html += '<div class="quiz-question"><h3>Pop your email in to see your result</h3>';
+    html += '<div class="quiz-question"><h2>Pop your email in to see your result</h2>';
     html += '<p class="lede" style="text-align:center; margin-bottom:1.5rem;">You\'ll get your Future Maker type straight away, plus the odd note from the newsletter.</p>';
     html += '<form class="quiz-email-gate-form" style="display:flex; flex-direction:column; gap:0.75rem; align-items:center;">';
     html += '<input type="email" placeholder="you@email.com" required style="width:100%; max-width:320px; font-family:\'Inter\',sans-serif; padding:0.8rem 1rem; border:1px solid var(--blush-deep);" />';
@@ -190,7 +190,7 @@ function initFutureMakerQuiz(containerId, source) {
         .catch(function () {
           submitBtn.disabled = false;
           submitBtn.textContent = "See my result";
-          alert("That didn't send. Mind trying again?");
+          var em=document.createElement("p");em.className="form-error";em.setAttribute("role","alert");em.textContent="That didn't send. Check your email address and try again.";if(!thisForm.querySelector(".form-error"))thisForm.appendChild(em);
         });
     });
   }
@@ -198,7 +198,7 @@ function initFutureMakerQuiz(containerId, source) {
   function renderQuestion() {
     var item = QUESTIONS[current];
     var html = '<div class="quiz-progress">Question ' + (current + 1) + ' of ' + QUESTIONS.length + '</div>';
-    html += '<div class="quiz-question"><h3>' + item.q + '</h3><div class="quiz-options">';
+    html += '<div class="quiz-question"><h2>' + item.q + '</h2><div class="quiz-options">';
     item.options.forEach(function (opt) {
       html += '<button type="button" class="quiz-option" data-archetype="' + opt.a + '">' + opt.t + '</button>';
     });

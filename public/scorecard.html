@@ -219,14 +219,15 @@
     .btn, .cta { padding-left: 16px; padding-right: 16px; }
   }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
-</style>
+.skip-link-sc{position:absolute;left:.75rem;top:-100px;background:#0A1F3D;color:#fff;padding:.75rem 1rem;border-radius:8px;z-index:100}.skip-link-sc:focus{top:.75rem}</style>
 </head>
 <body>
+  <a class="skip-link-sc" href="#sc-main">Skip to the scorecard</a>
 <div class="bg-decor" aria-hidden="true"><span></span><span></span><span></span></div>
 <div class="wrap">
-  <main class="card">
+  <main class="card" id="sc-main" tabindex="-1">
     <div class="brand">
-      <a href="/"><img src="/images/logo-168.png" srcset="/images/logo-168.png 1x, /images/logo-336.png 2x" alt="" width="40" height="40"><span>Growing Women in Business</span></a>
+      <a href="/"><img src="/images/mark.svg" alt="" width="40" height="40"><span>Growing Women in Business</span></a>
     </div>
 
     <!-- SCREEN 1: hook + details (captured FIRST) -->

@@ -26,22 +26,37 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(function (r) { return r.json(); })
         .then(function (data) {
           if (data.ok) {
-            form.outerHTML = isWaitlist
-              ? '<p class="confirm">You\'re on the waitlist. I\'ll message you the moment it reopens.</p>'
-              : '<p class="confirm">You\'re on the list. Watch your inbox.</p>';
+            var done = document.createElement('p');
+            done.className = 'confirm';
+            done.setAttribute('role', 'status');
+            done.tabIndex = -1;
+            done.textContent = isWaitlist
+              ? "You're on the waitlist. I'll message you the moment it reopens."
+              : "You're on the list. Watch your inbox.";
+            form.replaceWith(done);
+            done.focus();
           } else {
-            if (button) {
-              button.disabled = false;
-              button.textContent = originalButtonText;
-            }
+            fail(data && data.error);
           }
         })
-        .catch(function () {
-          if (button) {
-            button.disabled = false;
-            button.textContent = originalButtonText;
-          }
-        });
+        .catch(function () { fail(); });
+
+      function fail(code) {
+        if (button) {
+          button.disabled = false;
+          button.textContent = originalButtonText;
+        }
+        var msg = form.querySelector('.form-error');
+        if (!msg) {
+          msg = document.createElement('p');
+          msg.className = 'form-error';
+          msg.setAttribute('role', 'alert');
+          form.appendChild(msg);
+        }
+        msg.textContent = /email/i.test(code || '')
+          ? "That email doesn't look right. Mind checking it?"
+          : "That didn't go through. Mind trying again in a moment?";
+      }
     });
   });
 });
