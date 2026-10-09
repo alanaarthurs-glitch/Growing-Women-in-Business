@@ -1,6 +1,6 @@
 // Things Alana still needs to choose. Leave a value empty and the page shows a sensible fallback.
 window.GWIB_CONFIG = {
-  bookingUrl: "",      // Calendly / Cal.com / TidyCal / Google booking link for the welcome and discovery calls
+  bookingUrl: "https://calendly.com/alana-arthurs/findable-call?utm_source=website&utm_medium=welcome&utm_campaign=findable-call", // free 30-minute call, used on the welcome and apply pages
   communityUrl: "",    // Where The Circle lives (Skool, Facebook group). Shown on the welcome page once set.
 
   // The next Cohort date, in one place. Leave it empty and the home and Cohort
