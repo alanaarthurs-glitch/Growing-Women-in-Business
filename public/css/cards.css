@@ -67,9 +67,10 @@
 .deck-head { max-width: 30em; }
 
 .deck-head .eyebrow {
-  color: var(--mint);
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--rose);
+  background: none;
+  border: 0;
+  padding: 0;
   box-shadow: none;
 }
 
@@ -436,3 +437,38 @@
 
 .cards-next .offer-card .price { font-variant-numeric: lining-nums; }
 .cards-next .offer-card .price-note { margin-bottom: 1.25rem; }
+
+/* ==========================================================================
+   Lighter card backs, so the decks stand out from the navy table.
+   Daily Pep is berry, the Fear Buddy is sage. Cream borders and emblem.
+   ========================================================================== */
+.deck[data-deck="pep"] .oracle-back {
+  color: var(--cream);
+  border-color: rgba(253, 249, 241, 0.7);
+  background:
+    radial-gradient(1.4px 1.4px at 18% 16%, rgba(255, 255, 255, 0.95), transparent),
+    radial-gradient(1.2px 1.2px at 80% 22%, rgba(255, 255, 255, 0.85), transparent),
+    radial-gradient(1.6px 1.6px at 30% 78%, rgba(255, 255, 255, 0.9), transparent),
+    radial-gradient(1.2px 1.2px at 74% 70%, rgba(255, 255, 255, 0.8), transparent),
+    radial-gradient(circle at 50% 46%, rgba(255, 255, 255, 0.2), transparent 55%),
+    linear-gradient(160deg, #C4506A 0%, #B03A4E 55%, #8F2D40 100%);
+  box-shadow: 0 0 0 1px rgba(253, 249, 241, 0.25), 0 26px 50px -20px rgba(0, 0, 0, 0.55);
+}
+.deck[data-deck="fear"] .oracle-back {
+  color: var(--cream);
+  border-color: rgba(253, 249, 241, 0.7);
+  background:
+    radial-gradient(1.4px 1.4px at 18% 16%, rgba(255, 255, 255, 0.95), transparent),
+    radial-gradient(1.2px 1.2px at 80% 22%, rgba(255, 255, 255, 0.85), transparent),
+    radial-gradient(1.6px 1.6px at 30% 78%, rgba(255, 255, 255, 0.9), transparent),
+    radial-gradient(1.2px 1.2px at 74% 70%, rgba(255, 255, 255, 0.8), transparent),
+    radial-gradient(circle at 50% 46%, rgba(255, 255, 255, 0.2), transparent 55%),
+    linear-gradient(160deg, #5B8A7F 0%, #3F6E64 55%, #2F574F 100%);
+  box-shadow: 0 0 0 1px rgba(253, 249, 241, 0.25), 0 26px 50px -20px rgba(0, 0, 0, 0.55);
+}
+.deck .oracle-back::before { border-color: rgba(253, 249, 241, 0.75); }
+.deck .oracle-back::after { border-color: rgba(253, 249, 241, 0.3); }
+.deck .oracle-back .ob-title,
+.deck .oracle-back .ob-hint,
+.deck .oracle-back .ob-emblem,
+.deck .oracle-back .ob-star { color: var(--cream); }
