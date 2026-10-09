@@ -618,3 +618,52 @@
   background: var(--cream);
   border-radius: 8px;
 }
+
+/* Draw another card and Share with a friend, side by side under the card. */
+.deck-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+}
+.deck-actions .deck-again,
+.deck-actions .deck-share {
+  width: auto;
+  min-height: 44px;
+  margin: 0;
+  padding: 0.6rem 1.1rem;
+  font-size: 0.9rem;
+  line-height: 1.2;
+}
+
+/* One Keep going link under all four decks. */
+.decks-next {
+  position: relative;
+  z-index: 1;
+  margin: 3.5rem 0 0;
+  text-align: center;
+}
+.decks-next a {
+  font-family: var(--font-sans);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--white);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.decks-next a:hover { color: var(--mint); }
+
+/* Keep the two buttons on one line inside the card's width. */
+.deck-actions {
+  flex-wrap: nowrap;
+  width: min(300px, 100%);
+}
+.deck-actions .deck-again,
+.deck-actions .deck-share {
+  flex: 1 1 0;
+  padding: 0.55rem 0.6rem;
+  font-size: 0.84rem;
+  white-space: nowrap;
+}
+.deck-actions .deck-share:only-child,
+.deck-actions .deck-again[hidden] + .deck-share { flex: 0 1 auto; padding: 0.55rem 1.1rem; }
