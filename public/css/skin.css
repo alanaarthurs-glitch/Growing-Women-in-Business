@@ -96,14 +96,13 @@ section>.inner>.eyebrow{display:block}
 .proof-strip{background:var(--navy);color:var(--white)}
 .proof-tile{background:none;border:0;border-top:2px solid var(--rose);border-radius:0;padding:14px 0 0}
 .proof-tile .figure,.proof-tile p{color:var(--white)}
-@media(min-width:1440px){
+@media(min-width:1760px){
   .site-nav ul{flex-wrap:nowrap;gap:18px}
   .site-nav li{white-space:nowrap}
   .site-nav a{font-size:.88rem}
-  .site-nav li:nth-child(4){display:none}
 }
 .topbar .btn{white-space:nowrap;flex:0 0 auto}
-@media(min-width:1440px){.topbar .wordmark{flex:0 0 auto}}
+@media(min-width:1760px){.topbar .wordmark{flex:0 0 auto}}
 .topbar .wordmark{min-width:0}
 
 /* Form messages, tap targets, small screens, sticky bar */
