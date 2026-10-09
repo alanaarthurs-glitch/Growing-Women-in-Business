@@ -237,3 +237,7 @@ html{scroll-padding-bottom:80px}
 .home-fear .oracle-decks{display:flex!important;justify-content:center;max-width:none;width:100%;margin:0 auto}
 .home-fear .deck{margin:0 auto}
 @media(min-width:1760px){.topbar .wordmark{flex:0 0 auto;white-space:nowrap}}
+.scene{max-width:44rem;margin:0 0 32px}
+.scene p{font-size:1.2rem;line-height:1.6}
+.hero-proof{margin-top:18px;max-width:34rem}
+.about p+p{margin-top:0}

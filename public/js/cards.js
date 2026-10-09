@@ -547,7 +547,7 @@
       share.addEventListener('click', function () {
         if (!current) return;
         var url = location.origin + '/cards' + (root.id ? '#' + root.id : '');
-        var text = deckName + ', ' + current.name + ': “' + current.message + '” ' + current.action + ' Draw your own card from the Futures Deck here:';
+        var text = deckName + ', ' + current.name + ': “' + current.message + '” ' + current.action + ' Draw your own card from the Future Deck here:';
         if (navigator.share) {
           navigator.share({ title: current.name + ' | ' + deckName, text: text, url: url }).catch(function () {});
           return;
