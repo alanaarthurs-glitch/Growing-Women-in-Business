@@ -251,6 +251,12 @@ async function serveStatic(req, res, urlPath) {
     res.end();
     return;
   }
+  // The Push is off the site for now. Old links land on the homepage.
+  if (urlPath === "/push" || urlPath === "/push.html") {
+    res.writeHead(301, { Location: "/" });
+    res.end();
+    return;
+  }
 
   let filePath = path.join(PUBLIC_DIR, urlPath === "/" ? "index.html" : urlPath);
   if (!isInsidePublic(filePath)) {
