@@ -103,7 +103,7 @@ I'm Alana. In six weeks you build a website, one clear thing to sell and a plan 
     <div class="climb-grid">
       <div class="climb-step">
         <span class="letter">C</span>
-        <h3>Calm the Body</h3>
+        <h3>Centre the Body</h3>
         <p>Bring the nervous system down, together. You can't do the brave thing from fight-or-flight.</p>
       </div>
       <div class="climb-step">
