@@ -94,6 +94,7 @@ const ARCHETYPE_PDF_KEYS = {
 const KNOWN_SOURCES = [
   "Home Quiz", "Circle Welcome", "Cohort Welcome", "Free Newsletter Card",
   "Push Waitlist", "Cohort Waitlist", "Webinar Waitlist", "Newsletter Panel", "Findable Scorecard", "Draw a Card",
+  "Free Prompts",
 ];
 
 const KNOWN_APPLY_CATEGORIES = ["Pricing", "Visibility", "The Avoided Conversation"];

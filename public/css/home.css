@@ -126,6 +126,7 @@ h1 em,h2 em,h3 em{font-family:var(--serif);font-style:italic;font-weight:400;let
   .tile-proof,.tile-ai{grid-column:span 5}
   .tile-letter,.tile-wins{grid-column:span 6}
   .tile-cohort{grid-column:span 12}
+  .tile-cards{grid-column:span 6}
 }
 
 /* Who */
