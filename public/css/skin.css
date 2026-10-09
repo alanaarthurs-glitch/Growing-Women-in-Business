@@ -126,3 +126,14 @@ html{scroll-padding-bottom:80px}
 
 /* site.css makes every .btn full width under 600px; the header button must stay its own size. */
 .topbar .btn{width:auto}
+
+/* Tidy pass: newsletter alignment, form padding, quiz question size */
+.newsletter-panel{padding:72px max(var(--gutter),calc((100% - var(--max))/2 + var(--gutter)))}
+.newsletter-panel>*{padding-left:0;padding-right:0;max-width:44rem;margin-left:0;margin-right:0}
+.newsletter-panel-form{max-width:36rem;width:100%}
+.apply-form{padding:28px;max-width:560px;margin:24px 0 0;display:grid;gap:18px}
+.apply-form label{display:block;margin-bottom:6px}
+.apply-form .btn{justify-self:start}
+.quiz-box h2,.quiz-box .quiz-question h2{font-size:clamp(1.3rem,3vw,1.7rem);line-height:1.2;letter-spacing:-.01em;text-align:left;margin-bottom:1rem}
+.quiz-box{max-width:640px;margin-left:0;text-align:left}
+.newsletter-panel .newsletter-panel-form{margin-left:0!important;margin-right:auto;justify-content:flex-start}
