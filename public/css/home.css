@@ -223,3 +223,15 @@ html{scroll-padding-bottom:80px}
   .wordmark{font-size:.85rem;max-width:7.5em}
   .topbar-inner{gap:8px;padding-left:12px;padding-right:12px}
 }
+
+/* Fear Buddy deck on the homepage: cards.css expects these names */
+.home-fear{--ink:#0A1F3D;--pink:#B03A4E;--pink-deep:#7E2836;--rose:#DF8491;--mint:#ADC1BB;--blush-deep:#EAD9D3;--white:#fff;--cream:#FDF9F1;--font-heading:'Instrument Serif',Georgia,serif;--font-serif:'Instrument Serif',Georgia,serif;--font-sans:Inter,system-ui,sans-serif;--radius:16px;--radius-btn:8px;color:#fff}
+.home-fear .home-deck-only{display:flex;justify-content:center}
+.home-fear .deck{max-width:340px;width:100%}
+.home-fear .deck-head h2{color:#fff;font-size:clamp(2rem,5vw,3rem)}
+.home-fear .deck-head{margin:0 auto 24px;text-align:center}
+.home-fear .deck-head p{text-align:center}
+.home-fear .deck-again{background:var(--cream);color:var(--navy)}
+.home-fear .deck-next{color:var(--rose)}
+.home-fear .oracle-decks{display:flex!important;justify-content:center;max-width:none;width:100%;margin:0 auto}
+.home-fear .deck{margin:0 auto}
