@@ -217,52 +217,7 @@
       action: "Tell one person the big goal you've never said out loud. Say it plainly, no laughing it off." },
     { n: "XXVI", name: "The Pitch", motif: "bell",
       message: "Someone out there is waiting for exactly what you sell. They can't say yes to an offer they never hear.",
-      action: "Send one message today offering your thing to someone who could actually buy it." },
-    { n: "XXVII", name: "The Other Way", motif: "path",
-      message: "Autopilot keeps you safe and keeps you small. Wake up the part of you that notices.",
-      action: "Take a completely different route to somewhere you go every week. Tell me one thing you saw." },
-    { n: "XXVIII", name: "The Wrong Hand", motif: "mirror",
-      message: "You do most of your day without thinking. Feeling clumsy for a minute shows you how much.",
-      action: "Brush your teeth or make your tea with your other hand today, and laugh at yourself while you do it." },
-    { n: "XXIX", name: "The Swap", motif: "sun",
-      message: "Your best hours go to the easy stuff because it feels productive. Give them to the hard thing instead.",
-      action: "Do your hardest task at the time of day you'd normally save for the easy ones." },
-    { n: "XXX", name: "The Silent Morning", motif: "sunrise",
-      message: "Your own thoughts are hard to hear over everyone else's. Give them a morning.",
-      action: "No phone, radio or podcast until 10am tomorrow. Just you and what you think." },
-    { n: "XXXI", name: "The Yes Day", motif: "sparkle",
-      message: "No keeps you comfortable. Yes takes you somewhere you haven't been.",
-      action: "Say yes to the first new thing anyone suggests today, as long as it's safe and free." },
-    { n: "XXXII", name: "The Opposite", motif: "moon",
-      message: "The things you always say about yourself aren't facts. They're habits.",
-      action: "Write down one thing you always say about yourself, then spend today acting as if the opposite were true." },
-    { n: "XXXIII", name: "The Delete", motif: "feather",
-      message: "Half your to-do list belongs to someone else's idea of who you should be.",
-      action: "Find one ‘should’ on your list that nobody asked you for, and cross it off for good." },
-    { n: "XXXIV", name: "The Stranger's Eyes", motif: "compass",
-      message: "You're too close to your own business to see it clearly. Step back.",
-      action: "Look at your business as if you'd just found it online. Write down the first thing you'd change." },
-    { n: "XXXV", name: "The Fresh Start", motif: "door",
-      message: "Some of what you do is only there because it always has been.",
-      action: "If you started your business again tomorrow, what wouldn't you bother with? Stop one of those things this week." },
-    { n: "XXXVI", name: "The Retired Excuse", motif: "pause",
-      message: "Your favourite excuse has had a long career. Time it retired.",
-      action: "Pick the excuse you use most and retire it out loud: ‘I'm not using that one any more.’ Tell me which one it was." },
-    { n: "XXXVII", name: "The Beginner", motif: "ladder",
-      message: "Being bad at something new keeps you humble and hungry.",
-      action: "Spend twenty minutes learning something you're rubbish at, like a dance or a language." },
-    { n: "XXXVIII", name: "The New Voice", motif: "spiral",
-      message: "If everyone you follow agrees with you, you've stopped learning.",
-      action: "Follow five people who think completely differently from you and read what they post for a week." },
-    { n: "XXXIX", name: "The Wrong Room", motif: "mountain",
-      message: "The best ideas often come from rooms that have nothing to do with your work.",
-      action: "Go to a free event outside your industry and start a conversation with one person there." },
-    { n: "XL", name: "The Unplugged Hour", motif: "tree",
-      message: "Your best ideas are waiting for a quiet moment. Screens never give them one.",
-      action: "Spend one hour with no screen at all. Keep a pen handy for whatever turns up." },
-    { n: "XLI", name: "The Burn It Down", motif: "flame",
-      message: "The thing you'd never change might be the thing holding you back.",
-      action: "Write down the one part of your business you'd never change, then spend ten minutes imagining you've been forced to." }
+      action: "Send one message today offering your thing to someone who could actually buy it." }
   ];
 
   var LIFT = [
@@ -311,6 +266,99 @@
     { n: "XV", name: "The Pass It On", motif: "plane",
       message: "Kindness grows when it moves. Keep it moving.",
       action: "When someone helps you today, help someone else before bed and tell them where it came from." }
+  ];
+
+  var BREAK = [
+    { n: "I", name: "The Shake Off", motif: "wave", label: "Do it now",
+      message: "Fear gets stuck in the body. Shake it loose and your head follows.",
+      action: "Shake your hands, arms and legs hard for thirty seconds, like a dog coming out of the sea." },
+    { n: "II", name: "The Power Pose", motif: "star", label: "Do it now",
+      message: "Stand like you've already won and your body starts to believe it.",
+      action: "Stand like a superhero, hands on hips and chin up, for one full minute." },
+    { n: "III", name: "The Jump", motif: "stairs", label: "Do it now",
+      message: "You can't spiral and do star jumps at the same time. Try it.",
+      action: "Do ten star jumps right now, wherever you are." },
+    { n: "IV", name: "The Cold Splash", motif: "sea", label: "Do it now",
+      message: "Cold water snaps you back into the room. The spiral can't follow you there.",
+      action: "Run cold water over your wrists or splash your face, then take one slow breath." },
+    { n: "V", name: "The Stretch", motif: "bridge", label: "Do it now",
+      message: "A scared body curls in. Make yourself big and the fear gets smaller.",
+      action: "Reach both arms as high as they'll go and hold for five big breaths." },
+    { n: "VI", name: "The Silly Voice", motif: "smile", label: "Do it now",
+      message: "It's hard to believe a worry when a cartoon says it.",
+      action: "Say the scary thought out loud in a cartoon voice. Then say it again, sillier." },
+    { n: "VII", name: "The Count Back", motif: "hourglass", label: "Do it now",
+      message: "Your brain can't panic and do maths at the same time.",
+      action: "Count backwards from 100 in sevens, out loud if you can." },
+    { n: "VIII", name: "The Five Things", motif: "eye", label: "Do it now",
+      message: "Fear lives in the future. Your senses only work in the here and now.",
+      action: "Name five things you can see, four you can hear and three you can touch." },
+    { n: "IX", name: "The Stop Word", motif: "no", label: "Do it now",
+      message: "A spiral needs your attention to keep going. Take it back.",
+      action: "Pick a word like ‘Next’ or ‘Nope’ and say it out loud the second the spiral starts." },
+    { n: "X", name: "The Rename", motif: "question", label: "Do it now",
+      message: "Give the fear a daft name and it becomes a visitor, not the boss.",
+      action: "Name your fear something silly, then greet it: ‘Oh, it's Doris again.’" },
+    { n: "XI", name: "The Room Swap", motif: "chair", label: "Do it now",
+      message: "New surroundings give your brain something new to think about.",
+      action: "Get up and go to a different room, or step outside for one minute." },
+    { n: "XII", name: "The Song Switch", motif: "notes", label: "Do it now",
+      message: "One song can change how you feel in three minutes flat.",
+      action: "Put on the one song that always lifts you, and turn it up loud." },
+    { n: "XIII", name: "The Hum", motif: "echo", label: "Do it now",
+      message: "Humming slows your breathing, and a slower breath tells your body it's safe.",
+      action: "Hum any tune for thirty seconds, low and slow." },
+    { n: "XIV", name: "The Laugh", motif: "bell", label: "Do it now",
+      message: "Your body can't really tell a fake laugh from a real one. It just feels better.",
+      action: "Fake laugh for thirty seconds. It usually turns into a real one." },
+    { n: "XV", name: "The Text", motif: "phone", label: "Do it now",
+      message: "A spiral shrinks the second someone else knows about it.",
+      action: "Send your fear buddy one word, ‘spiralling’, and let her send one back." },
+    { n: "XVI", name: "The Other Way", motif: "path", label: "Do it today",
+      message: "Autopilot keeps you safe and keeps you small. Wake up the part of you that notices.",
+      action: "Take a completely different route to somewhere you go every week. Tell me one thing you saw." },
+    { n: "XVII", name: "The Wrong Hand", motif: "mirror", label: "Do it today",
+      message: "You do most of your day without thinking. Feeling clumsy for a minute shows you how much.",
+      action: "Brush your teeth or make your tea with your other hand today, and laugh at yourself while you do it." },
+    { n: "XVIII", name: "The Swap", motif: "sun", label: "Do it today",
+      message: "Your best hours go to the easy stuff because it feels productive. Give them to the hard thing instead.",
+      action: "Do your hardest task at the time of day you'd normally save for the easy ones." },
+    { n: "XIX", name: "The Silent Morning", motif: "sunrise", label: "Do it today",
+      message: "Your own thoughts are hard to hear over everyone else's. Give them a morning.",
+      action: "No phone, radio or podcast until 10am tomorrow. Just you and what you think." },
+    { n: "XX", name: "The Yes Day", motif: "sparkle", label: "Do it today",
+      message: "No keeps you comfortable. Yes takes you somewhere you haven't been.",
+      action: "Say yes to the first new thing anyone suggests today, as long as it's safe and free." },
+    { n: "XXI", name: "The Opposite", motif: "moon", label: "Do it today",
+      message: "The things you always say about yourself aren't facts. They're habits.",
+      action: "Write down one thing you always say about yourself, then spend today acting as if the opposite were true." },
+    { n: "XXII", name: "The Delete", motif: "feather", label: "Do it today",
+      message: "Half your to-do list belongs to someone else's idea of who you should be.",
+      action: "Find one ‘should’ on your list that nobody asked you for, and cross it off for good." },
+    { n: "XXIII", name: "The Stranger's Eyes", motif: "compass", label: "Do it today",
+      message: "You're too close to your own business to see it clearly. Step back.",
+      action: "Look at your business as if you'd just found it online. Write down the first thing you'd change." },
+    { n: "XXIV", name: "The Fresh Start", motif: "door", label: "Do it today",
+      message: "Some of what you do is only there because it always has been.",
+      action: "If you started your business again tomorrow, what wouldn't you bother with? Stop one of those things this week." },
+    { n: "XXV", name: "The Retired Excuse", motif: "pause", label: "Do it today",
+      message: "Your favourite excuse has had a long career. Time it retired.",
+      action: "Pick the excuse you use most and retire it out loud: ‘I'm not using that one any more.’ Tell me which one it was." },
+    { n: "XXVI", name: "The Beginner", motif: "ladder", label: "Do it today",
+      message: "Being bad at something new keeps you humble and hungry.",
+      action: "Spend twenty minutes learning something you're rubbish at, like a dance or a language." },
+    { n: "XXVII", name: "The New Voice", motif: "spiral", label: "Do it today",
+      message: "If everyone you follow agrees with you, you've stopped learning.",
+      action: "Follow five people who think completely differently from you and read what they post for a week." },
+    { n: "XXVIII", name: "The Wrong Room", motif: "mountain", label: "Do it today",
+      message: "The best ideas often come from rooms that have nothing to do with your work.",
+      action: "Go to a free event outside your industry and start a conversation with one person there." },
+    { n: "XXIX", name: "The Unplugged Hour", motif: "tree", label: "Do it today",
+      message: "Your best ideas are waiting for a quiet moment. Screens never give them one.",
+      action: "Spend one hour with no screen at all. Keep a pen handy for whatever turns up." },
+    { n: "XXX", name: "The Burn It Down", motif: "flame", label: "Do it today",
+      message: "The thing you'd never change might be the thing holding you back.",
+      action: "Write down the one part of your business you'd never change, then spend ten minutes imagining you've been forced to." }
   ];
 
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -391,7 +439,8 @@
       motif: front.querySelector('.oc-motif'),
       name: front.querySelector('.oc-name'),
       message: front.querySelector('.oc-message'),
-      action: front.querySelector('.oc-action')
+      action: front.querySelector('.oc-action'),
+      label: front.querySelector('.oc-action-label')
     };
     var busy = false;
     var current = null;
@@ -403,6 +452,7 @@
       slots.name.textContent = c.name;
       slots.message.textContent = c.message;
       slots.action.textContent = c.action;
+      if (c.label) slots.label.textContent = c.label;
     }
 
     function faceUp() {
@@ -475,6 +525,7 @@
     var pep = document.querySelector('[data-deck="pep"]');
     var fear = document.querySelector('[data-deck="fear"]');
     var lift = document.querySelector('[data-deck="lift"]');
+    var brk = document.querySelector('[data-deck="break"]');
 
     if (pep) {
       setupDeck(pep, pepForToday, function () {
@@ -497,6 +548,14 @@
         lift.querySelector('.deck-note').textContent = 'Pass it on, then notice how you feel.';
         lift.querySelector('.deck-again').hidden = false;
         showNext(lift);
+      });
+    }
+
+    if (brk) {
+      setupDeck(brk, randomDrawer(BREAK), function () {
+        brk.querySelector('.deck-note').textContent = 'Do it, then notice what changed.';
+        brk.querySelector('.deck-again').hidden = false;
+        showNext(brk);
       });
     }
   });

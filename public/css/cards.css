@@ -44,8 +44,8 @@
 }
 
 /* Decks side by side: a subgrid keeps the cards on one line even when the
-   intro paragraphs run to different lengths. Two across with The Lift
-   centred underneath, then all three across on wide screens. */
+   intro paragraphs run to different lengths. Two by two, then all four
+   across on wide screens. */
 @media (min-width: 840px) {
   .oracle-decks {
     display: grid;
@@ -64,26 +64,18 @@
     row-gap: 1.75rem;
   }
 
-  .deck[data-deck="lift"] {
-    grid-column: 1 / -1;
-    grid-row: 4 / span 3;
-    margin-top: 4.5rem;
-  }
+  .deck:nth-child(n + 3) { margin-top: 4.5rem; }
 }
 
-@media (min-width: 1100px) {
+@media (min-width: 1380px) {
   .oracle-decks {
-    max-width: 1120px;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    max-width: 1340px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     grid-template-rows: auto auto auto;
-    column-gap: 2rem;
+    column-gap: 1.5rem;
   }
 
-  .deck[data-deck="lift"] {
-    grid-column: auto;
-    grid-row: span 3;
-    margin-top: 0;
-  }
+  .deck:nth-child(n + 3) { margin-top: 0; }
 }
 
 .deck-head { max-width: 30em; }
@@ -534,3 +526,25 @@
 .deck[data-deck="lift"] .oracle-back .ob-star { color: var(--ink); }
 .deck[data-deck="lift"] .oracle-back .ob-hint { opacity: .85; }
 .deck-head p{text-align:left}
+
+/* Break the Pattern: a cream back with navy lines, the fourth colour. */
+.deck[data-deck="break"] .oracle-back {
+  color: var(--ink);
+  border-color: rgba(10, 31, 61, 0.55);
+  background:
+    radial-gradient(1.4px 1.4px at 18% 16%, rgba(176, 58, 78, 0.5), transparent),
+    radial-gradient(1.2px 1.2px at 80% 22%, rgba(176, 58, 78, 0.4), transparent),
+    radial-gradient(1.6px 1.6px at 30% 78%, rgba(176, 58, 78, 0.45), transparent),
+    radial-gradient(1.2px 1.2px at 74% 70%, rgba(176, 58, 78, 0.4), transparent),
+    radial-gradient(circle at 50% 46%, rgba(255, 255, 255, 0.7), transparent 55%),
+    linear-gradient(160deg, #FFFDF8 0%, #F6EEE2 55%, #EAD9D3 100%);
+  box-shadow: 0 0 0 1px rgba(253, 249, 241, 0.3), 0 26px 50px -20px rgba(0, 0, 0, 0.55);
+}
+.deck[data-deck="break"] .oracle-back::before { border-color: rgba(10, 31, 61, 0.6); }
+.deck[data-deck="break"] .oracle-back::after { border-color: rgba(10, 31, 61, 0.25); }
+.deck[data-deck="break"] .oracle-back .ob-title,
+.deck[data-deck="break"] .oracle-back .ob-hint,
+.deck[data-deck="break"] .oracle-back .ob-emblem,
+.deck[data-deck="break"] .oracle-back .ob-star { color: var(--ink); }
+.deck[data-deck="break"] .oracle-back .ob-hint { opacity: .85; }
+.deck[data-deck="break"] .oracle-back .ob-title { font-size: 0.92rem; letter-spacing: 0.18em; }
