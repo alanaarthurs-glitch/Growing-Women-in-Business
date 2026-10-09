@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>You built it. Can anybody find it? | Growing Women in Business</title>
-<meta name="description" content="11 quick questions, about 2 minutes. Your findable score out of 100, the one gap costing you customers, and the ten-minute fix to make first.">
+<title>Your Visibility Score: can anybody find what you've built? | Growing Women in Business</title>
+<meta name="description" content="11 quick questions, about 2 minutes. Your Visibility Score out of 100, the one gap costing you customers, and the ten-minute fix to make first.">
 <link rel="canonical" href="https://www.growingwomeninbusiness.com/scorecard">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<meta property="og:title" content="You built it. Can anybody find it?">
-<meta property="og:description" content="11 quick questions, about 2 minutes. Your findable score out of 100 and the first thing to fix.">
+<meta property="og:title" content="Your Visibility Score: can anybody find what you've built?">
+<meta property="og:description" content="11 quick questions, about 2 minutes. Your Visibility Score out of 100 and the first thing to fix.">
 <meta property="og:image" content="https://www.growingwomeninbusiness.com/images/og.png">
 <meta property="og:url" content="https://www.growingwomeninbusiness.com/scorecard">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -222,7 +222,7 @@
 .skip-link-sc{position:absolute;left:.75rem;top:-100px;background:#0A1F3D;color:#fff;padding:.75rem 1rem;border-radius:8px;z-index:100}.skip-link-sc:focus{top:.75rem}</style>
 </head>
 <body>
-  <a class="skip-link-sc" href="#sc-main">Skip to the scorecard</a>
+  <a class="skip-link-sc" href="#sc-main">Skip to the Visibility Score</a>
 <div class="bg-decor" aria-hidden="true"><span></span><span></span><span></span></div>
 <div class="wrap">
   <main class="card" id="sc-main" tabindex="-1">
@@ -233,7 +233,7 @@
     <!-- SCREEN 1: hook + details (captured FIRST) -->
     <section id="screen-start" class="screen" aria-labelledby="start-title">
       <div class="owner" id="owner"></div>
-      <span class="eyebrow">Free scorecard &middot; about 2 minutes</span>
+      <span class="eyebrow">Free Visibility Score &middot; about 2 minutes</span>
       <h1 id="start-title" tabindex="-1" data-focus></h1>
       <p class="promise" id="start-promise"></p>
       <form id="details" novalidate>
@@ -276,7 +276,7 @@
     <section id="screen-result" class="screen" hidden aria-labelledby="r-greeting">
       <h1 id="r-greeting" tabindex="-1" data-focus></h1>
       <div id="r-score-wrap">
-        <p class="score-label">Your findable score</p>
+        <p class="score-label">Your Visibility Score</p>
         <div class="score-ring" id="score-ring" aria-hidden="false">
           <p class="score" id="r-score"></p>
         </div>
@@ -320,7 +320,7 @@ const CONFIG = {
   },
   title: "You built it. Can anybody find it?",
   promise: "11 quick questions. 2 minutes. You get a score out of 100, the one thing quietly losing you customers, and a ten-minute fix you can do tonight.",
-  startButton: "Get my score",
+  startButton: "Get my Visibility Score",
   consentText: "Yes, send me the odd message from Growing Women in Business. Real tips, no spam, unsubscribe whenever.",
   privacyUrl: "/privacy.html",
   secondsPerQuestion: 10,
@@ -334,7 +334,7 @@ const CONFIG = {
   signup: { button: "Yes, send me The Only Way Is Up", done: "You're on the list. Watch your inbox.",
             already: "You're on the list", failed: "That didn't go through. Please try again in a minute." },
   share: { button: "Share my score", copied: "Copied",
-           text: "I scored {pct}% on the findable score. Can anybody find what you've built? Two minutes:",
+           text: "I scored {pct}% on the Visibility Score. Can anybody find what you've built? Two minutes:",
            url: "https://www.growingwomeninbusiness.com/scorecard?utm_source=share&utm_medium=social&utm_campaign=findable-score" },
 
   categories: [
@@ -456,7 +456,7 @@ const CONFIG = {
 
   // ---- Screen 1
   function renderStart() {
-    document.title = C.title + " | " + C.business;
+    document.title = "Your Visibility Score | " + C.business;
     $("start-title").textContent = C.title;
     $("start-promise").textContent = C.promise;
     $("consent-text").textContent = C.consentText;

@@ -907,7 +907,7 @@ async function sendScorecardEmail(email, firstName, score, tier, categories, win
   return resendSend({
     from: RESEND_FROM_EMAIL,
     to: email,
-    subject: `Your findable score: ${score}%, ${tier}`,
+    subject: `Your Visibility Score: ${score}%, ${tier}`,
     html: scorecardEmailHtml(firstName, score, tier, categories, wins, opts),
   });
 }
