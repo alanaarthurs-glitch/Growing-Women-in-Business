@@ -427,8 +427,56 @@
     });
   }
 
+  // A free AI prompt for every card, built from the card's own words so it
+  // always matches. Each deck asks the AI to help in its own way.
+  function promptFor(deck, c) {
+    var card = '“' + c.name + '”: ' + c.message;
+    if (deck === 'pep') {
+      return 'Act as a warm, practical mentor for a woman running her own small business.\n\n' +
+        'Today’s card is ' + card + '\n' +
+        'The action on it is: ' + c.action + '\n\n' +
+        'Ask me up to three short questions, one at a time, about my life and business right now. ' +
+        'Then help me do this action today in a way that fits my real week. ' +
+        'Finish with one step so small I could do it in the next ten minutes.';
+    }
+    if (deck === 'fear') {
+      return 'Act as my fear buddy: kind, funny and on my side, never a coach giving me a lecture.\n\n' +
+        'I’ve just drawn the card ' + card + '\n' +
+        'The dare is: ' + c.action + '\n\n' +
+        'Ask me what I’m scared will happen, one question at a time, no more than three. ' +
+        'Then help me shrink the dare until it feels doable today, ' +
+        'and write me a short message I can send a friend saying I’m going to do it.';
+    }
+    if (deck === 'lift') {
+      return 'Act as a warm friend who is brilliant with words.\n\n' +
+        'I’ve drawn the card ' + card + '\n' +
+        'The way to pass it on is: ' + c.action + '\n\n' +
+        'Ask me two quick questions about who I could do this for and what they mean to me. ' +
+        'Then write me the exact words to use, whether that’s a message, a note, a review, a comment or a voice note script. ' +
+        'Keep it short, warm and in plain British English, so I can send it today.';
+    }
+    if (c.label === 'Do it now') {
+      return 'Act as a calm, steady voice. I’m stuck in a spiral right now.\n\n' +
+        'I’ve drawn the card ' + card + '\n' +
+        'The pattern interrupt is: ' + c.action + '\n\n' +
+        'Talk me through doing it, step by step, in short lines. ' +
+        'Then ask me one question about what changed, and give me one small next step for the next ten minutes.';
+    }
+    return 'Act as a curious, encouraging mentor who loves shaking up habits.\n\n' +
+      'I’ve drawn the card ' + card + '\n' +
+      'The challenge is: ' + c.action + '\n\n' +
+      'Ask me up to three short questions, one at a time, about my usual routine. ' +
+      'Then help me plan exactly when and how I’ll do this today, ' +
+      'and give me one question to think about tonight about what I noticed.';
+  }
+
   function setupDeck(root, draw, onShown) {
     var card = root.querySelector('.oracle-card');
+    var aiBox = root.querySelector('.deck-prompt');
+    var aiText = root.querySelector('.deck-prompt-text');
+    var aiCopy = root.querySelector('.deck-prompt-copy');
+    var aiStatus = root.querySelector('.deck-prompt-status');
+    var deckKey = root.getAttribute('data-deck');
     var back = root.querySelector('.oracle-back');
     var front = root.querySelector('.oracle-front');
     var again = root.querySelector('.deck-again');
@@ -453,6 +501,28 @@
       slots.message.textContent = c.message;
       slots.action.textContent = c.action;
       if (c.label) slots.label.textContent = c.label;
+      if (aiText) {
+        aiText.textContent = promptFor(deckKey, c);
+        aiStatus.textContent = '';
+      }
+    }
+
+    if (aiCopy) {
+      aiCopy.addEventListener('click', function () {
+        if (!current) return;
+        copyText(aiText.textContent).then(function () {
+          aiStatus.textContent = 'Copied. Paste it into your AI.';
+        }, function () {
+          var box = aiText.closest('details');
+          if (box) box.open = true;
+          var range = document.createRange();
+          range.selectNodeContents(aiText);
+          var sel = window.getSelection();
+          sel.removeAllRanges();
+          sel.addRange(range);
+          aiStatus.textContent = 'Your browser won’t copy for us. The prompt is selected, so copy it by hand.';
+        });
+      });
     }
 
     function faceUp() {
@@ -462,6 +532,7 @@
       front.removeAttribute('aria-hidden');
       slots.name.focus({ preventScroll: true });
       if (share) share.hidden = false;
+      if (aiBox) aiBox.hidden = false;
       if (onShown) onShown();
     }
 

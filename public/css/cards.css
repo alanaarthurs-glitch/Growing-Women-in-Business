@@ -548,3 +548,73 @@
 .deck[data-deck="break"] .oracle-back .ob-star { color: var(--ink); }
 .deck[data-deck="break"] .oracle-back .ob-hint { opacity: .85; }
 .deck[data-deck="break"] .oracle-back .ob-title { font-size: 0.92rem; letter-spacing: 0.18em; }
+
+/* The free AI prompt under each turned card. */
+.deck-prompt {
+  width: min(300px, 100%);
+  margin: 0.25rem auto 0;
+  padding: 1rem 1rem 0.9rem;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: var(--radius-btn);
+}
+.deck-prompt-label {
+  margin: 0 0 0.3rem;
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--rose);
+}
+.deck-prompt-help {
+  margin: 0 0 0.75rem;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.82);
+}
+.deck-prompt-copy {
+  min-height: 44px;
+  padding: 0.6rem 1.2rem;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--ink);
+  background: var(--cream);
+  border: 0;
+  border-radius: var(--radius-btn);
+  cursor: pointer;
+}
+.deck-prompt-copy:hover { background: var(--white); }
+.deck-prompt-status {
+  display: block;
+  min-height: 1.2em;
+  margin-top: 0.4rem;
+  font-size: 0.82rem;
+  color: var(--mint);
+}
+.deck-prompt-box { margin-top: 0.35rem; text-align: left; }
+.deck-prompt-box summary {
+  cursor: pointer;
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--white);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.deck-prompt-text {
+  margin: 0.6rem 0 0;
+  padding: 0.75rem;
+  max-height: 260px;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--ink);
+  background: var(--cream);
+  border-radius: 8px;
+}
