@@ -61,9 +61,12 @@
       <section class="blush">
         <div class="inner">
           <span class="eyebrow">Step one</span>
-          <h2>Book your discovery call</h2>
-          <div id="circle-booking-cta"></div>
+          <h2>Join the private Facebook group</h2>
+          <p class="lede" id="circle-community-line">The Circle lives in a private Facebook group. Alana will send you the link and add you within 48 hours.</p>
           <div id="circle-community-cta"></div>
+          <h2>And book your welcome call</h2>
+          <p class="lede">A short call to say hello and pair you with your fear buddy.</p>
+          <div id="circle-booking-cta"></div>
         </div>
       </section>
 
@@ -77,53 +80,6 @@
       </section>
     </div>
 
-    <div id="cohort-flow" hidden>
-      <section class="blush">
-        <div class="inner">
-          <span class="eyebrow">Step one</span>
-          <h2>Your first action, right now</h2>
-          <div class="quote-block">
-            <p>You're in. Properly in. Welcome to The Future Maker Cohort.</p>
-            <p>Before you do anything else, before you overthink it, I want one thing from you and one thing only.</p>
-            <p>In one sentence, tell me the one big action you're here to take. The pricing you keep not doing, the post you keep not posting, the conversation you keep not having, whatever it is for you. One sentence. Voice note or text, whichever's easier, doesn't matter, it just has to be honest.</p>
-            <p>Reply to this now. Don't tidy it up. Don't make it sound clever. Just say the true thing.</p>
-            <p>That's it. That's the first action, and you've basically already taken it. I'll call you within 48 hours.</p>
-            <p>Alana x</p>
-          </div>
-          <form class="apply-form" id="action-form">
-            <div>
-              <label for="action-email">Email</label>
-              <input type="email" id="action-email" name="email" required autocomplete="email" />
-            </div>
-            <div>
-              <label for="action-text">In one sentence, the one big action you're here to take</label>
-              <textarea id="action-text" name="action" required></textarea>
-            </div>
-            <button type="submit" class="btn">Send it to Alana</button>
-          </form>
-          <div id="action-success" class="calendar-slot" hidden>
-            <p>Got it. That's the first action, and you've basically already taken it. Alana will call you within 48 hours.</p>
-          </div>
-        </div>
-      </section>
-
-      <section class="white">
-        <div class="inner">
-          <span class="eyebrow">Step two</span>
-          <h2>Book your welcome call</h2>
-          <div id="cohort-booking-cta"></div>
-        </div>
-      </section>
-
-      <section class="blush">
-        <div class="inner">
-          <span class="eyebrow">Step three</span>
-          <h2>What kind of Future Maker are you?</h2>
-          <p class="lede">Nine quick questions, no right answers. This helps Alana see how best to support you too.</p>
-          <div class="quiz-box" id="quiz-box-cohort"></div>
-        </div>
-      </section>
-    </div>
   </main>
 
   <section class="newsletter-panel" aria-labelledby="nl-heading">
@@ -159,99 +115,37 @@
   <script src="/js/nav.js"></script>
   <script src="/js/newsletter-panel.js"></script>
   <script>
-function showFormError(btn, text) {
-  var m = btn.parentNode.querySelector('.form-error');
-  if (!m) { m = document.createElement('p'); m.className = 'form-error'; m.setAttribute('role', 'alert'); btn.parentNode.insertBefore(m, btn.nextSibling); }
-  m.textContent = text;
-}
     (function () {
-      var params = new URLSearchParams(window.location.search);
-      var offer = params.get('offer');
-      var emailParam = params.get('email') || '';
-      var isCohort = offer === 'cohort';
       var config = window.GWIB_CONFIG || { bookingUrl: '', communityUrl: '' };
 
-      document.getElementById('welcome-eyebrow').textContent = "You're in";
-
-      function renderBookingCta(containerId, fallbackText) {
+      function addButton(containerId, href, label) {
         var container = document.getElementById(containerId);
-        if (!container) return;
-        if (config.bookingUrl) {
-          var a = document.createElement('a');
-          a.href = config.bookingUrl;
-          a.target = '_blank';
-          a.rel = 'noopener';
-          a.className = 'btn';
-          a.textContent = 'Book your call';
-          container.appendChild(a);
-        } else {
-          var p = document.createElement('p');
-          p.className = 'lede';
-          p.textContent = fallbackText;
-          container.appendChild(p);
-        }
+        if (!container || !href) return false;
+        var a = document.createElement('a');
+        a.href = href;
+        a.target = '_blank';
+        a.rel = 'noopener';
+        a.className = 'btn';
+        a.textContent = label;
+        container.appendChild(a);
+        return true;
       }
 
-      if (isCohort) {
-        document.getElementById('welcome-heading').textContent = "You're officially a Future Maker";
-        document.getElementById('welcome-lede').textContent = "Two quick things, then your six weeks properly begins.";
-        document.getElementById('cohort-flow').hidden = false;
+      document.getElementById('welcome-heading').textContent = "You're officially in The Circle";
+      document.getElementById('circle-flow').hidden = false;
 
-        if (emailParam) {
-          document.getElementById('action-email').value = emailParam;
-        }
-
-        renderBookingCta('cohort-booking-cta', "Alana will be in touch within 48 hours to lock in your welcome call.");
-
-        var actionForm = document.getElementById('action-form');
-        actionForm.addEventListener('submit', function (e) {
-          e.preventDefault();
-          var button = actionForm.querySelector('button[type="submit"]');
-          button.disabled = true;
-          button.textContent = 'Sending…';
-
-          fetch('/api/first-action', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              email: document.getElementById('action-email').value,
-              action: document.getElementById('action-text').value
-            })
-          })
-            .then(function (r) { return r.json(); })
-            .then(function (data) {
-              if (!data.ok) throw new Error(data.error || 'Something went wrong');
-              actionForm.hidden = true;
-              document.getElementById('action-success').hidden = false;
-            })
-            .catch(function () {
-              button.disabled = false;
-              button.textContent = 'Send it to Alana';
-              showFormError(button, "That didn't send. Check your email address is right and try again in a moment.");
-            });
-        });
-
-        initFutureMakerQuiz('quiz-box-cohort', 'Cohort Welcome');
-      } else {
-        document.getElementById('welcome-heading').textContent = "You're officially in The Circle";
-        document.getElementById('welcome-lede').textContent = "Two quick things, then you're properly set up.";
-        document.getElementById('circle-flow').hidden = false;
-
-        renderBookingCta('circle-booking-cta', "Alana will call you within 48 hours to welcome you in and get you paired with your fear buddy.");
-
-        if (config.communityUrl) {
-          var container = document.getElementById('circle-community-cta');
-          var a2 = document.createElement('a');
-          a2.href = config.communityUrl;
-          a2.target = '_blank';
-          a2.rel = 'noopener';
-          a2.className = 'btn';
-          a2.textContent = 'Go to The Circle';
-          container.appendChild(a2);
-        }
-
-        initFutureMakerQuiz('quiz-box-circle', 'Circle Welcome');
+      if (addButton('circle-community-cta', config.communityUrl, 'Go to The Circle on Facebook')) {
+        document.getElementById('circle-community-line').textContent = 'The Circle lives in a private Facebook group. Tap below to ask to join, and Alana will let you in.';
       }
+
+      if (!addButton('circle-booking-cta', config.bookingUrl, 'Book your welcome call')) {
+        var p = document.createElement('p');
+        p.className = 'lede';
+        p.textContent = 'Alana will call you within 48 hours to welcome you in and get you paired with your fear buddy.';
+        document.getElementById('circle-booking-cta').appendChild(p);
+      }
+
+      initFutureMakerQuiz('quiz-box-circle', 'Circle Welcome');
     })();
   </script>
 </body>
