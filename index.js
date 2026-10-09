@@ -460,17 +460,38 @@ function createSendGuard(options) {
   return { claim, prune, size: () => sent.size };
 }
 
-const apiLimiter = createRateLimiter({ capacity: 20, windowMs: 10 * 60 * 1000, maxKeys: 10000 });
+const apiLimiter = createRateLimiter({ capacity: 60, windowMs: 10 * 60 * 1000, maxKeys: 10000 });
 const sendGuard = createSendGuard({ ttlMs: 24 * 60 * 60 * 1000, maxKeys: 50000 });
 setInterval(() => {
   apiLimiter.prune();
   sendGuard.prune();
 }, 60 * 1000).unref();
 
+// How many proxies sit in front of this server and add to X-Forwarded-For
+// (Railway's edge is 1; add 1 more if Cloudflare goes in front). The sender
+// controls the START of that header, so only the values the proxies added at
+// the END can be trusted. Never use the first value.
+const TRUST_PROXY_HOPS = Math.max(0, parseInt(process.env.TRUST_PROXY_HOPS || "1", 10) || 0);
 function clientIp(req) {
-  // Railway's edge adds X-Forwarded-For. The first value is the client.
-  const forwarded = (req.headers["x-forwarded-for"] || "").split(",")[0].trim();
-  return forwarded || (req.socket && req.socket.remoteAddress) || "unknown";
+  const parts = (req.headers["x-forwarded-for"] || "").split(",").map((p) => p.trim()).filter(Boolean);
+  if (TRUST_PROXY_HOPS > 0 && parts.length) {
+    const ip = parts[Math.max(0, parts.length - TRUST_PROXY_HOPS)];
+    if (ip) return ip;
+  }
+  return (req.socket && req.socket.remoteAddress) || "unknown";
+}
+
+// A hard ceiling on emails sent from the site per hour, whoever asks. Leads
+// are still saved when the cap is hit; only the email is skipped.
+const EMAIL_HOURLY_CAP = parseInt(process.env.EMAIL_HOURLY_CAP || "200", 10);
+let emailWindowStart = Date.now();
+let emailWindowCount = 0;
+function emailCapOk() {
+  const now = Date.now();
+  if (now - emailWindowStart >= 60 * 60 * 1000) { emailWindowStart = now; emailWindowCount = 0; }
+  if (emailWindowCount >= EMAIL_HOURLY_CAP) return false;
+  emailWindowCount += 1;
+  return true;
 }
 
 // Browsers send an Origin header on every cross-site POST. If there is one,
@@ -491,7 +512,10 @@ function originAllowed(req) {
 function appendLocalLead(fileName, record) {
   try {
     fs.mkdirSync(DATA_DIR, { recursive: true });
-    fs.appendFileSync(path.join(DATA_DIR, fileName), JSON.stringify(record) + "\n");
+    const file = path.join(DATA_DIR, fileName);
+    // Notion is the real record. Stop the local backup growing without limit.
+    try { if (fs.statSync(file).size > 5 * 1024 * 1024) return; } catch (e) { /* new file */ }
+    fs.appendFileSync(file, JSON.stringify(record) + "\n");
   } catch (err) {
     console.error("Local lead write failed:", err.message);
   }
@@ -601,6 +625,7 @@ async function sendWelcomeEmail(email, archetype) {
   const pdfKey = ARCHETYPE_PDF_KEYS[archetype];
   if (!pdfKey) return false;
   if (!sendGuard.claim("welcome", email)) return false;
+  if (!emailCapOk()) { console.warn("Hourly email cap reached, welcome email skipped"); return false; }
 
   const pdfPath = path.join(PDF_DIR, `${pdfKey}.pdf`);
   const pdfBuffer = await fs.promises.readFile(pdfPath);
@@ -871,6 +896,7 @@ function scorecardEmailHtml(firstName, score, tier, categories, wins, opts) {
 async function sendScorecardEmail(email, firstName, score, tier, categories, wins, opts) {
   if (!RESEND_API_KEY || !RESEND_FROM_EMAIL) return false;
   if (!sendGuard.claim("scorecard", email)) return false;
+  if (!emailCapOk()) { console.warn("Hourly email cap reached, scorecard email skipped"); return false; }
   return resendSend({
     from: RESEND_FROM_EMAIL,
     to: email,
@@ -1037,6 +1063,7 @@ function handleRequest(req, res) {
     res.setHeader("X-Frame-Options", "SAMEORIGIN");
     res.setHeader("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
     res.setHeader("Cross-Origin-Opener-Policy", CROSS_ORIGIN_OPENER_POLICY);
+    res.setHeader("Cross-Origin-Resource-Policy", "same-site");
 
     // Canonical host redirect. Only fires on an exact match against the bare
     // (non-www) host, so localhost and Railway's own *.up.railway.app host

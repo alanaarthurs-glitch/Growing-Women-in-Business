@@ -651,7 +651,10 @@ const CONFIG = {
       state.sent = true;
       const rec = buildLeadRecord(r);
       rec.wins = Array.from(document.querySelectorAll("#r-wins li")).map((li) => li.textContent);
-      fetch("/api/scorecard", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(rec) }).catch(() => {});
+      const sendLead = (tries) => fetch("/api/scorecard", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(rec) })
+        .then((r) => { if (!r.ok && tries > 0) setTimeout(() => sendLead(tries - 1), 4000); })
+        .catch(() => { if (tries > 0) setTimeout(() => sendLead(tries - 1), 4000); });
+      sendLead(2);
     }
   }
 

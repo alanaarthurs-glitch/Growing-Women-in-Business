@@ -144,19 +144,31 @@ test("honeypot filled: 200 but nothing saved", async () => {
   assert.ok(!saved.includes("bot@example.com"));
 });
 
-test("rate limit: 20 posts are fine, the 21st from the same IP is 429", async () => {
+test("rate limit: 60 posts are fine, the 61st from the same IP is 429", async () => {
   const ip = "198.51.100.77";
   const statuses = [];
-  for (let i = 0; i < 21; i++) {
+  for (let i = 0; i < 61; i++) {
     const r = await request("POST", "/api/scorecard", {
       headers: { "Content-Type": "application/json", "X-Forwarded-For": ip },
       body: JSON.stringify(validScorecard),
     });
     statuses.push(r.status);
-    if (i === 20) assert.ok(Number(r.headers["retry-after"]) > 0, "Retry-After set");
+    if (i === 60) assert.ok(Number(r.headers["retry-after"]) > 0, "Retry-After set");
   }
-  assert.deepStrictEqual(statuses.slice(0, 20), new Array(20).fill(200));
-  assert.strictEqual(statuses[20], 429);
+  assert.deepStrictEqual(statuses.slice(0, 60), new Array(60).fill(200));
+  assert.strictEqual(statuses[60], 429);
+});
+
+test("rate limit: a spoofed first X-Forwarded-For value does not dodge the limit", async () => {
+  const statuses = [];
+  for (let i = 0; i < 65; i++) {
+    const r = await request("POST", "/api/scorecard", {
+      headers: { "Content-Type": "application/json", "X-Forwarded-For": `9.9.9.${i}, 203.0.113.50` },
+      body: JSON.stringify(validScorecard),
+    });
+    statuses.push(r.status);
+  }
+  assert.ok(statuses.includes(429), "fake leading addresses must not give a fresh allowance");
 });
 
 test("stored scorecard is cleaned: tier from score, unknown categories dropped", async () => {
