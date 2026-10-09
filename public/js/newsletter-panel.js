@@ -30,7 +30,9 @@ document.addEventListener('DOMContentLoaded', function () {
             done.className = 'confirm';
             done.setAttribute('role', 'status');
             done.tabIndex = -1;
-            done.textContent = isWaitlist
+            done.textContent = /^Webinar/.test(source || '')
+              ? "You're on the list. I'll email you the date as soon as it's set."
+              : isWaitlist
               ? "You're on the waitlist. I'll message you the moment it reopens."
               : "You're on the list. Watch your inbox.";
             form.replaceWith(done);
