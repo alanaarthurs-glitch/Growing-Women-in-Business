@@ -600,15 +600,12 @@
 
     if (pep) {
       setupDeck(pep, pepForToday, function () {
-        var when = today().date.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' });
-        pep.querySelector('.deck-note').textContent = "That's your card for " + when.replace(',', '') + '. A new one turns up at midnight.';
         showNext(pep);
       });
     }
 
     if (fear) {
       setupDeck(fear, randomDrawer(FEAR), function () {
-        fear.querySelector('.deck-note').textContent = 'Do the action, then tell someone you did it.';
         fear.querySelector('.deck-again').hidden = false;
         showNext(fear);
       });
@@ -616,7 +613,6 @@
 
     if (lift) {
       setupDeck(lift, randomDrawer(LIFT), function () {
-        lift.querySelector('.deck-note').textContent = 'Pass it on, then notice how you feel.';
         lift.querySelector('.deck-again').hidden = false;
         showNext(lift);
       });
@@ -624,7 +620,6 @@
 
     if (brk) {
       setupDeck(brk, randomDrawer(BREAK), function () {
-        brk.querySelector('.deck-note').textContent = 'Do it, then notice what changed.';
         brk.querySelector('.deck-again').hidden = false;
         showNext(brk);
       });
