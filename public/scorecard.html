@@ -218,6 +218,47 @@
     .consent { margin-top: 14px; }
     .btn, .cta { padding-left: 16px; padding-right: 16px; }
   }
+  /* The dial and slider */
+  .dial-wrap { display: grid; place-items: center; margin: 6px 0 2px; }
+  .dial { width: 190px; height: 190px; }
+  @media (min-width: 600px) { .dial { width: 220px; height: 220px; } }
+  #dial-arc { transition: stroke-dashoffset .35s cubic-bezier(.22,.61,.36,1); }
+  /* The needle is turned by a small JS tween on its rotate() attribute, so no CSS transform here */
+  .pick-label {
+    text-align: center; font-family: var(--head-font); font-size: 1.55rem; font-weight: 600;
+    line-height: 1.2; min-height: 2.4em; margin: 0 0 10px; display: grid; place-items: center;
+  }
+  .slider-wrap { margin: 0 6px 14px; }
+  input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 44px; background: transparent; cursor: pointer; margin: 0; }
+  input[type="range"]::-webkit-slider-runnable-track { height: 12px; border-radius: 99px; background: linear-gradient(90deg, #EAD9D3, #DF8491 60%, #B03A4E); }
+  input[type="range"]::-moz-range-track { height: 12px; border-radius: 99px; background: linear-gradient(90deg, #EAD9D3, #DF8491 60%, #B03A4E); }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 34px; height: 34px; margin-top: -11px; border-radius: 50%;
+    background: #fff; border: 4px solid var(--button); box-shadow: 0 6px 16px -4px rgba(176,58,78,.6);
+  }
+  input[type="range"]::-moz-range-thumb { width: 26px; height: 26px; border-radius: 50%; background: #fff; border: 4px solid var(--button); box-shadow: 0 6px 16px -4px rgba(176,58,78,.6); }
+  .slider-ends { display: flex; justify-content: space-between; font-size: .8rem; color: var(--muted); margin-top: 2px; }
+  .answers.chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 16px; }
+  .answers.chips .answer {
+    width: auto; min-height: 40px; padding: 8px 14px; border-radius: 99px; font-size: .9rem; gap: 8px;
+  }
+  .answers.chips .answer .key { width: 22px; height: 22px; font-size: .75rem; border-radius: 50%; }
+  .lock-btn { width: 100%; }
+  @media (min-width: 600px) { .lock-btn { width: 100%; } }
+
+  /* The master prompt */
+  .prompt-box { margin-top: 30px; padding: 22px; border-radius: 16px; background: var(--ink); color: #fff; }
+  .prompt-box .eyebrow { background: #fff; color: var(--button); box-shadow: none; }
+  .prompt-title { color: #fff; font-family: var(--head-font); font-size: 1.35rem; font-weight: 600; margin: 8px 0 14px; line-height: 1.25; }
+  .prompt-box pre {
+    white-space: pre-wrap; word-wrap: break-word; font: 400 .92rem/1.55 var(--body-font);
+    background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.18); border-radius: 12px;
+    padding: 16px; margin: 0 0 14px; max-height: 260px; overflow: auto; color: #fff;
+  }
+  .prompt-box .btn { width: 100%; }
+  .prompt-box .muted { color: rgba(255,255,255,.75); }
+
+
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 .skip-link-sc{position:absolute;left:.75rem;top:-100px;background:#0A1F3D;color:#fff;padding:.75rem 1rem;border-radius:8px;z-index:100}.skip-link-sc:focus{top:.75rem}</style>
 </head>
@@ -265,10 +306,40 @@
       <div class="progress" role="progressbar" aria-label="Quiz progress" aria-valuemin="0" id="progress"><div id="progress-fill"></div></div>
       <h1 id="q-text" tabindex="-1" data-focus></h1>
       <p class="qhelp" id="q-help" hidden></p>
+
+      <div class="dial-wrap" aria-hidden="true">
+        <svg class="dial" viewBox="0 0 200 200" id="dial">
+          <defs>
+            <linearGradient id="dialGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#B03A4E"/><stop offset="1" stop-color="#DF8491"/>
+            </linearGradient>
+          </defs>
+          <circle cx="100" cy="100" r="84" fill="none" stroke="#EAD9D3" stroke-width="14"/>
+          <circle id="dial-arc" cx="100" cy="100" r="84" fill="none" stroke="url(#dialGrad)" stroke-width="14"
+                  stroke-linecap="round" stroke-dasharray="527.8" stroke-dashoffset="527.8" transform="rotate(-90 100 100)"/>
+          <g id="dial-needle" transform="rotate(-135 100 100)">
+            <line x1="100" y1="100" x2="100" y2="34" stroke="#0A1F3D" stroke-width="6" stroke-linecap="round"/>
+            <circle cx="100" cy="100" r="11" fill="#0A1F3D"/>
+            <circle cx="100" cy="100" r="4" fill="#fff"/>
+          </g>
+          <text id="dial-emoji" x="100" y="150" text-anchor="middle" font-size="34">🙈</text>
+        </svg>
+      </div>
+
+      <p class="pick-label" id="pick-label" aria-live="polite"></p>
+
+      <div class="slider-wrap">
+        <input type="range" id="slider" min="0" max="3" step="1" value="0" aria-labelledby="q-text" aria-valuetext="">
+        <div class="slider-ends" aria-hidden="true"><span id="slider-lo"></span><span id="slider-hi"></span></div>
+      </div>
+
       <div class="answers" role="group" aria-labelledby="q-text" id="answers"></div>
+
+      <button type="button" class="btn lock-btn" id="lock-btn">Lock it in &rarr;</button>
+
       <div class="nav">
         <button type="button" class="link-btn" id="back-btn">&larr; Back</button>
-        <span class="small muted key-tip">Tip: press 1&ndash;<span id="key-max">4</span></span>
+        <span class="small muted key-tip">Drag the slider, tap a chip, or press 1&ndash;<span id="key-max">4</span></span>
       </div>
     </section>
 
@@ -296,6 +367,15 @@
         <p id="r-next-line"></p>
         <div id="r-cta-bottom"></div>
       </div>
+
+      <div class="prompt-box">
+        <span class="eyebrow">Free master prompt</span>
+        <h3 class="prompt-title">Paste this into ChatGPT or Claude. Ten minutes, and you'll have your one-sentence offer, your bio and your first post.</h3>
+        <pre id="r-prompt" tabindex="0"></pre>
+        <button type="button" class="btn" id="copy-prompt">Copy my prompt</button>
+        <p class="small muted" id="copy-status" aria-live="polite"></p>
+      </div>
+
 
       <p class="disclaimer" id="r-disclaimer" hidden></p>
       <p><button type="button" class="link-btn" id="retake-btn">Take it again</button></p>
@@ -523,32 +603,81 @@ const CONFIG = {
     $("q-text").textContent = q.text;
     const help = $("q-help");
     help.hidden = !q.help; help.textContent = q.help || "";
+    // Slider order: scored answers run low to high so the dial reads like a gauge;
+    // insight answers keep their written order. `order[s]` = answer index at slider stop s.
+    const order = q.insight
+      ? q.answers.map((a, k) => k)
+      : q.answers.map((a, k) => k).sort((x, y) => (q.answers[x].points || 0) - (q.answers[y].points || 0));
+    state.order = order;
     const box = $("answers");
+    box.className = "answers chips";
     box.innerHTML = "";
-    q.answers.forEach((a, k) => {
+    order.forEach((k, s) => {
+      const a = q.answers[k];
       const b = document.createElement("button");
-      b.type = "button"; b.className = "answer";
-      b.setAttribute("aria-pressed", state.picks[state.i] === k ? "true" : "false");
-      const key = document.createElement("span"); key.className = "key"; key.setAttribute("aria-hidden", "true"); key.textContent = String(k + 1);
+      b.type = "button"; b.className = "answer"; b.dataset.stop = String(s);
+      const key = document.createElement("span"); key.className = "key"; key.setAttribute("aria-hidden", "true"); key.textContent = String(s + 1);
       const lab = document.createElement("span"); lab.textContent = a.label;
       b.append(key, lab);
-      b.addEventListener("click", () => pick(k, b));
+      b.addEventListener("click", () => setStop(s));
       box.append(b);
     });
-    $("key-max").textContent = String(q.answers.length);
+    const slider = $("slider");
+    slider.max = String(order.length - 1);
+    $("slider-lo").textContent = q.insight ? "" : "Not yet";
+    $("slider-hi").textContent = q.insight ? "" : "Nailed it";
+    const prev = state.picks[state.i];
+    const startStop = prev === null ? (q.insight ? 0 : 0) : order.indexOf(prev);
+    setStop(startStop, true);
+    $("key-max").textContent = String(order.length);
     $("back-btn").style.visibility = state.i === 0 ? "hidden" : "visible";
   }
 
-  function pick(k, btn) {
-    state.picks[state.i] = k;
-    document.querySelectorAll("#answers .answer").forEach((b) => b.setAttribute("aria-pressed", "false"));
-    if (btn) btn.setAttribute("aria-pressed", "true");
-    const advance = () => {
-      if (state.i < Q.length - 1) { state.i += 1; renderQuestion(); $("q-text").focus(); }
-      else { renderResult(); show("screen-result"); }
-    };
-    reduceMotion ? advance() : setTimeout(advance, 220);
+  // Tween the needle angle with timeouts (works in background tabs too, unlike rAF)
+  let needleAngle = -135, needleTimer = null;
+  function turnNeedle(target) {
+    clearTimeout(needleTimer);
+    const el = $("dial-needle");
+    if (reduceMotion) { needleAngle = target; el.setAttribute("transform", "rotate(" + target + " 100 100)"); return; }
+    const from = needleAngle, t0 = Date.now(), dur = 320;
+    (function tick() {
+      const p = Math.min(1, (Date.now() - t0) / dur), e = 1 - Math.pow(1 - p, 3);
+      needleAngle = from + (target - from) * e;
+      el.setAttribute("transform", "rotate(" + needleAngle.toFixed(1) + " 100 100)");
+      if (p < 1) needleTimer = setTimeout(tick, 16);
+    })();
   }
+
+  const EMOJI = { scored: ["🙈", "🤔", "🙂", "🔥"], insight: ["⚡", "📅", "🌱", "👀"] };
+
+  // Move the dial, slider and chips to stop `s`, and record the pick (without advancing).
+  function setStop(s, silent) {
+    const q = Q[state.i];
+    const order = state.order;
+    const n = order.length;
+    s = Math.max(0, Math.min(n - 1, s));
+    const k = order[s];
+    state.picks[state.i] = k;
+    const slider = $("slider");
+    slider.value = String(s);
+    slider.setAttribute("aria-valuetext", q.answers[k].label);
+    document.querySelectorAll("#answers .answer").forEach((b) => b.setAttribute("aria-pressed", b.dataset.stop === String(s) ? "true" : "false"));
+    $("pick-label").textContent = q.answers[k].label;
+    const frac = n > 1 ? s / (n - 1) : 1;
+    $("dial-arc").setAttribute("stroke-dashoffset", String(527.8 * (1 - frac * 0.75)));
+    turnNeedle(-135 + 270 * frac);
+    $("dial-emoji").textContent = (q.insight ? EMOJI.insight : EMOJI.scored)[s] || "✨";
+    if (!silent && navigator.vibrate && !reduceMotion) { try { navigator.vibrate(8); } catch (e) {} }
+  }
+
+  $("slider").addEventListener("input", (ev) => setStop(parseInt(ev.target.value, 10)));
+
+  function advance() {
+    if (state.picks[state.i] === null) setStop(0);
+    if (state.i < Q.length - 1) { state.i += 1; renderQuestion(); $("q-text").focus(); }
+    else { renderResult(); show("screen-result"); }
+  }
+  $("lock-btn").addEventListener("click", advance);
 
   $("back-btn").addEventListener("click", () => {
     if (state.i > 0) { state.i -= 1; renderQuestion(); $("q-text").focus(); }
@@ -556,13 +685,12 @@ const CONFIG = {
 
   document.addEventListener("keydown", (ev) => {
     if ($("screen-question").hidden) return;
-    if (ev.target && /^(INPUT|TEXTAREA|SELECT)$/.test(ev.target.tagName)) return;
+    if (ev.target && /^(INPUT|TEXTAREA|SELECT)$/.test(ev.target.tagName) && ev.target.id !== "slider") return;
+    if (ev.key === "Enter") { ev.preventDefault(); advance(); return; }
     const k = parseInt(ev.key, 10);
-    if (k >= 1 && k <= Q[state.i].answers.length) {
-      ev.preventDefault();
-      pick(k - 1, document.querySelectorAll("#answers .answer")[k - 1]);
-    }
+    if (k >= 1 && k <= state.order.length) { ev.preventDefault(); setStop(k - 1); }
   });
+
 
   // ---- Scoring
   const picked = (qi) => (state.picks[qi] === null ? null : Q[qi].answers[state.picks[qi]]);
@@ -646,6 +774,8 @@ const CONFIG = {
     $("r-means").textContent = block.means;
     $("r-next-line").textContent = block.nextLine;
     renderCtas(r, block);
+    $("r-prompt").textContent = buildMasterPrompt(r, who);
+    $("copy-status").textContent = "";
     const d = $("r-disclaimer"); d.hidden = !C.disclaimer; d.textContent = C.disclaimer || "";
     if (!state.sent) {
       state.sent = true;
@@ -772,6 +902,49 @@ const CONFIG = {
     return rec;
   }
 
+  // The free master prompt: her score and weakest area, turned into a prompt she pastes
+  // into ChatGPT or Claude. Gives away the what and the why; the cohort does the build with her.
+  function buildMasterPrompt(r, who) {
+    const name = who || "me";
+    const cats = r.mode === "type" ? [] : [...r.cats].sort((a, b) => a.pct - b.pct);
+    const weakest = cats[0] ? cats[0].name.replace(/\?$/, "").toLowerCase() : "being found";
+    const areas = cats.map((c) => c.name.replace(/\?$/, "") + ": " + c.pct + "%").join(", ");
+    const insights = Object.values(r.insights || {}).join("; ");
+    return [
+      "You are a warm, straight-talking business mentor for women who have spent years building other people's things and are now building their own. Talk to me like a smart friend. British English. No hype, no jargon, no exclamation marks.",
+      "",
+      "About me: my name is " + name + ". I just took a findable scorecard and scored " + (r.pct || 0) + "% (" + areas + "). My weakest area is " + weakest + "." + (insights ? " When asked what's in the way and when I want this sorted, I said: " + insights + "." : ""),
+      "",
+      "First, ask me three quick questions, one at a time, and wait for each answer:",
+      "1. What have I actually spent the last few years doing, at work or at home? (List it all, even the stuff that doesn't feel like a skill.)",
+      "2. Who has asked me for help, advice or a favour more than once?",
+      "3. What would I love to be paid for, if I'm honest?",
+      "",
+      "Then, using my answers, give me all of this in one go:",
+      "A. My one-sentence offer, in the form: I help ___ with ___ for £___. Give me three versions and tell me which one you'd pick and why.",
+      "B. A two-line bio I can paste into Instagram, LinkedIn and WhatsApp today.",
+      "C. My receipts list: ten things I've run, fixed, built or held together, written as skills a customer would pay for.",
+      "D. My first post. Under 120 words. It says what I do and who it's for, sounds like me, and ends with one simple question.",
+      "E. One ten-minute action for tonight that makes me more findable in the area I'm weakest in (" + weakest + ").",
+      "",
+      "Keep everything short and real. If something I said is vague, ask me rather than guessing."
+    ].join("\n");
+  }
+
+  $("copy-prompt").addEventListener("click", async () => {
+    const text = $("r-prompt").textContent;
+    const status = $("copy-status");
+    try {
+      await navigator.clipboard.writeText(text);
+      status.textContent = "Copied. Open ChatGPT or Claude, paste, and press enter.";
+    } catch (e) {
+      const range = document.createRange(); range.selectNodeContents($("r-prompt"));
+      const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
+      status.textContent = "Select-all is done for you: press Ctrl+C (or Cmd+C) to copy.";
+    }
+  });
+
+
   $("retake-btn").addEventListener("click", () => {
     state.picks.fill(null); state.i = 0; renderQuestion(); show("screen-question");
   });
@@ -805,9 +978,9 @@ const CONFIG = {
       const p = Math.min(1, (now - t0) / dur), v = Math.round(ease(p) * target);
       scoreEl.textContent = v + "%";
       ring.style.setProperty("--pct", v);
-      if (p < 1) requestAnimationFrame(step);
+      if (p < 1) setTimeout(() => step(performance.now()), 16);
     }
-    requestAnimationFrame(step);
+    setTimeout(() => step(performance.now()), 16);
     fills.forEach((f, i) => setTimeout(() => { f.style.transition = ""; f.style.width = finalWidths[i]; }, 250 + i * 160));
   }
 
