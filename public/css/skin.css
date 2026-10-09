@@ -123,3 +123,7 @@ html{scroll-padding-bottom:80px}
 .offer-cards{grid-template-columns:minmax(0,1fr)}
 @media(min-width:640px){.offer-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .offer-card input{max-width:100%;min-width:0}
+.topbar .btn{white-space:nowrap;flex:0 0 auto}.topbar .wordmark{flex:0 0 auto}
+
+/* site.css makes every .btn full width under 600px; the header button must stay its own size. */
+.topbar .btn{width:auto}
