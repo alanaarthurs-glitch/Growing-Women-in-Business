@@ -512,3 +512,25 @@
 .deck .oracle-back .ob-hint,
 .deck .oracle-back .ob-emblem,
 .deck .oracle-back .ob-star { color: var(--cream); }
+
+/* The Lift: a light rose back so it stands out from the table too. */
+.deck[data-deck="lift"] .oracle-back {
+  color: var(--ink);
+  border-color: rgba(10, 31, 61, 0.55);
+  background:
+    radial-gradient(1.4px 1.4px at 18% 16%, rgba(255, 255, 255, 0.95), transparent),
+    radial-gradient(1.2px 1.2px at 80% 22%, rgba(255, 255, 255, 0.85), transparent),
+    radial-gradient(1.6px 1.6px at 30% 78%, rgba(255, 255, 255, 0.9), transparent),
+    radial-gradient(1.2px 1.2px at 74% 70%, rgba(255, 255, 255, 0.8), transparent),
+    radial-gradient(circle at 50% 46%, rgba(255, 255, 255, 0.35), transparent 55%),
+    linear-gradient(160deg, #F0B3BC 0%, #E8929F 55%, #DF8491 100%);
+  box-shadow: 0 0 0 1px rgba(253, 249, 241, 0.3), 0 26px 50px -20px rgba(0, 0, 0, 0.55);
+}
+.deck[data-deck="lift"] .oracle-back::before { border-color: rgba(10, 31, 61, 0.6); }
+.deck[data-deck="lift"] .oracle-back::after { border-color: rgba(10, 31, 61, 0.25); }
+.deck[data-deck="lift"] .oracle-back .ob-title,
+.deck[data-deck="lift"] .oracle-back .ob-hint,
+.deck[data-deck="lift"] .oracle-back .ob-emblem,
+.deck[data-deck="lift"] .oracle-back .ob-star { color: var(--ink); }
+.deck[data-deck="lift"] .oracle-back .ob-hint { opacity: .85; }
+.deck-head p{text-align:left}
