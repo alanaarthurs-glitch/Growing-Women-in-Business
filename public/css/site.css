@@ -1908,6 +1908,36 @@ ol.rundown li b {
 .quiz-result .archetype-desc { color: var(--soft-ink); margin: 0 0 1.5rem; }
 .quiz-result .archetype-cta { font-weight: 700; margin: 0 0 1.5rem; }
 
+.quiz-result .archetype-prompt {
+  background: var(--blush);
+  border: var(--hairline);
+  border-radius: var(--radius);
+  padding: 1.1rem 1.25rem;
+  margin: 0 0 1.5rem;
+}
+.quiz-result .archetype-prompt-label {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pink);
+  margin: 0 0 0.5rem;
+}
+.quiz-result .archetype-prompt-text { margin: 0 0 0.9rem; color: var(--ink); }
+.quiz-result .archetype-prompt-copy {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--pink);
+  background: var(--white);
+  border: 1px solid var(--pink);
+  border-radius: var(--radius-btn);
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+.quiz-result .archetype-prompt-copy:hover { background: var(--pink); color: var(--white); }
+
 .quiz-divider {
   border: none;
   border-top: var(--hairline);

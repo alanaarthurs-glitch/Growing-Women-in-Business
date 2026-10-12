@@ -47,6 +47,19 @@ function initFutureMakerQuiz(containerId, source) {
     }
   };
 
+  var PROMPTS = {
+    wildflower: "I've grown without much support and I keep growing quietly. Ask me five questions, one at a time, to find the one thing I've built that deserves to be seen. Then help me write two sentences about it that I'd be proud to post.",
+    ember: "There's something I really want to do and I keep holding it back. Ask me what it is, then give me the smallest first step I can take in ten minutes today, and help me do it right now.",
+    pearl: "I've been carrying something for a long time that could help other people. Interview me about it, one question at a time, then turn my answers into a short post I can share this week.",
+    mademoiselle: "I'm waiting for the right room. Help me describe it: who's in it, what it feels like and what my standards are. Then suggest one real room I could walk into this month, and a first line to say when I get there.",
+    latebloomer: "Here's what I've built over the years, in my own time: [list it]. Show me how it adds up to proof that I'm further along than I feel, then give me one bold next step to take this week.",
+    firestarter: "I spend my time getting everyone else moving. My own goal is [your goal]. Help me protect one hour this week just for it, and plan the first three things I'll do in that hour.",
+    sage: "People ask me for answers all the time. Ask me the five questions I get asked most, then help me turn my answers into short tips I can share, so people can find my advice without having to ask.",
+    livewire: "Here are all my ideas right now: [paste them]. Help me pick the one worth doing first, turn it into a three-step plan I can finish by Friday, and park the rest on a list for later.",
+    anchor: "I carry a lot for other people. Help me list everything on my plate, pick one thing I can hand over or ask for help with, and draft a short, kind message asking for that help."
+  };
+  Object.keys(PROMPTS).forEach(function (key) { ARCHETYPES[key].prompt = PROMPTS[key]; });
+
   var PRIORITY = ["wildflower","ember","pearl","mademoiselle","latebloomer","firestarter","sage","livewire","anchor"];
 
   var QUESTIONS = [
@@ -224,12 +237,48 @@ function initFutureMakerQuiz(containerId, source) {
     html += '<div class="archetype-name">' + result.name + '</div>';
     html += '<p class="archetype-desc">' + result.desc + '</p>';
     html += '<p class="archetype-cta">' + result.cta + '</p>';
+    html += '<div class="archetype-prompt">';
+    html += '<div class="archetype-prompt-label">Your first prompt. Copy it into Claude or ChatGPT.</div>';
+    html += '<p class="archetype-prompt-text">' + result.prompt + '</p>';
+    html += '<button type="button" class="archetype-prompt-copy">Copy prompt</button>';
+    html += '</div>';
     html += '<a href="/circle.html" class="btn">Join The Circle</a>';
-    html += '<p class="guarantee" style="margin-top:1rem;">Post a Monday commitment for a full month and show up to the live. If you don\'t feel more able to act than day one, that month\'s refunded.</p>';
-    html += '<p style="margin-top:1.5rem; font-size:0.85rem; color:var(--soft-ink);">You\'re on the newsletter too. Watch your inbox.</p>';
+    html += '<p style="margin-top:1.25rem; font-size:0.85rem; color:var(--soft-ink);">You\'re on the newsletter too.</p>';
     html += '<a href="#" class="quiz-retake">Retake the quiz</a>';
     html += '</div>';
     box.innerHTML = html;
+
+    var copyBtn = box.querySelector(".archetype-prompt-copy");
+    copyBtn.addEventListener("click", function () {
+      var promptEl = box.querySelector(".archetype-prompt-text");
+      var done = function () {
+        copyBtn.textContent = "Copied";
+        setTimeout(function () { copyBtn.textContent = "Copy prompt"; }, 1800);
+      };
+      var fallback = function () {
+        try {
+          var range = document.createRange();
+          range.selectNodeContents(promptEl);
+          var sel = window.getSelection();
+          sel.removeAllRanges();
+          sel.addRange(range);
+          document.execCommand("copy");
+          sel.removeAllRanges();
+          done();
+        } catch (err) {
+          copyBtn.textContent = "Select and copy";
+        }
+      };
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(promptEl.textContent).then(done, fallback);
+        } else {
+          fallback();
+        }
+      } catch (err) {
+        fallback();
+      }
+    });
 
     box.querySelector(".quiz-retake").addEventListener("click", function (e) {
       e.preventDefault();
