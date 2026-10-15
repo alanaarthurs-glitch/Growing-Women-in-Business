@@ -2,13 +2,13 @@ function initFutureMakerQuiz(containerId, source) {
   var ARCHETYPES = {
     wildflower: {
       name: "The Wildflower",
-      desc: "You grew in ground nobody would've chosen for you, and did it anyway. You're still growing quietly, whether anyone's watching or not.",
+      desc: "You grew in ground nobody would've chosen for you, and did it anyway. You're still quietly getting on with it, whether anyone's watching or not.",
       cta: "Now root down and keep growing on purpose."
     },
     ember: {
       name: "The Ember",
-      desc: "You're not loud about it, never have been. Real heat's banked down underneath, waiting for the moment you decide to move.",
-      cta: "Now stop banking it down. Let it move."
+      desc: "You're not loud about it, never have been. There's real heat underneath, waiting for the moment you say go.",
+      cta: "Now stop holding it back. Let it move."
     },
     pearl: {
       name: "The Pearl",
@@ -22,8 +22,8 @@ function initFutureMakerQuiz(containerId, source) {
     },
     latebloomer: {
       name: "The Late Bloomer",
-      desc: "You're not behind, you never were. You've built on your own timeline while everyone else made noise about theirs, and you're about to catch up fast.",
-      cta: "Now catch up fast, on your own terms."
+      desc: "You're not behind, you never were. You've built on your own timeline while everyone else made noise about theirs. Now you're ready to go faster.",
+      cta: "Now pick up the pace, on your own terms."
     },
     firestarter: {
       name: "The Firestarter",
@@ -32,8 +32,8 @@ function initFutureMakerQuiz(containerId, source) {
     },
     sage: {
       name: "The Sage",
-      desc: "You already know more than you give yourself credit for. People come to you for the answer because you usually already have it.",
-      cta: "Now trust the answer you already have."
+      desc: "You already know more than you give yourself credit for. People come to you because you usually have the answer.",
+      cta: "Now trust what you already know."
     },
     livewire: {
       name: "The Live Wire",

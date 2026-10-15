@@ -146,7 +146,7 @@ I'm Alana. In six weeks you build a website, one clear thing to sell and a plan 
   </ul>
   <p class="price">&pound;297</p>
   <p class="price-note">one payment</p>
-  <p class="offer-note">There's no cash refund. But if you turn up to the kickoff, come to the weekly calls and do the paired work with your buddy, and you still haven't done the one big scary thing you came here to do by day 42, I'll keep working with you 1:1, free, by WhatsApp or email, until you have.</p>
+  <p class="offer-note">You've got 14 days from the day you pay. If you change your mind, tell me and you get your money back, minus any sessions we've already had. No questions. And if you turn up to the kickoff, come to the weekly calls and do the paired work with your buddy, and you still haven't done the one big scary thing you came here to do by day 42, I'll keep working with you 1:1, free, by WhatsApp or email, until you have.</p>
   <p class="offer-note">Bring a friend free. Every paid seat can bring one woman in at no cost.</p>
   <p class="offer-note">This is the first time I'm running it in this shape. I'd rather say that than pretend otherwise.</p>
   <div class="offer-actions">
