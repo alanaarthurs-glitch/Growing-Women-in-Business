@@ -1,0 +1,1733 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Build What's Yours</title>
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="description" content="Invite-only workbooks from Growing Women in Business.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0A1F3D; --berry:#B03A4E; --berry-deep:#7E2836; --rose:#DF8491;
+  --sage:#3F6E64; --sage-light:#ADC1BB; --cream:#FDF9F1; --paper:#FBF6F2;
+  --blush:#FBEBEA; --blush-deep:#EAD9D3; --soft-ink:#4B5566; --white:#fff;
+  --serif:'Cormorant Garamond','Iowan Old Style',Georgia,serif;
+  --sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;
+  --radius:16px; --radius-sm:12px;
+  --shadow:0 18px 40px -14px rgba(10,31,61,.16),0 2px 10px rgba(10,31,61,.05);
+  --shadow-btn:0 10px 24px -8px rgba(176,58,78,.45);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--navy);font:16px/1.65 var(--sans);-webkit-font-smoothing:antialiased}
+a{color:var(--berry)}
+h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.1;margin:0}
+button{font:inherit;cursor:pointer}
+.wrap{max-width:1080px;margin:0 auto;padding:0 16px}
+.narrow{max-width:780px;margin:0 auto}
+
+/* Top bar */
+.topbar{position:sticky;top:0;z-index:20;background:rgba(251,246,242,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--blush-deep)}
+.topbar .wrap{display:flex;align-items:center;gap:12px;height:58px}
+.logo{font-family:var(--serif);font-size:22px;font-weight:700;color:var(--navy);text-decoration:none;white-space:nowrap}
+.logo span{color:var(--berry);font-style:italic}
+.overall{margin-left:auto;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--soft-ink)}
+.overall .bar{width:120px;height:8px;border-radius:99px;background:var(--blush-deep);overflow:hidden}
+.overall .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--berry-deep),var(--berry));transition:width .4s}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:10px 16px 12px;max-width:1080px;margin:0 auto;scrollbar-width:thin}
+.tab{flex:0 0 auto;border:1px solid var(--blush-deep);background:var(--white);color:var(--navy);padding:7px 13px;border-radius:99px;font-size:14px;font-weight:500;display:flex;align-items:center;gap:7px}
+.tab .dot{width:9px;height:9px;border-radius:50%;background:var(--blush-deep)}
+.tab .dot.part{background:var(--rose)} .tab .dot.done{background:var(--sage)}
+.tab[aria-selected="true"]{background:var(--navy);color:var(--white);border-color:var(--navy)}
+
+/* Hero */
+.hero{background:linear-gradient(135deg,#0A1F3D 0%,#7E2836 130%);color:var(--white);padding:56px 0 64px}
+.eyebrow{font-size:13px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:var(--rose);margin:0 0 12px}
+.hero h1{font-size:clamp(40px,7vw,68px)}
+.hero h1 em{color:var(--rose)}
+.hero p.lead{font-size:19px;max-width:640px;opacity:.92;margin:18px 0 0}
+.hero .btns{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+.btn{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:var(--radius-sm);padding:13px 20px;font-weight:600;font-size:15px;text-decoration:none;transition:transform .15s,box-shadow .15s}
+.btn-primary{background:var(--berry);color:var(--white);box-shadow:var(--shadow-btn)}
+.btn-primary:hover{transform:translateY(-1px);background:var(--berry-deep)}
+.btn-ghost{background:transparent;color:inherit;border:1px solid currentColor}
+.btn-soft{background:var(--blush);color:var(--berry-deep);border:1px solid var(--blush-deep)}
+.btn-soft:hover{background:var(--white)}
+
+section.view{display:none;padding:40px 0 80px}
+section.view.active{display:block}
+
+/* Cards */
+.card{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:28px}
+.grid{display:grid;gap:18px}
+.grid-2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.grid-3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.section-title{font-size:clamp(30px,4.5vw,44px);margin-bottom:10px}
+.muted{color:var(--soft-ink)}
+.step-num{font-family:var(--serif);font-size:40px;color:var(--berry);line-height:1}
+.card h3{font-size:24px;margin:8px 0 6px}
+.card p{margin:0 0 10px}
+ul.clean{padding-left:18px;margin:8px 0}
+ul.clean li{margin:4px 0}
+
+.mic{border-left:4px solid var(--berry);background:var(--blush)}
+.mic h3{display:flex;align-items:center;gap:10px}
+.kbd{display:inline-block;border:1px solid var(--blush-deep);border-bottom-width:2px;background:var(--white);border-radius:6px;padding:0 6px;font-size:13px;font-weight:600}
+
+.module-card{display:flex;flex-direction:column;gap:6px;text-align:left;border:1px solid var(--blush-deep);background:var(--white);border-radius:var(--radius);padding:22px;color:var(--navy);transition:transform .15s,box-shadow .15s}
+.module-card:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.module-card .num{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--berry);font-weight:700}
+.module-card h3{font-size:25px;margin:0}
+.module-card .prog{height:6px;border-radius:99px;background:var(--blush-deep);overflow:hidden;margin-top:auto}
+.module-card .prog i{display:block;height:100%;background:var(--sage);width:0}
+.module-card small{color:var(--soft-ink)}
+
+/* Module header */
+.mod-head{background:var(--white);border-bottom:1px solid var(--blush-deep);padding:40px 0 30px;margin:-40px 0 30px}
+.mod-head h2{font-size:clamp(34px,5vw,52px)}
+.mod-head .why{font-size:18px;max-width:720px;margin:12px 0 0}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.chip{background:var(--blush);border:1px solid var(--blush-deep);color:var(--berry-deep);border-radius:99px;padding:4px 12px;font-size:13px;font-weight:500}
+.part-label{font-family:var(--serif);font-size:30px;margin:44px 0 6px;color:var(--berry-deep)}
+.part-label + p{margin-top:0}
+
+/* Question */
+.q{background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);padding:26px;margin:0 0 22px;border-top:4px solid var(--blush-deep)}
+.q.has{border-top-color:var(--rose)} .q.strong{border-top-color:var(--sage)}
+.q-top{display:flex;gap:14px;align-items:flex-start}
+.q-n{flex:0 0 auto;width:38px;height:38px;border-radius:50%;background:var(--navy);color:var(--white);display:grid;place-items:center;font-weight:700;font-size:14px}
+.q h3{font-size:26px;margin:2px 0 4px}
+.q .ask{font-size:17px;margin:0}
+.talk{margin:14px 0 0;padding:12px 16px;background:var(--cream);border-radius:var(--radius-sm);border:1px dashed var(--blush-deep)}
+.talk b{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--sage)}
+.talk ul{margin:6px 0 0;padding-left:18px}
+.talk li{margin:2px 0}
+textarea{width:100%;min-height:150px;margin-top:16px;border:1.5px solid var(--blush-deep);border-radius:var(--radius-sm);padding:14px 16px;font:16px/1.6 var(--sans);color:var(--navy);background:var(--white);resize:vertical}
+textarea:focus,input:focus,button:focus-visible{outline:3px solid var(--sage-light);outline-offset:2px;border-color:var(--sage)}
+.meter{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;margin-top:10px;font-size:13.5px}
+.depth{display:flex;align-items:center;gap:8px;font-weight:600}
+.depth .bars{display:flex;gap:3px}
+.depth .bars i{width:16px;height:7px;border-radius:3px;background:var(--blush-deep)}
+.depth .bars i.on{background:var(--sage)}
+.boost{display:inline-flex;align-items:center;gap:5px;color:var(--soft-ink)}
+.boost.ok{color:var(--sage);font-weight:600}
+.saved{margin-left:auto;color:var(--sage);font-size:12.5px;opacity:0;transition:opacity .3s}
+.saved.show{opacity:1}
+details{margin-top:12px;border-radius:var(--radius-sm);border:1px solid var(--blush-deep);background:var(--paper)}
+details summary{cursor:pointer;padding:10px 14px;font-weight:600;font-size:14.5px;list-style:none;display:flex;align-items:center;gap:8px}
+details summary::-webkit-details-marker{display:none}
+details summary::before{content:"+";display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--white);border:1px solid var(--blush-deep);font-size:14px;color:var(--berry)}
+details[open] summary::before{content:"–"}
+details .body{padding:0 16px 14px}
+details.tip summary{color:var(--berry-deep)}
+details.ex summary{color:var(--sage)}
+details .body p{margin:6px 0}
+
+/* Choice + dials */
+.options{display:grid;gap:10px;margin-top:16px}
+.opt{display:flex;gap:12px;align-items:flex-start;border:1.5px solid var(--blush-deep);border-radius:var(--radius-sm);padding:12px 14px;background:var(--white);text-align:left;color:var(--navy)}
+.opt .l{flex:0 0 auto;width:28px;height:28px;border-radius:50%;border:1.5px solid var(--blush-deep);display:grid;place-items:center;font-weight:700;font-size:13px}
+.opt.sel{border-color:var(--berry);background:var(--blush)}
+.opt.sel .l{background:var(--berry);border-color:var(--berry);color:var(--white)}
+.opt small{display:block;color:var(--soft-ink)}
+.advice{margin-top:12px;padding:12px 16px;border-radius:var(--radius-sm);background:#EEF4F2;border-left:4px solid var(--sage);display:none}
+.advice.show{display:block}
+.dial{margin-top:16px}
+.dial .ends{display:flex;justify-content:space-between;font-size:14px;font-weight:600}
+.dial input[type=range]{width:100%;accent-color:var(--berry)}
+.total{margin-top:14px;font-size:18px;font-weight:700}
+
+/* Module footer */
+.done-box{background:var(--navy);color:var(--white);border-radius:var(--radius);padding:30px;margin-top:34px}
+.done-box h3{font-size:32px}
+.done-box p{opacity:.9}
+.done-box .btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.done-box .btn-soft{background:var(--white)}
+.next-row{display:flex;justify-content:space-between;gap:12px;margin-top:20px;flex-wrap:wrap}
+
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--navy);color:var(--white);padding:12px 18px;border-radius:12px;font-size:14px;opacity:0;pointer-events:none;transition:all .3s;z-index:50;max-width:calc(100% - 32px)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+footer{border-top:1px solid var(--blush-deep);padding:30px 0 50px;font-size:14px;color:var(--soft-ink)}
+footer .line{font-family:var(--serif);font-size:22px;color:var(--navy);font-style:italic}
+
+#print-doc{display:none}
+@media print{
+  body{background:#fff}
+  body>*:not(#print-doc){display:none!important}
+  #print-doc{display:block;font:12pt/1.55 Georgia,serif;color:#000}
+  #print-doc h1{font-size:26pt;margin-bottom:4pt}
+  #print-doc h2{font-size:18pt;margin:22pt 0 6pt;page-break-after:avoid}
+  #print-doc h3{font-size:12.5pt;font-family:Arial,sans-serif;margin:12pt 0 3pt;page-break-after:avoid}
+  #print-doc p{margin:0 0 6pt;white-space:pre-wrap}
+}
+@media (max-width:900px){ .overall .txt{display:none} }
+@media (max-width:600px){
+  .card,.q{padding:20px}
+  .q h3{font-size:23px}
+  .overall .bar{width:70px}
+  .overall .txt{display:none}
+  .acct .who{display:none}
+}
+
+/* Website step */
+input.field{width:100%;margin-top:16px;border:1.5px solid var(--blush-deep);border-radius:var(--radius-sm);padding:13px 16px;font:17px var(--sans);color:var(--navy)}
+details.from summary{color:var(--navy)}
+.from-item{background:var(--white);border:1px solid var(--blush-deep);border-radius:10px;padding:10px 12px;margin:8px 0}
+.from-item b{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--sage)}
+.from-item p{margin:4px 0 6px;white-space:pre-wrap;font-size:15px}
+.colours{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:16px}
+.colour{display:flex;align-items:center;gap:10px;border:1px solid var(--blush-deep);border-radius:var(--radius-sm);padding:10px;background:var(--white);font-size:14px;font-weight:600}
+.colour input{width:44px;height:44px;border:0;padding:0;background:none;cursor:pointer}
+.colour code{margin-left:auto;font-size:12px;color:var(--soft-ink)}
+.swatch{margin-top:14px;border-radius:var(--radius-sm);border:1px solid var(--blush-deep);padding:22px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.sw-title{font-family:var(--serif);font-size:26px;font-weight:700}
+.sw-btn{padding:10px 18px;border-radius:10px;font-weight:600;font-size:14px}
+.slots{display:grid;gap:14px;margin-top:16px}
+.slot{display:grid;grid-template-columns:140px 1fr;gap:16px;border:1px solid var(--blush-deep);border-radius:var(--radius-sm);padding:14px;background:var(--white)}
+.slot-img{width:140px;height:105px;border-radius:10px;background:repeating-linear-gradient(45deg,var(--blush),var(--blush) 10px,var(--cream) 10px,var(--cream) 20px);display:grid;place-items:center;overflow:hidden;text-align:center;font-size:13px;color:var(--soft-ink);padding:6px}
+.slot-img.filled{background:var(--paper);padding:0}
+.slot-img img{width:100%;height:100%;object-fit:cover}
+#slotimg-logo img{object-fit:contain}
+.slot-body p{margin:4px 0 10px;font-size:14.5px}
+.slot-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.btn-sm{padding:9px 14px;font-size:14px;cursor:pointer}
+.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+.ask-panel{margin-top:12px}
+.ask-panel label{display:block;font-weight:600;font-size:14px;margin-bottom:-8px}
+.ask-panel textarea{min-height:90px}
+.small{font-size:13.5px}
+.site-frame{margin-top:16px;border:1px solid var(--blush-deep);border-radius:var(--radius-sm);overflow:hidden;background:#e9e4df}
+.frame-bar{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--white);font-size:13px;font-weight:600;border-bottom:1px solid var(--blush-deep)}
+#siteFrame{display:block;width:100%;height:640px;border:0;margin:0 auto;background:#fff;transition:width .3s}
+@media (max-width:600px){ .slot{grid-template-columns:1fr} .slot-img{width:100%;height:160px} #siteFrame{height:520px} }
+
+.check-row{display:flex;gap:8px;align-items:center;font-weight:600;font-size:14.5px;margin-top:14px}
+.check-row input{width:18px;height:18px;accent-color:var(--berry)}
+.qe{border:1px solid var(--blush-deep);border-radius:var(--radius-sm);padding:12px 14px;margin-top:12px;background:var(--cream)}
+.qe>label{font-weight:700;font-size:14px}
+.qe input.field{margin-top:6px}
+.qa{display:grid;grid-template-columns:130px 1fr;gap:10px;align-items:center;margin-top:8px}
+.qa input{border:1.5px solid var(--blush-deep);border-radius:10px;padding:9px 12px;font:15px var(--sans);color:var(--navy);width:100%}
+.lvl{font-size:12.5px;font-weight:700;border-radius:99px;padding:4px 10px;text-align:center}
+.lvl-0{background:var(--blush);color:var(--berry-deep)}.lvl-1{background:#FFF3DC;color:#7a5200}.lvl-2{background:#E7F1EE;color:var(--sage)}
+.row-btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.saving-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:4px}
+.saving-grid label{font-weight:600;font-size:14px}
+.saving-grid input.field{margin-top:6px}
+@media (max-width:600px){ .qa{grid-template-columns:1fr;gap:4px} .lvl{justify-self:start} }
+
+/* Sign-in */
+body.locked .topbar, body.locked #main, body.locked footer{display:none}
+#gate{display:none}
+body.locked #gate{display:flex}
+#gate{min-height:100vh;align-items:center;justify-content:center;padding:32px 16px;background:linear-gradient(135deg,#0A1F3D 0%,#7E2836 130%)}
+.gate-card{width:100%;max-width:460px}
+.gate-card .logo{font-size:20px}
+.gate-card h1{font-size:44px;margin:14px 0 8px}
+.gate-card h1 em{color:var(--berry)}
+.gate-card label{display:block;font-weight:600;font-size:14.5px;margin:16px 0 6px}
+.gate-card input[type=email],.gate-card input[type=text]{width:100%;border:1.5px solid var(--blush-deep);border-radius:var(--radius-sm);padding:13px 14px;font:16px var(--sans);color:var(--navy)}
+.gate-card input.code{font-size:28px;letter-spacing:10px;text-align:center;font-weight:700}
+.gate-card .btn{width:100%;justify-content:center;margin-top:16px}
+.gate-card .consent{display:flex;gap:10px;align-items:flex-start;font-weight:400;font-size:14px;color:var(--soft-ink)}
+.gate-card .consent input{width:20px;height:20px;flex:none;margin-top:2px;accent-color:var(--berry)}
+.gate-card .small{font-size:13px;color:var(--soft-ink);margin:12px 0 0}
+.gate-card .links{display:flex;justify-content:space-between;gap:10px;margin-top:14px;font-size:14px}
+.linkbtn{background:none;border:0;padding:0;color:var(--berry);text-decoration:underline;font-size:14px}
+.gmsg{color:var(--berry-deep);font-weight:600;font-size:14.5px;margin:12px 0 0;min-height:1em}
+.preview-note{background:var(--blush);border:1px dashed var(--rose);border-radius:var(--radius-sm);padding:12px 14px;font-size:14px;margin-top:14px}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.acct{white-space:nowrap;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--soft-ink)}
+.acct .linkbtn{font-size:13px}
+#syncStatus{color:var(--sage)}
+</style>
+</head>
+<body class="locked">
+
+<section id="gate" aria-label="Sign in">
+  <div class="card gate-card">
+    <span class="logo">Build What's <span>Yours</span></span>
+    <p class="eyebrow" style="color:var(--berry);margin:18px 0 0">Invite only</p>
+    <h1>Build what's <em>yours.</em></h1>
+    <p class="muted" style="margin:0">Sign in with the email address Alana invited.</p>
+
+    <div class="preview-note" id="gPreview" hidden>
+      <b>Preview on your computer.</b> Sign-in only works once this page is on your website. Until then you can open the workbooks here to check them.
+      <button class="btn btn-primary" id="gPreviewBtn" type="button">Open the preview</button>
+    </div>
+
+    <form id="gStart" novalidate>
+      <label for="gEmail">Your email</label>
+      <input id="gEmail" type="email" autocomplete="email" inputmode="email" required>
+      <div class="hp" aria-hidden="true"><label for="gWebsite">Website</label><input id="gWebsite" type="text" tabindex="-1" autocomplete="off"></div>
+      <label class="consent" for="gConsent"><input id="gConsent" type="checkbox"><span>Yes, send me The Only Way Is Up, Alana's newsletter, and the odd note from Growing Women in Business. Unsubscribe whenever.</span></label>
+      <button class="btn btn-primary" type="submit">Email me a sign-in code</button>
+      <p class="small">We only use your email to sign you in and keep your answers safe. <a href="/privacy.html">Privacy notice</a></p>
+    </form>
+
+    <form id="gCode" novalidate hidden>
+      <p style="margin:18px 0 0">We've sent a 6-digit code to <b id="gSentTo"></b>. It works for 10 minutes. Check your spam folder if it isn't there in a minute.</p>
+      <label for="gCodeIn">Your code</label>
+      <input id="gCodeIn" class="code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]*">
+      <button class="btn btn-primary" type="submit">Sign in</button>
+      <div class="links"><button class="linkbtn" type="button" id="gResend">Send a new code</button><button class="linkbtn" type="button" data-gate-back>Use a different email</button></div>
+    </form>
+
+    <div id="gNotInvited" hidden>
+      <h3 style="font-size:26px;margin:18px 0 6px">This workbook is invite only</h3>
+      <p>We can't find <b id="gNoEmail"></b> on the invite list. If Alana has invited you, check you're using the same email address she has for you. If you'd like access, get in touch with Alana.</p>
+      <button class="btn btn-soft" type="button" data-gate-back>Try a different email</button>
+    </div>
+
+    <div id="gLoading" hidden><p style="margin:22px 0 0">Opening your workbooks…</p></div>
+
+    <p class="gmsg" id="gMsg" role="alert"></p>
+  </div>
+</section>
+
+<header class="topbar">
+  <div class="wrap">
+    <a class="logo" href="#start">Build What's <span>Yours</span></a>
+    <div class="overall" title="Your overall progress">
+      <span class="txt" id="overallTxt">0% built</span>
+      <span class="bar"><i id="overallBar"></i></span>
+    </div>
+    <div class="acct"><span class="who" id="acctEmail"></span><span id="syncStatus"></span><button class="linkbtn" id="signOut" type="button">Sign out</button></div>
+  </div>
+  <nav class="tabs" id="tabs" role="tablist" aria-label="Workbooks"></nav>
+</header>
+
+<main id="main"></main>
+
+<footer>
+  <div class="wrap">
+    <p class="line">From capable but invisible to a Future Maker, building what's yours.</p>
+    <p>Made by Alana Arthurs at Growing Women in Business. Your answers are private to you: they save to your account and on this device. <a href="/privacy.html">Privacy notice</a></p>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div id="print-doc"></div>
+
+<!-- Website engine, shared with the Done-For-You Studio. Keep both copies the same. -->
+<script type="text/plain" id="site-css">
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font:17px/1.65 Inter,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+h1,h2,h3{font-family:var(--head);font-weight:var(--hw);line-height:1.12;margin:0 0 14px}
+h2{font-size:var(--h2);color:var(--main)}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}.narrow{max-width:760px}
+.btn{display:inline-block;background:var(--accent);color:var(--on-accent);text-decoration:none;font-weight:600;padding:15px 26px;border-radius:var(--r);border:0;cursor:pointer;font-size:16px;transition:transform .15s,box-shadow .15s;box-shadow:0 12px 26px -12px rgba(0,0,0,.4)}
+.btn:hover{transform:translateY(-2px)}
+.btn.line{background:transparent;color:inherit;border:2px solid currentColor;box-shadow:none}
+.draft{background:#111;color:#fff;text-align:center;font:600 13px/1.4 Inter,Arial,sans-serif;padding:8px 14px}
+header{position:sticky;top:0;z-index:20;background:var(--bg-glass);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+header .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:72px}
+.brand{font-family:var(--head);font-weight:var(--hw);font-size:24px;color:var(--main);text-decoration:none}
+.brand img{max-height:50px;width:auto}
+header .btn{padding:10px 18px;font-size:15px}
+.hero{background:var(--hero-bg);color:var(--hero-text);padding:64px 0 72px;overflow:hidden}
+.hero .wrap{display:grid;gap:44px;align-items:center;grid-template-columns:1.05fr .95fr}
+.hero.noimg .wrap{grid-template-columns:1fr}
+.badge{display:inline-block;background:var(--accent);color:var(--on-accent);font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase;padding:6px 14px;border-radius:99px;margin-bottom:18px}
+.hero h1{font-size:var(--hsize);color:var(--hero-h1)}
+.hero p.sub{font-size:20px;max-width:620px;margin:0 0 26px;opacity:.92}
+.hero .ctas{display:flex;gap:12px;flex-wrap:wrap}
+.countdown{display:flex;gap:10px;margin-top:26px;flex-wrap:wrap;align-items:center}
+.countdown .u{background:var(--soft);color:var(--text);border-radius:12px;padding:10px 12px;min-width:68px;text-align:center}
+.countdown .u b{display:block;font-size:26px;font-family:var(--head);line-height:1}
+.countdown .u span{font-size:12px;text-transform:uppercase;letter-spacing:.08em}
+.countdown .lbl{font-weight:600;font-size:14px;margin-right:4px}
+.slider{position:relative;border-radius:var(--r);overflow:hidden;box-shadow:0 30px 60px -25px rgba(0,0,0,.45);aspect-ratio:4/3;background:var(--soft)}
+.slider .slide{position:absolute;inset:0;opacity:0;transition:opacity .8s ease}
+.slider .slide.on{opacity:1}
+.slider .slide img{width:100%;height:100%;object-fit:cover}
+.slider .slide figcaption{position:absolute;left:14px;bottom:14px;background:rgba(0,0,0,.55);color:#fff;font-size:14px;padding:5px 10px;border-radius:8px}
+.slider .dots{position:absolute;left:0;right:0;bottom:12px;display:flex;justify-content:center;gap:7px}
+.slider .dots button{width:10px;height:10px;border-radius:50%;border:0;background:rgba(255,255,255,.6);padding:0;cursor:pointer}
+.slider .dots button.on{background:#fff;width:24px;border-radius:6px}
+.arrow{position:absolute;top:50%;transform:translateY(-50%);width:42px;height:42px;border-radius:50%;border:0;background:rgba(255,255,255,.85);color:#111;font-size:20px;cursor:pointer;display:grid;place-items:center}
+.arrow.prev{left:10px}.arrow.next{right:10px}
+section{padding:76px 0}
+.alt{background:var(--soft)}
+.center{text-align:center}
+.lead{font-size:19px;max-width:680px;margin:0 auto 10px}
+.deal{display:grid;gap:28px;grid-template-columns:1.2fr .8fr;align-items:center;background:var(--bg);border:2px solid var(--main);border-radius:var(--r);padding:36px}
+.deal .price{font-family:var(--head);font-size:44px;color:var(--main);line-height:1;margin:8px 0 16px}
+.code{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--soft);border:2px dashed var(--accent);border-radius:12px;padding:14px 16px;margin-top:14px}
+.code b{font-size:22px;letter-spacing:.12em}
+.code button{margin-left:auto;background:var(--main);color:var(--on-main);border:0;border-radius:8px;padding:8px 14px;font-weight:600;cursor:pointer}
+.calc{background:var(--bg);border-radius:var(--r);padding:34px;border:1px solid var(--line);max-width:760px;margin:26px auto 0;box-shadow:0 20px 40px -24px rgba(0,0,0,.25)}
+.calc .q{font-size:20px;font-weight:600;margin-bottom:6px}
+.calc .n{font-family:var(--head);font-size:56px;color:var(--main);line-height:1;margin:12px 0}
+.calc input[type=range]{width:100%;-webkit-appearance:none;appearance:none;height:10px;border-radius:99px;background:linear-gradient(90deg,var(--accent) var(--p,0%),var(--line) var(--p,0%));outline:none;margin:10px 0 20px}
+.calc input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:30px;border-radius:50%;background:var(--main);border:4px solid var(--bg);box-shadow:0 2px 8px rgba(0,0,0,.3);cursor:pointer}
+.calc input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:50%;background:var(--main);border:4px solid var(--bg);cursor:pointer}
+.calc .ends{display:flex;justify-content:space-between;font-size:13px;opacity:.75;margin-top:-14px;margin-bottom:18px}
+.calc .res{display:grid;gap:12px;grid-template-columns:repeat(3,1fr)}
+.calc .res div{background:var(--soft);border-radius:12px;padding:14px;text-align:center}
+.calc .res span{display:block;font-size:13px;opacity:.8}
+.calc .res b{font-size:24px;font-family:var(--head)}
+.calc .res .save{background:var(--accent);color:var(--on-accent)}
+.calc.nosave .res .save{background:var(--soft);color:var(--text)}
+.calc .msg{margin:14px 0 0;font-weight:600;text-align:center}
+.quiz{max-width:720px;margin:26px auto 0;background:var(--bg);border-radius:var(--r);padding:34px;border:1px solid var(--line);box-shadow:0 20px 40px -24px rgba(0,0,0,.25)}
+.quiz-bar{height:8px;border-radius:99px;background:var(--line);overflow:hidden;margin-bottom:22px}
+.quiz-bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .4s}
+.quiz-step{font-size:13px;letter-spacing:.08em;text-transform:uppercase;opacity:.7;margin:0 0 6px}
+.quiz h3{font-size:26px}
+.quiz-answers{display:grid;gap:10px;margin-top:16px}
+.quiz-answer{text-align:left;background:var(--soft);color:var(--text);border:2px solid transparent;border-radius:12px;padding:14px 16px;font-size:16px;cursor:pointer;transition:border-color .15s,transform .15s}
+.quiz-answer:hover{border-color:var(--accent);transform:translateX(4px)}
+.quiz-result{text-align:center;animation:pop .5s ease}
+.quiz-result .tag{display:inline-block;background:var(--accent);color:var(--on-accent);border-radius:99px;padding:5px 14px;font-weight:700;font-size:13px;letter-spacing:.06em;text-transform:uppercase}
+.quiz-result h3{font-size:34px;color:var(--main);margin:14px 0 8px}
+.quiz-result .again{background:none;border:0;color:inherit;text-decoration:underline;margin-top:14px;cursor:pointer;font-size:14px}
+@keyframes pop{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
+.cards{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));margin-top:26px}
+.card{background:var(--bg);border:1px solid var(--line);border-radius:var(--r);padding:26px}
+.alt .card{background:var(--bg)}
+.problem{font-size:19px;font-style:italic}
+.offer h3{font-size:26px;color:var(--main);margin-bottom:6px}
+.offer .p{font-weight:700;font-size:20px;margin-bottom:12px}
+.offer ul,.deal ul{list-style:none;padding:0;margin:12px 0 20px}
+.offer li,.deal li{padding:6px 0 6px 30px;position:relative}
+.offer li:before,.deal li:before{content:"✓";position:absolute;left:0;top:6px;width:22px;height:22px;border-radius:50%;background:var(--main);color:var(--on-main);display:grid;place-items:center;font-size:12px;font-weight:700}
+.offer .best{font-size:14px;opacity:.8;margin-top:-4px}
+.times{list-style:none;padding:0;margin:26px auto 0;max-width:720px}
+.times li{display:flex;gap:12px;align-items:center;padding:14px 18px;border:1px solid var(--line);border-radius:12px;margin-bottom:10px;background:var(--bg)}
+.times li:before{content:"";width:12px;height:12px;border-radius:50%;background:var(--accent);flex:none}
+.reel{position:relative}
+.reel .track{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding-bottom:6px}
+.reel .track::-webkit-scrollbar{display:none}
+.reel .track img{flex:0 0 min(78%,420px);height:300px;object-fit:cover;border-radius:var(--r);scroll-snap-align:start}
+.reel .arrow{top:150px}
+.quotes{max-width:760px;margin:26px auto 0;aspect-ratio:auto;min-height:230px;background:transparent;box-shadow:none;overflow:visible}
+.quotes .slide{display:flex;align-items:center;justify-content:center}
+.quotes blockquote{margin:0;text-align:center;font-family:var(--head);font-size:clamp(22px,3vw,30px);line-height:1.35;padding:0 50px}
+.quotes blockquote footer{font-family:Inter,Arial,sans-serif;font-size:15px;font-weight:600;margin-top:14px;color:var(--main)}
+.quotes .dots{bottom:-26px}.quotes .dots button{background:var(--line)}.quotes .dots button.on{background:var(--main)}
+.quotes .arrow{background:var(--soft);color:var(--text)}
+.about{display:grid;gap:44px;align-items:center;grid-template-columns:.85fr 1.15fr}
+.about.noimg{grid-template-columns:1fr}
+.about img{border-radius:var(--r);aspect-ratio:1/1;object-fit:cover;width:100%}
+details{border-bottom:1px solid var(--line);padding:18px 0}
+summary{cursor:pointer;font-weight:600;font-size:18px;list-style:none;display:flex;justify-content:space-between;gap:12px}
+summary::-webkit-details-marker{display:none}
+summary:after{content:"+";font-size:24px;line-height:1;color:var(--accent)}
+details[open] summary:after{content:"–"}
+details p{margin:10px 0 0}
+.final{background:var(--main);color:var(--on-main);text-align:center}
+.final h2{color:var(--on-main)}
+.final .btn{background:var(--accent);color:var(--on-accent)}
+.foot{padding:30px 0 90px;font-size:15px;border-top:1px solid var(--line)}
+.foot .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
+.sticky{position:fixed;left:12px;right:12px;bottom:12px;z-index:30;display:none}
+.sticky .btn{display:block;text-align:center}
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease}
+.reveal.in{opacity:1;transform:none}
+@media (max-width:820px){.hero .wrap,.about,.deal{grid-template-columns:1fr}.hero{padding:40px 0 52px}section{padding:56px 0}header .btn{display:none}.sticky{display:block}.calc .res{grid-template-columns:1fr}.quotes blockquote{padding:0 8px}.quotes .arrow{display:none}}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}.slider .slide{transition:none}}
+</script>
+<script type="text/plain" id="site-js">
+(function(){
+  var D = {}; try { D = JSON.parse(document.getElementById("site-data").textContent); } catch(e){}
+  // Gentle reveal as you scroll, with a fallback so nothing stays hidden.
+  var els = [].slice.call(document.querySelectorAll(".reveal"));
+  if ("IntersectionObserver" in window){
+    var io = new IntersectionObserver(function(es){ es.forEach(function(e){ if (e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target); } }); }, { threshold:.1 });
+    els.forEach(function(el){ io.observe(el); });
+  }
+  setTimeout(function(){ els.forEach(function(el){ el.classList.add("in"); }); }, 2500);
+
+  // Picture and review sliders.
+  function slider(root){
+    var slides = root.querySelectorAll(".slide"), auto = +root.getAttribute("data-auto") || 0;
+    if (!slides.length) return;
+    if (slides.length < 2){ slides[0].classList.add("on"); [].forEach.call(root.querySelectorAll(".arrow,.dots"), function(x){ x.style.display = "none"; }); return; }
+    var i = 0, dots = root.querySelector(".dots"), t;
+    [].forEach.call(slides, function(s, k){ var b = document.createElement("button"); b.type = "button"; b.setAttribute("aria-label", "Show " + (k + 1)); b.onclick = function(){ go(k); reset(); }; dots.appendChild(b); });
+    function go(k){ slides[i].classList.remove("on"); dots.children[i].classList.remove("on"); i = (k + slides.length) % slides.length; slides[i].classList.add("on"); dots.children[i].classList.add("on"); }
+    function reset(){ clearInterval(t); if (auto) t = setInterval(function(){ go(i + 1); }, auto); }
+    var p = root.querySelector(".prev"), n = root.querySelector(".next");
+    if (p) p.onclick = function(){ go(i - 1); reset(); };
+    if (n) n.onclick = function(){ go(i + 1); reset(); };
+    var x0 = null;
+    root.addEventListener("touchstart", function(e){ x0 = e.touches[0].clientX; }, { passive:true });
+    root.addEventListener("touchend", function(e){ if (x0 === null) return; var dx = e.changedTouches[0].clientX - x0; if (Math.abs(dx) > 40){ go(i + (dx < 0 ? 1 : -1)); reset(); } x0 = null; });
+    slides[0].classList.add("on"); dots.children[0].classList.add("on"); reset();
+  }
+  [].forEach.call(document.querySelectorAll("[data-slider]"), slider);
+
+  // Gallery reel arrows.
+  [].forEach.call(document.querySelectorAll(".reel"), function(r){
+    var tr = r.querySelector(".track");
+    [].forEach.call(r.querySelectorAll(".arrow"), function(a){ a.onclick = function(){ tr.scrollBy({ left:(a.classList.contains("next") ? 1 : -1) * tr.clientWidth * .8, behavior:"smooth" }); }; });
+  });
+
+  // Countdown to the end of the offer.
+  var cd = document.getElementById("countdown");
+  if (cd && D.end){
+    var end = new Date(D.end + "T23:59:59").getTime();
+    var tick = function(){
+      var s = Math.max(0, Math.floor((end - Date.now()) / 1000));
+      if (s <= 0){ cd.innerHTML = "<b>This offer has now ended.</b>"; return false; }
+      cd.querySelector("[data-d]").textContent = Math.floor(s / 86400);
+      cd.querySelector("[data-h]").textContent = Math.floor(s % 86400 / 3600);
+      cd.querySelector("[data-m]").textContent = Math.floor(s % 3600 / 60);
+      cd.querySelector("[data-s]").textContent = s % 60;
+      return true;
+    };
+    if (tick()) var ct = setInterval(function(){ if (!tick()) clearInterval(ct); }, 1000);
+  }
+
+  // Copy the offer code.
+  [].forEach.call(document.querySelectorAll("[data-copycode]"), function(b){
+    b.onclick = function(){
+      var code = b.getAttribute("data-copycode");
+      var done = function(){ b.textContent = "Copied"; setTimeout(function(){ b.textContent = "Copy"; }, 1800); };
+      if (navigator.clipboard) navigator.clipboard.writeText(code).then(done, done); else done();
+    };
+  });
+
+  // "How much would you save?" slider.
+  var vs = document.getElementById("calc");
+  if (vs && D.slider){
+    var S = D.slider, input = vs.querySelector("input");
+    var money = function(v){ v = Math.round(v * 100) / 100; return "£" + v.toLocaleString("en-GB", { minimumFractionDigits: v % 1 ? 2 : 0, maximumFractionDigits: 2 }); };
+    var upd = function(){
+      var n = +input.value, usual = n * S.weeks * S.usual, save = usual - S.deal;
+      vs.querySelector("[data-n]").textContent = n;
+      vs.querySelector("[data-pay]").textContent = money(usual);
+      vs.querySelector("[data-deal]").textContent = money(S.deal);
+      vs.querySelector("[data-save]").textContent = money(Math.max(0, save));
+      vs.querySelector("[data-msg]").textContent = save > 0 ? "That's what you'd keep in your pocket with " + S.name + "." : "At this amount, paying as you go works out cheaper. Come a little more often and " + S.name + " pays for itself.";
+      vs.classList.toggle("nosave", save <= 0);
+      input.style.setProperty("--p", ((n - input.min) / (input.max - input.min) * 100) + "%");
+    };
+    input.addEventListener("input", upd); upd();
+  }
+
+  // The short quiz.
+  var qz = document.getElementById("quiz-box");
+  if (qz && D.quiz && D.quiz.questions && D.quiz.questions.length){
+    var Q = D.quiz, step = 0, score = {}, total = 0, bar = document.querySelector("#quiz .quiz-bar i");
+    var el = function(tag, cls, text){ var x = document.createElement(tag); if (cls) x.className = cls; if (text != null) x.textContent = text; return x; };
+    var render = function(){
+      qz.innerHTML = "";
+      if (step >= Q.questions.length) return result();
+      var q = Q.questions[step];
+      bar.style.width = (step / Q.questions.length * 100) + "%";
+      qz.appendChild(el("p", "quiz-step", "Question " + (step + 1) + " of " + Q.questions.length));
+      qz.appendChild(el("h3", "", q.q));
+      var a = el("div", "quiz-answers");
+      q.answers.forEach(function(ans){
+        var b = el("button", "quiz-answer", ans.t); b.type = "button";
+        b.onclick = function(){ if (Q.tiers) total += +ans.p || 0; else score[ans.o] = (score[ans.o] || 0) + 1; step++; render(); };
+        a.appendChild(b);
+      });
+      qz.appendChild(a);
+    };
+    var result = function(){
+      bar.style.width = "100%";
+      if (Q.tiers){
+        // "How ready are you?" quiz: add up the points, show the matching tier.
+        var tier = Q.tiers.filter(function(t){ return total >= t.min; })[0] || Q.tiers[Q.tiers.length - 1];
+        var tb = el("div", "quiz-result");
+        tb.appendChild(el("span", "tag", tier.tag));
+        tb.appendChild(el("h3", "", tier.title));
+        if (tier.text) tb.appendChild(el("p", "", tier.text));
+        var tg = el("a", "btn", tier.cta); tg.href = tier.link || "#contact";
+        if (/^https?:/.test(tg.href)){ tg.target = "_blank"; tg.rel = "noopener"; }
+        tb.appendChild(tg);
+        var ta = el("button", "again", "Start again"); ta.type = "button"; ta.onclick = function(){ step = 0; total = 0; render(); };
+        tb.appendChild(el("br")); tb.appendChild(ta);
+        qz.appendChild(tb);
+        return;
+      }
+      var best = 0, top = -1;
+      Q.offers.forEach(function(o, k){ var s = score[k] || 0; if (s > top){ top = s; best = k; } });
+      var o = Q.offers[best] || Q.offers[0];
+      var box = el("div", "quiz-result");
+      box.appendChild(el("span", "tag", Q.resultTag || "Your best fit"));
+      box.appendChild(el("h3", "", o.name));
+      if (o.why) box.appendChild(el("p", "", o.why));
+      if (o.price) box.appendChild(el("p", "", o.price)).style.fontWeight = "700";
+      var go = el("a", "btn", Q.cta || "Book now"); go.href = o.link || Q.link || "#contact";
+      if (/^https?:/.test(go.href)){ go.target = "_blank"; go.rel = "noopener"; }
+      box.appendChild(go);
+      var again = el("button", "again", "Start again"); again.type = "button"; again.onclick = function(){ step = 0; score = {}; total = 0; render(); };
+      box.appendChild(el("br")); box.appendChild(again);
+      qz.appendChild(box);
+    };
+    render();
+  }
+})();
+</script>
+
+<script>
+/* ------------------------------------------------------------------
+   CONTENT
+   Every workbook: id, name, short, why, outcome chips, parts > questions.
+   Question types: text (default), choice, dials, score.
+   boost: number | money | quote | moment | feeling
+------------------------------------------------------------------- */
+let MODULES = [];
+
+/* ------------------------------------------------------------------
+   STATE (saved in this browser only)
+------------------------------------------------------------------- */
+const KEY = "build-whats-yours-v1";
+let state = {};
+try { state = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch(e){ state = {}; }
+let saveTimer;
+// Saves on this device straight away, and marks the answer to send to the
+// person's account on the next sync.
+function save(id){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e){} }, 250);
+  if (id) markDirty(id);
+}
+const allQs = m => m.parts.flatMap(p => p.qs);
+const words = s => (s || "").trim().split(/\s+/).filter(Boolean).length;
+
+function answered(q){
+  const v = state[q.id];
+  if (!v) return false;
+  if (q.type === "choice") return v.pick != null;
+  if (q.type === "dials" || q.type === "score" || q.type === "colours") return v.touched === true;
+  if (q.type === "images") return !!v.slots && Object.values(v.slots).some(s => s.has || s.sent);
+  if (q.type === "build") return !!v.built;
+  if (q.type === "field" || q.type === "date") return words(v) >= 1;
+  if (q.type === "quiz") return !!memberQuiz();
+  if (q.type === "saving") return !!memberSaving();
+  return words(v) >= 5;
+}
+function modProgress(m){
+  const qs = allQs(m); const done = qs.filter(answered).length;
+  return {done, total: qs.length, pct: Math.round(done / qs.length * 100)};
+}
+
+/* ------------------------------------------------------------------
+   RENDER
+------------------------------------------------------------------- */
+const $ = (s, el=document) => el.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const main = $("#main");
+
+function renderTabs(){
+  const tabs = $("#tabs");
+  const items = [{id:"start", short:"Start here"}, ...MODULES, {id:"pack", short:"Your OS pack"}];
+  tabs.innerHTML = items.map(m => {
+    let dot = "";
+    if (m.parts){ const p = modProgress(m); dot = `<span class="dot ${p.pct===100?'done':p.pct>0?'part':''}"></span>`; }
+    return `<button class="tab" role="tab" data-go="${m.id}" aria-selected="false">${dot}${m.n?m.n+". ":""}${esc(m.short)}</button>`;
+  }).join("");
+}
+
+function renderStart(){
+  return `
+  <section class="view" id="view-start">
+    <div class="hero" style="margin-top:-40px">
+      <div class="wrap">
+        <p class="eyebrow">Growing Women in Business</p>
+        <h1>Build what's <em>yours.</em></h1>
+        <p class="lead">Seven talk-it-out workbooks that turn what's in your head into the operating system for your business, then a website built from your own words and pictures. You talk. The page coaches you. You walk away with documents that make every post, page and pitch sound like you, and a website that's yours.</p>
+        <div class="btns">
+          <button class="btn btn-primary" data-go="brand">Start with you →</button>
+          <button class="btn btn-ghost" data-go="pack">See your OS pack</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="wrap" style="margin-top:40px">
+      <div class="grid grid-2">
+        <div class="card">
+          <h2 class="section-title" style="font-size:32px">What's an OS?</h2>
+          <p>OS stands for operating system. Here it means one master document that holds everything about you, your business, your product or your voice, so you (and any AI tool or helper you work with) never start from a blank page again.</p>
+          <p class="muted">Write it once. Update it as you grow. Everything else runs off it.</p>
+        </div>
+        <div class="card mic">
+          <h3>🎙️ Talk, don't type</h3>
+          <p>You'll say far more out loud than you'd ever type. Use <b>Wispr Flow</b> (a voice-typing app for your computer and phone), or what's already on your device:</p>
+          <ul class="clean">
+            <li>Windows: press <span class="kbd">Win</span> + <span class="kbd">H</span></li>
+            <li>Mac: Edit menu, then Start Dictation</li>
+            <li>Phone: tap the microphone on your keyboard</li>
+          </ul>
+          <p class="muted" style="margin:0">Click in an answer box, start the voice typing and talk.</p>
+        </div>
+      </div>
+
+      <h2 class="section-title" style="margin-top:48px">How to get the most out of it</h2>
+      <div class="grid grid-3" style="margin-top:18px">
+        <div class="card"><div class="step-num">1</div><h3>Ramble on purpose</h3><p>Talk for two to five minutes per question, like you're on the phone to your best friend. Don't edit while you talk. Raw is good.</p></div>
+        <div class="card"><div class="step-num">2</div><h3>Follow the coach</h3><p>Under every answer, the page tells you how deep you've gone and what would make it stronger: a number, a real moment, your customer's exact words.</p></div>
+        <div class="card"><div class="step-num">3</div><h3>Take it with you</h3><p>At the end of each workbook, download your OS, copy it or save it as a PDF. Give it to any AI tool and tell it to use it as your source of truth.</p></div>
+      </div>
+
+      <div class="card" style="margin-top:22px">
+        <h3>Little things that make a big difference</h3>
+        <ul class="clean">
+          <li>Stand up and walk around while you talk. You'll say more.</li>
+          <li>Say the number, even if it feels small. "Eight customers" beats "a few".</li>
+          <li>Say "for example" a lot. Real moments are worth ten times more than general statements.</li>
+          <li>Use your customers' words, not yours. Put them in quote marks.</li>
+          <li>Don't know something? Say "I don't know yet". That's useful too, because now you know what to find out.</li>
+          <li>Something too heavy today? Skip it. You can come back.</li>
+        </ul>
+      </div>
+
+      <h2 class="section-title" style="margin-top:48px">Your seven workbooks, then your website</h2>
+      <p class="muted">Go in order if you can: you first, then your business, your product and your voice, then how you get seen and how you sell. Then turn it all into your website. One a day and you'll have the full set, website included, in just over a week.</p>
+      <div class="grid grid-3" id="moduleGrid" style="margin-top:18px"></div>
+
+      <p class="muted" style="margin-top:30px;font-size:14px">🔒 Your answers save automatically as you go, and only you can see them. Download a copy at the end of each session too, so you always have your own.</p>
+    </div>
+  </section>`;
+}
+
+function renderModuleGrid(){
+  const g = $("#moduleGrid"); if (!g) return;
+  g.innerHTML = MODULES.map(m => { const p = modProgress(m); return `
+    <button class="module-card" data-go="${m.id}">
+      <span class="num">${m.id === "website" ? "The final step" : "Workbook " + m.n}</span>
+      <h3>${esc(m.name)}</h3>
+      <span class="muted">${esc(m.tag)}</span>
+      <small>${esc(m.time)} · ${p.done} of ${p.total} answered</small>
+      <span class="prog"><i style="width:${p.pct}%"></i></span>
+    </button>`; }).join("");
+}
+
+function renderQuestion(q, num){
+  let body = "";
+  const talk = q.talk ? `<div class="talk"><b>Talk about</b><ul>${q.talk.map(t=>`<li>${esc(t)}</li>`).join("")}</ul></div>` : "";
+  if (q.type === "choice"){
+    body = `<div class="options">${q.opts.map((o,i)=>`
+      <button class="opt" data-q="${q.id}" data-i="${i}"><span class="l">${"ABCDEFG"[i]}</span><span>${esc(o[0])}</span></button>`).join("")}</div>
+      <div class="advice" id="adv-${q.id}"></div>
+      <textarea data-note="${q.id}" maxlength="20000" placeholder="Why did you pick that? Talk it through here (optional)…"></textarea>`;
+  } else if (q.type === "dials" || q.type === "score"){
+    body = q.dials.map((d,i)=>`
+      <div class="dial">
+        <div class="ends"><span>${esc(d[0])}</span><span>${q.type==="dials"?esc(d[1]):`<output id="out-${q.id}-${i}">3</output> / 5`}</span></div>
+        <input type="range" min="1" max="5" step="1" value="3" data-dial="${q.id}" data-i="${i}" aria-label="${esc(d[0])}${d[1]?' to '+esc(d[1]):''}">
+      </div>`).join("") + (q.type==="score" ? `<div class="total" id="total-${q.id}"></div><div class="advice show" id="adv-${q.id}"></div>` : "");
+  } else if (q.type === "field"){
+    body = `<input class="field" type="text" data-text="${q.id}" maxlength="300" placeholder="Type or say it here…" aria-label="${esc(q.t)}">`;
+  } else if (q.type === "colours"){
+    body = `<div class="colours">${["Main colour","Accent (buttons)","Background"].map((l,i)=>`
+      <label class="colour"><input type="color" data-colour="${q.id}" data-i="${i}"><span>${l}</span><code id="hex-${q.id}-${i}"></code></label>`).join("")}</div>
+      <div class="swatch" id="swatch-${q.id}"><span class="sw-title">Your name here</span><span class="sw-btn">Your button</span></div>`;
+  } else if (q.type === "date"){
+    body = `<input class="field" type="date" data-text="${q.id}" aria-label="${esc(q.t)}" style="max-width:240px">`;
+  } else if (q.type === "quiz"){
+    body = renderQuizEditor(q);
+  } else if (q.type === "saving"){
+    body = renderSavingEditor(q);
+  } else if (q.type === "images"){
+    body = renderSlots(q);
+  } else if (q.type === "build"){
+    body = renderBuild(q);
+  } else {
+    body = `${talk}<textarea data-text="${q.id}" maxlength="20000" placeholder="Click here, start your voice typing and talk…"></textarea>
+      <div class="meter" id="meter-${q.id}"></div>`;
+  }
+  if (q.from) body += `<details class="from"><summary>What you said earlier</summary><div class="body" id="from-${q.id}"></div></details>`;
+  const tip = q.tip ? `<details class="tip"><summary>Hint and tip</summary><div class="body"><p>${esc(q.tip)}</p></div></details>` : "";
+  const ex = q.ex ? `<details class="ex"><summary>See an example (made-up business: Jo, a dog groomer in Truro)</summary><div class="body"><p>${esc(q.ex)}</p></div></details>` : "";
+  return `<article class="q" id="q-${q.id}">
+    <div class="q-top"><div class="q-n">${num}</div><div><h3>${esc(q.t)}</h3><p class="ask">${esc(q.ask)}</p></div></div>
+    ${body}${tip}${ex}
+  </article>`;
+}
+
+function renderModule(m, idx){
+  let n = 0;
+  const parts = m.parts.map(p => `
+    <h3 class="part-label">${esc(p.title)}</h3>${p.intro?`<p class="muted">${esc(p.intro)}</p>`:""}
+    ${p.qs.map(q => renderQuestion(q, ++n)).join("")}`).join("");
+  const prev = idx === 0 ? "start" : MODULES[idx-1].id;
+  const next = idx === MODULES.length-1 ? "pack" : MODULES[idx+1].id;
+  const nextName = idx === MODULES.length-1 ? "Your OS pack" : MODULES[idx+1].name;
+  return `
+  <section class="view" id="view-${m.id}">
+    <div class="mod-head"><div class="wrap narrow">
+      <p class="eyebrow" style="color:var(--berry)">${m.id === "website" ? "The final step" : `Workbook ${m.n} of ${MODULES.length - 1}`} · ${esc(m.time)}</p>
+      <h2>${esc(m.name)}</h2>
+      <p class="muted" style="font-size:19px;margin:6px 0 0;font-style:italic;font-family:var(--serif)">${esc(m.tag)}</p>
+      <p class="why">${esc(m.why)}</p>
+      <div class="chips">${m.chips.map(c=>`<span class="chip">${esc(c)}</span>`).join("")}</div>
+    </div></div>
+    <div class="wrap narrow">
+      ${parts}
+      <div class="done-box" ${m.id === "website" ? "hidden" : ""}>
+        <h3>Your ${esc(m.name)}</h3>
+        <p id="sum-${m.id}"></p>
+        <p>Save it now so you never lose it. Then give it to any AI tool you use and ask it to treat it as your source of truth, so everything it writes for you sounds like you and gets your facts right.</p>
+        <div class="btns">
+          <button class="btn btn-primary" data-dl="${m.id}">Download it</button>
+          <button class="btn btn-soft" data-copy="${m.id}">Copy it</button>
+          <button class="btn btn-soft" data-print="${m.id}">Save as PDF</button>
+        </div>
+      </div>
+      <div class="next-row">
+        <button class="btn btn-soft" data-go="${prev}">← Back</button>
+        <button class="btn btn-primary" data-go="${next}">Next: ${esc(nextName)} →</button>
+      </div>
+    </div>
+  </section>`;
+}
+
+function renderPack(){
+  return `
+  <section class="view" id="view-pack">
+    <div class="mod-head"><div class="wrap narrow">
+      <p class="eyebrow" style="color:var(--berry)">Everything in one place</p>
+      <h2>Your OS pack</h2>
+      <p class="why">All your workbooks in one document. Download it, keep a copy somewhere safe, and come back to update it whenever something changes: a new offer, a new price, a phrase that really lands with buyers.</p>
+    </div></div>
+    <div class="wrap narrow">
+      <div class="grid grid-2" id="packGrid"></div>
+      <div class="done-box">
+        <h3>Download everything</h3>
+        <p>One file with every answer, ready to save, print or give to your AI tool.</p>
+        <div class="btns">
+          <button class="btn btn-primary" data-dl="all">Download the full pack</button>
+          <button class="btn btn-soft" data-copy="all">Copy it</button>
+          <button class="btn btn-soft" data-print="all">Save as PDF</button>
+        </div>
+      </div>
+      <div class="card" style="margin-top:22px;border-left:4px solid var(--sage)">
+        <h3>Your website</h3>
+        <p>Your answers turn into a real website in the final step. Add your pictures, pick your look and download it.</p>
+        <button class="btn btn-primary" data-go="website">Build my website →</button>
+      </div>
+      <div class="card" style="margin-top:22px">
+        <h3>How to use your OS pack</h3>
+        <ul class="clean">
+          <li><b>With AI:</b> upload it, or paste it in at the start of a chat, and tell the tool it's your source of truth. Ask it to flag anything it has to guess.</li>
+          <li><b>With people:</b> give your Voice OS to anyone who writes for you, and your Product OS to anyone who sells for you.</li>
+          <li><b>Every week:</b> add to your founder diary and update anything that's changed. A living OS gets better every time you touch it.</li>
+        </ul>
+      </div>
+      <div class="card" style="margin-top:22px;text-align:center">
+        <h3>Want help building yours?</h3>
+        <p class="muted">Book a free 30-minute call with Alana and bring your answers with you.</p>
+        <a class="btn btn-primary" href="https://calendly.com/alana-arthurs/findable-call" target="_blank" rel="noopener">Book a free call</a>
+      </div>
+      <p style="margin-top:28px;text-align:center"><button class="btn btn-soft" id="resetAll" style="font-size:13px">Delete all my answers</button></p>
+    </div>
+  </section>`;
+}
+
+function renderPackGrid(){
+  const g = $("#packGrid"); if (!g) return;
+  g.innerHTML = MODULES.map(m => { const p = modProgress(m); return `
+    <button class="module-card" data-go="${m.id}">
+      <span class="num">${p.pct===100?"✓ Complete":p.pct>0?"In progress":"Not started"}</span>
+      <h3>${esc(m.name)}</h3>
+      <small>${p.done} of ${p.total} answered</small>
+      <span class="prog"><i style="width:${p.pct}%"></i></span>
+    </button>`; }).join("");
+}
+
+/* ------------------------------------------------------------------
+   COACHING
+------------------------------------------------------------------- */
+const BOOSTS = {
+  number:{ok:"Has a number", no:"Add a number", re:/\d/},
+  money:{ok:"Has a price", no:"Add a £ figure", re:/£\s?\d|\d+\s?(pounds|k\b)/i},
+  quote:{ok:"Uses real words in quotes", no:"Add their exact words in quote marks", re:/["“”]/},
+  moment:{ok:"Has a real moment", no:"Add a real moment (\"last Tuesday…\")", re:/\b(yesterday|last (week|month|year|time|night)|once|one day|the day|when i|monday|tuesday|wednesday|thursday|friday|saturday|sunday|morning|for example)\b/i},
+  feeling:{ok:"Says how it felt", no:"Say how it felt", re:/\b(felt|feel|feeling|scared|proud|angry|cross|happy|love|hate|nervous|excited|embarrass\w*|cried|worried|ashamed|relieved|frustrat\w*|lonely)\b/i}
+};
+function depthLabel(w, target){
+  const r = w / target;
+  if (w === 0) return [0, "Not started"];
+  if (r < .35) return [1, "Just getting going, keep talking"];
+  if (r < .8) return [2, "Good start, add more detail"];
+  if (r < 1.5) return [3, "Strong answer"];
+  return [4, "Brilliant, this is gold"];
+}
+function updateMeter(q){
+  const el = $("#meter-" + q.id); if (!el) return;
+  const v = state[q.id] || ""; const w = words(v);
+  const [lvl, label] = depthLabel(w, q.target || 80);
+  const bars = [1,2,3,4].map(i => `<i class="${i<=lvl?'on':''}"></i>`).join("");
+  const boosts = (q.boost||[]).map(b => { const B = BOOSTS[b]; const ok = B.re.test(v);
+    return `<span class="boost ${ok?'ok':''}">${ok?'✓':'○'} ${ok?B.ok:B.no}</span>`; }).join("");
+  el.innerHTML = `<span class="depth"><span class="bars">${bars}</span>${label}</span><span class="muted">${w} words</span>${boosts}<span class="saved" id="saved-${q.id}">Saved ✓</span>`;
+  const card = $("#q-" + q.id);
+  card.classList.toggle("has", w >= 5); card.classList.toggle("strong", lvl >= 3);
+}
+function updateChoice(q){
+  const v = state[q.id] || {};
+  document.querySelectorAll(`.opt[data-q="${q.id}"]`).forEach(b => b.classList.toggle("sel", +b.dataset.i === v.pick));
+  const adv = $("#adv-" + q.id);
+  if (v.pick != null){ adv.innerHTML = "<b>What this means for you:</b> " + esc(q.opts[v.pick][1]); adv.classList.add("show"); }
+  $("#q-" + q.id).classList.toggle("strong", v.pick != null);
+}
+function updateDials(q){
+  const v = state[q.id] || {};
+  const vals = v.vals || q.dials.map(()=>3);
+  document.querySelectorAll(`[data-dial="${q.id}"]`).forEach(r => { r.value = vals[+r.dataset.i]; const o = $(`#out-${q.id}-${r.dataset.i}`); if (o) o.textContent = r.value; });
+  if (q.type === "score"){
+    const total = vals.reduce((a,b)=>a+ +b,0); const low = vals.some(x=>x<3);
+    $("#total-" + q.id).textContent = `Value score: ${total} / 20`;
+    $("#adv-" + q.id).innerHTML = !v.touched ? "Move the sliders to score your idea." :
+      low ? "<b>Fix before you build:</b> at least one score is under 3. Use the hint below to strengthen it, then score it again." :
+      total >= 16 ? "<b>Strong.</b> Go and build it." :
+      total >= 12 ? "<b>Good enough to build.</b> Keep an eye on your lowest score when you check results." :
+      "<b>Try a different type.</b> This idea needs too much fixing.";
+  }
+  $("#q-" + q.id).classList.toggle("strong", !!v.touched);
+}
+
+/* ------------------------------------------------------------------
+   EXPORT
+------------------------------------------------------------------- */
+function modText(m){
+  let out = `# ${m.name}\n_${m.tag}_\n\n`;
+  m.parts.forEach(p => {
+    out += `## ${p.title}\n\n`;
+    p.qs.forEach(q => {
+      out += `### ${q.t}\n`;
+      const v = state[q.id];
+      if (q.type === "choice"){
+        out += v && v.pick != null ? `${q.opts[v.pick][0]}\n${v.note ? "\n" + v.note.trim() + "\n" : ""}` : "_Not answered yet_\n";
+      } else if (q.type === "dials"){
+        out += v && v.touched ? q.dials.map((d,i)=>`- ${d[0]} to ${d[1]}: ${v.vals[i]} (1 = all ${d[0].toLowerCase()}, 5 = all ${d[1].toLowerCase()})`).join("\n") + "\n" : "_Not answered yet_\n";
+      } else if (q.type === "score"){
+        out += v && v.touched ? q.dials.map((d,i)=>`- ${d[0]} ${v.vals[i]}/5`).join("\n") + `\n- Total: ${v.vals.reduce((a,b)=>a+ +b,0)}/20\n` : "_Not answered yet_\n";
+      } else if (q.type === "colours"){
+        const c = siteColours();
+        out += `- Main ${c[0]}\n- Accent ${c[1]}\n- Background ${c[2]}\n`;
+      } else if (q.type === "images"){
+        const slots = (v && v.slots) || {};
+        out += q.slots.map(s => { const x = slots[s.id] || {};
+          return `- ${s.name}: ${x.has ? "photo added" : x.ask ? "asked for: " + x.ask.trim() : "none yet"}`; }).join("\n") + "\n";
+      } else if (q.type === "quiz"){
+        const qd = memberQuiz();
+        out += qd ? qd.questions.map((x, i) => `${i + 1}. ${x.q}\n` + x.answers.map(a => `   - ${QUIZ_LEVELS[a.p]}: ${a.t}`).join("\n")).join("\n") + "\n" : "_No quiz yet_\n";
+      } else if (q.type === "saving"){
+        const sd = memberSaving();
+        out += sd ? `${sd.unit}: £${sd.usual} each, offer £${sd.deal} for ${sd.weeks} weeks\n` : "_Not used_\n";
+      } else if (q.type === "build"){
+        out += v && v.built ? `Website built on ${v.built}\n` : "_Not built yet_\n";
+      } else {
+        out += (v && v.trim()) ? v.trim() + "\n" : "_Not answered yet_\n";
+      }
+      out += "\n";
+    });
+  });
+  return out;
+}
+function fullText(which){
+  const date = new Date().toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"});
+  const head = `Built with Build What's Yours, Growing Women in Business. Last updated ${date}.\nThis is my source of truth. Use only what's written here, and ask me rather than guessing anything that's missing or marked unknown.\n\n`;
+  if (which === "all") return `# My OS pack\n\n${head}` + MODULES.map(modText).join("\n---\n\n");
+  const m = MODULES.find(x=>x.id===which); return modText(m).replace(/\n\n/, `\n\n${head}`);
+}
+function download(which){
+  const name = which === "all" ? "My-OS-Pack" : "My-" + MODULES.find(x=>x.id===which).name.replace(/\s+/g,"-");
+  const blob = new Blob([fullText(which)], {type:"text/markdown"});
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name + ".md";
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href), 2000);
+  toast("Downloaded. Look in your Downloads folder.");
+}
+function copy(which){
+  const t = fullText(which);
+  const done = () => toast("Copied. Paste it wherever you need it.");
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(done, () => fallbackCopy(t, done));
+  else fallbackCopy(t, done);
+}
+function fallbackCopy(t, done){
+  const ta = document.createElement("textarea"); ta.value = t; document.body.appendChild(ta); ta.select();
+  try { document.execCommand("copy"); done(); } catch(e){ toast("Couldn't copy. Try Download instead."); }
+  ta.remove();
+}
+function printDoc(which){
+  const md = fullText(which);
+  const html = md.split("\n").map(l => {
+    if (l.startsWith("### ")) return `<h3>${esc(l.slice(4))}</h3>`;
+    if (l.startsWith("## ")) return `<h2>${esc(l.slice(3))}</h2>`;
+    if (l.startsWith("# ")) return `<h1>${esc(l.slice(2))}</h1>`;
+    if (l === "---") return "<hr>";
+    return l.trim() ? `<p>${esc(l.replace(/^_|_$/g,""))}</p>` : "";
+  }).join("");
+  $("#print-doc").innerHTML = html;
+  window.print();
+}
+function toast(msg){ const t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(t._h); t._h = setTimeout(()=>t.classList.remove("show"), 2600); }
+
+/* ------------------------------------------------------------------
+   YOUR WEBSITE: earlier answers, colours, pictures and the site maker
+------------------------------------------------------------------- */
+const val = id => (typeof state[id] === "string" ? state[id].trim() : "");
+
+// "What you said earlier" boxes under the website questions.
+function refreshFrom(){
+  Object.values(QMAP).forEach(q => {
+    const box = $("#from-" + q.id); if (!box) return;
+    const items = q.from.map(id => QMAP[id]).filter(Boolean).map(src => {
+      const v = val(src.id); if (!v) return "";
+      return `<div class="from-item"><b>${esc(src.t)}</b><p>${esc(v.length > 700 ? v.slice(0,700) + "…" : v)}</p>
+        <button class="linkbtn" type="button" data-usefrom="${src.id}" data-into="${q.id}">Copy this into the box</button></div>`;
+    }).join("");
+    box.innerHTML = items || `<p class="muted">Nothing yet. Answer here, or fill in the earlier workbooks first and come back.</p>`;
+  });
+}
+
+// Colours: the person's own picks, or colour codes from their Personal Brand OS.
+const DEFAULT_COLOURS = ["#3F6E64", "#B03A4E", "#FDF9F1"];
+function siteColours(){
+  const v = state["site-colours"];
+  if (v && Array.isArray(v.vals)) return v.vals;
+  const found = (val("colours").match(/#[0-9a-f]{6}\b/gi) || []).slice(0, 3).map(x => x.toUpperCase());
+  return DEFAULT_COLOURS.map((d, i) => found[i] || d);
+}
+function updateColours(q){
+  const c = siteColours();
+  document.querySelectorAll(`[data-colour="${q.id}"]`).forEach(inp => { inp.value = c[+inp.dataset.i]; $(`#hex-${q.id}-${inp.dataset.i}`).textContent = c[+inp.dataset.i].toUpperCase(); });
+  const sw = $("#swatch-" + q.id);
+  if (sw){ sw.style.background = c[2]; sw.style.color = readable(c[2]); sw.querySelector(".sw-title").style.color = c[0];
+    const b = sw.querySelector(".sw-btn"); b.style.background = c[1]; b.style.color = readable(c[1]); }
+  $("#q-" + q.id).classList.toggle("strong", !!(state[q.id] && state[q.id].touched));
+}
+function hexRgb(h){ h = h.replace("#",""); return [0,2,4].map(i => parseInt(h.slice(i,i+2),16)); }
+function luminance(h){ const [r,g,b] = hexRgb(h).map(v => { v /= 255; return v <= .03928 ? v/12.92 : Math.pow((v+.055)/1.055, 2.4); }); return .2126*r + .7152*g + .0722*b; }
+function readable(h){ return luminance(h) > .45 ? "#16181D" : "#FFFFFF"; }
+function mix(a, b, t){ const x = hexRgb(a), y = hexRgb(b); return "#" + x.map((v,i) => Math.round(v + (y[i]-v)*t).toString(16).padStart(2,"0")).join(""); }
+
+// Pictures are kept on this device (IndexedDB), never sent to the website.
+const IMGDB = (() => {
+  let dbp; const mem = {};
+  function open(){
+    if (!dbp) dbp = new Promise((res, rej) => {
+      try { const r = indexedDB.open("bwy-images", 1); r.onupgradeneeded = () => r.result.createObjectStore("img");
+        r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); } catch(e){ rej(e); }
+    });
+    return dbp;
+  }
+  async function run(mode, fn){
+    const db = await open();
+    return new Promise((res, rej) => { const t = db.transaction("img", mode); const r = fn(t.objectStore("img"));
+      t.oncomplete = () => res(r ? r.result : undefined); t.onerror = () => rej(t.error); });
+  }
+  return {
+    get: async k => { try { return await run("readonly", s => s.get(k)); } catch(e){ return mem[k]; } },
+    set: async (k, v) => { try { await run("readwrite", s => s.put(v, k)); } catch(e){ mem[k] = v; } },
+    del: async k => { try { await run("readwrite", s => s.delete(k)); } catch(e){ delete mem[k]; } },
+    clear: async () => { try { await run("readwrite", s => s.clear()); } catch(e){} Object.keys(mem).forEach(k => delete mem[k]); }
+  };
+})();
+
+function readFile(file){ return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = () => rej(r.error); r.readAsDataURL(file); }); }
+async function shrinkImage(file, maxSide, keepClear){
+  const src = await readFile(file);
+  const img = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => rej(new Error("not an image")); i.src = src; });
+  const w = img.naturalWidth || img.width || maxSide, h = img.naturalHeight || img.height || maxSide;
+  const scale = Math.min(1, maxSide / Math.max(w, h));
+  const c = document.createElement("canvas"); c.width = Math.max(1, Math.round(w*scale)); c.height = Math.max(1, Math.round(h*scale));
+  const ctx = c.getContext("2d");
+  if (!keepClear){ ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, c.width, c.height); }
+  ctx.drawImage(img, 0, 0, c.width, c.height);
+  return keepClear ? c.toDataURL("image/png") : c.toDataURL("image/jpeg", .82);
+}
+
+function renderSlots(q){
+  return `<div class="slots">${q.slots.map(s => `
+    <div class="slot" id="slot-${s.id}">
+      <div class="slot-img" id="slotimg-${s.id}"><span>${esc(s.name)}</span></div>
+      <div class="slot-body">
+        <b>${esc(s.name)}</b>
+        <p class="muted">${esc(s.idea)}</p>
+        <div class="slot-actions">
+          <label class="btn btn-soft btn-sm">Upload a photo<input type="file" accept="image/*" data-upload="${s.id}" class="visually-hidden"></label>
+          <button class="btn btn-soft btn-sm" type="button" data-askimg="${s.id}">Ask for this image</button>
+          <button class="linkbtn" type="button" data-rmimg="${s.id}" hidden>Remove photo</button>
+        </div>
+        <div class="ask-panel" id="ask-${s.id}" hidden>
+          <label for="askt-${s.id}">Describe the picture you'd like</label>
+          <textarea id="askt-${s.id}" data-imgask="${s.id}" maxlength="1500" placeholder="What should be in it? What feeling should it give? Anything to avoid?"></textarea>
+          <div class="slot-actions">
+            <button class="btn btn-primary btn-sm" type="button" data-sendimg="${s.id}">Send my request to Alana</button>
+            <button class="btn btn-soft btn-sm" type="button" data-copyimg="${s.id}">Copy for an AI image tool</button>
+          </div>
+          <p class="small muted" id="askstatus-${s.id}"></p>
+        </div>
+      </div>
+    </div>`).join("")}</div>
+    <p class="small muted">🔒 Your pictures stay on this device. They go into your website when you download it. On another device, add them again there.</p>`;
+}
+function slotState(id){
+  const v = state["site-images"] || { slots:{} }; v.slots = v.slots || {};
+  v.slots[id] = v.slots[id] || {}; state["site-images"] = v; return v.slots[id];
+}
+async function updateSlots(q){
+  for (const s of q.slots){
+    const st = ((state[q.id] || {}).slots || {})[s.id] || {};
+    const data = st.has ? await IMGDB.get("img-" + s.id) : null;
+    const box = $("#slotimg-" + s.id); if (!box) continue;
+    box.innerHTML = data ? `<img alt="${esc(s.name)}" src="${data}">` : `<span>${esc(s.name)}</span>`;
+    box.classList.toggle("filled", !!data);
+    const rm = document.querySelector(`[data-rmimg="${s.id}"]`); if (rm) rm.hidden = !data;
+    const ta = $("#askt-" + s.id); if (ta && document.activeElement !== ta) ta.value = st.ask || "";
+    if (st.ask) $("#ask-" + s.id).hidden = false;
+    const status = $("#askstatus-" + s.id);
+    if (status) status.textContent = st.sent ? `Request sent to Alana on ${st.sent}.` : "";
+  }
+  $("#q-" + q.id).classList.toggle("strong", answered(q));
+}
+const SLOT_SIZES = { logo:[800, true], hero:[1800, false] };
+async function handleUpload(input){
+  const id = input.dataset.upload; const file = input.files && input.files[0]; input.value = "";
+  if (!file) return;
+  if (!/^image\//.test(file.type)) return toast("That doesn't look like a picture. Try a JPG or PNG.");
+  if (file.size > 25 * 1024 * 1024) return toast("That picture is very big. Try one under 25 MB.");
+  const [side, clear] = SLOT_SIZES[id] || [1100, false];
+  try {
+    const data = await shrinkImage(file, side, clear && /png|svg|webp|gif/.test(file.type));
+    await IMGDB.set("img-" + id, data);
+    slotState(id).has = true; save("site-images");
+    await updateSlots(QMAP["site-images"]); refreshProgress();
+    toast("Picture added.");
+  } catch(err){ toast("We couldn't read that picture. Try a different one."); }
+}
+function imageBrief(slot){
+  const st = slotState(slot.id); const c = siteColours();
+  const style = (STYLES[(state["site-style"] || {}).pick] || STYLES[0]).name.toLowerCase();
+  const biz = val("site-name") || "my business"; const about = val("site-sub");
+  const what = slot.id === "logo" ? `A simple, modern logo for ${biz}.` : `A ${slot.name.toLowerCase()} picture for the website of ${biz}.`;
+  return `${what}${about ? " The business: " + about : ""} What I'd like: ${(st.ask || "").trim()} Style: ${style}, natural and realistic. Colours that go with ${c.join(", ")}.${slot.id === "logo" ? "" : " No words or letters in the picture."}`;
+}
+
+// The website itself.
+// The website engine is shared with the Done-For-You Studio: same styles
+// (#site-css) and the same sliders, quiz and countdown (#site-js).
+const STYLES = [
+  { name:"Warm and soft", font:"Cormorant+Garamond:wght@500;600;700", head:"'Cormorant Garamond', Georgia, serif", hw:600, r:"20px", heroOnMain:false, hsize:"clamp(40px,7vw,72px)", h2:"clamp(32px,4.5vw,46px)" },
+  { name:"Bold and confident", font:"Archivo+Black", head:"'Archivo Black', 'Arial Black', Arial, sans-serif", hw:400, r:"8px", heroOnMain:true, hsize:"clamp(36px,6.5vw,64px)", h2:"clamp(28px,4vw,40px)" },
+  { name:"Clean and simple", font:"", head:"'Inter', Arial, sans-serif", hw:700, r:"12px", heroOnMain:false, hsize:"clamp(34px,6vw,58px)", h2:"clamp(26px,4vw,38px)" }
+];
+const lines = s => (s || "").split(/\n+/).map(l => l.replace(/^\s*([-•*]|\d+[.)])\s+/, "").trim()).filter(Boolean);
+function safeLink(v){
+  v = (v || "").trim(); if (!v) return "";
+  if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) return "mailto:" + v;
+  if (/^https?:\/\/[^\s"<>]+$/i.test(v)) return v;
+  if (/^[a-z0-9.-]+\.[a-z]{2,}(\/[^\s"<>]*)?$/i.test(v)) return "https://" + v;
+  return "";
+}
+const num = v => { const m = String(v || "").replace(/,/g, "").match(/\d+(\.\d+)?/); return m ? parseFloat(m[0]) : NaN; };
+const fmtDate = d => { if (!d) return ""; const x = new Date(d + "T12:00:00"); return isNaN(x) ? d : x.toLocaleDateString("en-GB", { day:"numeric", month:"long", year:"numeric" }); };
+
+// ---- The quiz editor ("How ready are you?", three answers per question) ----
+const QUIZ_LEVELS = ["Not ready yet", "Getting there", "Ready now"];
+const STARTER_QUIZ = [
+  { q:"How long has this been on your mind?", a:["I've only just started thinking about it", "A few months now", "Far too long"] },
+  { q:"Have you tried to sort it out yourself?", a:["Not yet", "A bit, on and off", "Yes, and I'm ready for some help"] },
+  { q:"When would you like things to be different?", a:["Some day", "In the next few months", "As soon as possible"] }
+];
+function quizState(){
+  const v = state["site-quiz"] || {}; if (!Array.isArray(v.qs)) v.qs = [0,1,2].map(() => ({ q:"", a:["","",""] }));
+  if (v.on === undefined) v.on = true; state["site-quiz"] = v; return v;
+}
+function renderQuizEditor(q){
+  return `<label class="check-row"><input type="checkbox" data-quizon> Add a quiz to my website</label>
+    <div class="quiz-edit">${[0,1,2].map(i => `<div class="qe">
+      <label for="qq-${i}">Question ${i + 1}</label>
+      <input class="field" type="text" id="qq-${i}" data-quizq="${i}" maxlength="200" placeholder="${esc(STARTER_QUIZ[i].q)}">
+      ${QUIZ_LEVELS.map((lvl, j) => `<div class="qa"><span class="lvl lvl-${j}">${lvl}</span><input type="text" data-quiza="${i}.${j}" maxlength="140" aria-label="Question ${i + 1}, ${lvl} answer" placeholder="${esc(STARTER_QUIZ[i].a[j])}"></div>`).join("")}
+    </div>`).join("")}</div>
+    <div class="row-btns"><button class="btn btn-soft btn-sm" type="button" data-starterquiz>Give me a starting quiz</button></div>
+    <p class="small muted">At the end, visitors who are ready see your offer and your button. Visitors who aren't ready yet are invited to get in touch, so nobody leaves empty-handed.</p>`;
+}
+function fillQuizEditor(){
+  const v = quizState();
+  const on = document.querySelector("[data-quizon]"); if (!on) return;
+  on.checked = v.on !== false;
+  v.qs.forEach((x, i) => { const qi = document.querySelector(`[data-quizq="${i}"]`); if (qi) qi.value = x.q || "";
+    (x.a || []).forEach((t, j) => { const ai = document.querySelector(`[data-quiza="${i}.${j}"]`); if (ai) ai.value = t || ""; }); });
+  const card = $("#q-site-quiz"); if (card) card.classList.toggle("strong", !!memberQuiz());
+}
+
+// ---- The savings slider editor ----
+function savingState(){ const v = state["site-saving"] || { on:false, unit:"", usual:"", deal:"", weeks:"" }; state["site-saving"] = v; return v; }
+function renderSavingEditor(){
+  return `<label class="check-row"><input type="checkbox" data-savingon> Add the savings slider</label>
+    <div class="saving-grid">
+      <label>What people pay for, one at a time<input class="field" type="text" data-saving="unit" placeholder="session"></label>
+      <label>Price for one (£)<input class="field" type="number" min="0" step="0.01" data-saving="usual" placeholder="45"></label>
+      <label>Your offer's price (£)<input class="field" type="number" min="0" step="0.01" data-saving="deal" placeholder="180"></label>
+      <label>How many weeks it covers<input class="field" type="number" min="1" step="1" data-saving="weeks" placeholder="6"></label>
+    </div>`;
+}
+function fillSavingEditor(){
+  const v = savingState(); const on = document.querySelector("[data-savingon]"); if (!on) return;
+  on.checked = !!v.on;
+  ["unit","usual","deal","weeks"].forEach(k => { const i = document.querySelector(`[data-saving="${k}"]`); if (i) i.value = v[k] || ""; });
+  const card = $("#q-site-saving"); if (card) card.classList.toggle("strong", !!memberSaving());
+}
+
+function memberQuiz(){
+  const v = state["site-quiz"]; if (!v || v.on === false || !Array.isArray(v.qs)) return null;
+  const questions = v.qs.map(x => ({ q:(x.q || "").trim(), answers:(x.a || []).map((t, j) => ({ t:(t || "").trim(), p:j })).filter(a => a.t) })).filter(x => x.q && x.answers.length >= 2);
+  if (!questions.length) return null;
+  const offer = val("site-offer-name") || "working with me", price = val("site-price");
+  const link = safeLink(val("site-cta-link")) || "#contact", cta = val("site-cta-text") || "Get started";
+  const max = questions.reduce((s, x) => s + Math.max(...x.answers.map(a => a.p)), 0);
+  return { questions, title:`Is ${offer} right for you?`, tiers:[
+    { min: Math.ceil(max * .67), tag:"You're ready", title:`${offer} is made for you`, text: price ? `You're ready to start. ${price.replace(/\.$/, "")}.` : "You're ready to start.", cta, link },
+    { min: Math.ceil(max * .34), tag:"Getting there", title:`${offer} could be just right`, text:"You're nearly there. Let's talk it through and see if it's the right fit for you.", cta, link },
+    { min: 0, tag:"Not yet, and that's fine", title:"Start with a conversation", text:"It might not be the right time just yet. Get in touch and I'll point you to the best first step.", cta:"Get in touch", link:"#contact" }
+  ]};
+}
+function memberSaving(){
+  const v = state["site-saving"]; if (!v || !v.on) return null;
+  const usual = num(v.usual), deal = num(v.deal), weeks = num(v.weeks);
+  if (!(usual > 0 && deal > 0 && weeks > 0)) return null;
+  return { usual, deal, weeks, unit:(v.unit || "session").trim(), name: val("site-offer-name") || "my offer" };
+}
+
+async function buildSiteHtml(){
+  const name = val("site-name"), headline = val("site-headline");
+  if (!name || !headline) return { error:"Add your business name and your headline first (questions 1 and 2), then build again." };
+  const S = STYLES[(state["site-style"] || {}).pick] || STYLES[0];
+  const [main, accent, bg] = siteColours();
+  const text = readable(bg) === "#FFFFFF" ? "#F4F4F6" : "#1C1F26";
+  const img = {}; for (const id of ["logo","hero","you","work1","work2","work3"]){ const st = ((state["site-images"] || {}).slots || {})[id]; if (st && st.has){ const d = await IMGDB.get("img-" + id); if (d) img[id] = d; } }
+  const pics = ["hero","work1","work2","work3"].filter(k => img[k]);
+  const heroPics = pics.slice(0, 3), reelPics = pics.slice(3);
+  const ctaText = val("site-cta-text") || "Get in touch";
+  const mainLink = safeLink(val("site-cta-link")) || "#contact";
+  const btn = (t, cls, href) => { const h = href || mainLink; return `<a class="btn ${cls || ""}" href="${esc(h)}"${/^https?:/.test(h) ? ' target="_blank" rel="noopener"' : ""}>${esc(t || ctaText)}</a>`; };
+  const sub = val("site-sub"), contact = val("site-contact"), about = val("site-about"), guarantee = val("site-guarantee");
+  const offerName = val("site-offer-name"), price = val("site-price"), points = lines(val("site-offer-points"));
+  const problems = lines(val("site-problems"));
+  const reviews = parseProof(val("site-proof")), faq = parseFaq(val("site-faq"));
+  const end = val("site-end");
+  const qd = memberQuiz(), sd = memberSaving();
+  const data = { end, slider: sd, quiz: qd };
+  const heroBg = S.heroOnMain ? main : bg, heroText = S.heroOnMain ? readable(main) : text;
+  const fonts = `https://fonts.googleapis.com/css2?${S.font ? "family=" + S.font + "&" : ""}family=Inter:wght@400;500;600;700&display=swap`;
+  const vars = `:root{--main:${main};--accent:${accent};--bg:${bg};--bg-glass:${bg}ee;--text:${text};--soft:${mix(bg, main, .08)};--line:${mix(bg, main, .2)};--on-main:${readable(main)};--on-accent:${readable(accent)};--r:${S.r};--head:${S.head};--hw:${S.hw};--hsize:${S.hsize};--h2:${S.h2};--hero-bg:${heroBg};--hero-text:${heroText};--hero-h1:${S.heroOnMain ? heroText : main}}`;
+  const para = s => lines(s).map(p => `<p>${esc(p)}</p>`).join("");
+  const sections = [];
+
+  sections.push(`<section class="hero ${heroPics.length ? "" : "noimg"}"><div class="wrap">
+    <div>
+      <h1>${esc(headline)}</h1>
+      ${sub ? `<p class="sub">${esc(sub)}</p>` : ""}
+      <div class="ctas">${btn()}${qd ? `<a class="btn line" href="#quiz">Take the 1-minute quiz</a>` : ""}</div>
+      ${end ? `<div class="countdown" id="countdown"><span class="lbl">Ends in</span><div class="u"><b data-d>0</b><span>days</span></div><div class="u"><b data-h>0</b><span>hours</span></div><div class="u"><b data-m>0</b><span>mins</span></div><div class="u"><b data-s>0</b><span>secs</span></div></div>` : ""}
+    </div>
+    ${heroPics.length ? `<div class="slider" data-slider data-auto="5000">${heroPics.map(k => `<figure class="slide" style="margin:0"><img src="${img[k]}" alt=""></figure>`).join("")}<button class="arrow prev" type="button" aria-label="Previous picture">‹</button><button class="arrow next" type="button" aria-label="Next picture">›</button><div class="dots"></div></div>` : ""}
+  </div></section>`);
+  if (problems.length){
+    sections.push(`<section class="alt"><div class="wrap"><h2 class="reveal">Sound familiar?</h2>
+      <div class="cards">${problems.map(p => `<div class="card problem reveal">“${esc(p.replace(/^["“]|["”]$/g, ""))}”</div>`).join("")}</div></div></section>`);
+  }
+  if (qd){
+    sections.push(`<section id="quiz"><div class="wrap center">
+      <h2 class="reveal">${esc(qd.title)}</h2>
+      <p class="lead reveal">Three quick questions and you'll know your best next step.</p>
+      <div class="quiz reveal" style="text-align:left"><div class="quiz-bar"><i></i></div><div id="quiz-box"></div></div>
+    </div></section>`);
+  }
+  if (offerName || points.length || price){
+    sections.push(`<section class="${qd ? "alt" : ""}"><div class="wrap narrow">
+      <div class="deal reveal" style="grid-template-columns:1fr">
+        <div><h2>${esc(offerName || "How I can help")}</h2>
+        ${points.length ? `<ul>${points.map(p => `<li>${esc(p)}</li>`).join("")}</ul>` : ""}</div>
+        <div>${price ? `<div class="price">${esc(price)}</div>` : ""}${btn()}</div>
+      </div></div></section>`);
+  }
+  if (sd){
+    sections.push(`<section class="${qd ? "" : "alt"}"><div class="wrap center">
+      <h2 class="reveal">How much would you save?</h2>
+      <p class="lead reveal">Slide to show how many ${esc(sd.unit)}s a week you'd have.</p>
+      <div class="calc reveal" id="calc">
+        <div class="q">${esc(sd.unit.charAt(0).toUpperCase() + sd.unit.slice(1))}s a week</div>
+        <div class="n" data-n>2</div>
+        <input type="range" min="1" max="5" step="1" value="2" aria-label="${esc(sd.unit)}s a week">
+        <div class="ends"><span>1</span><span>5</span></div>
+        <div class="res">
+          <div><span>Paying one at a time for ${sd.weeks} weeks</span><b data-pay></b></div>
+          <div><span>With ${esc(sd.name)}</span><b data-deal></b></div>
+          <div class="save"><span>You save</span><b data-save></b></div>
+        </div>
+        <p class="msg" data-msg></p>
+        <p class="small" style="opacity:.7;margin:10px 0 0">Based on £${esc(String(sd.usual))} a ${esc(sd.unit)} paying one at a time.</p>
+      </div></div></section>`);
+  }
+  if (reelPics.length){
+    sections.push(`<section><div class="wrap"><div class="reel reveal"><div class="track">${reelPics.map(k => `<img src="${img[k]}" alt="">`).join("")}</div></div></div></section>`);
+  }
+  if (reviews.length){
+    sections.push(`<section class="alt"><div class="wrap center"><h2 class="reveal">What people say</h2>
+      <div class="slider quotes reveal" data-slider data-auto="6500">${reviews.map(r => `<div class="slide"><blockquote>“${esc(r.quote)}”${r.who ? `<footer>${esc(r.who)}</footer>` : ""}</blockquote></div>`).join("")}<button class="arrow prev" type="button" aria-label="Previous review">‹</button><button class="arrow next" type="button" aria-label="Next review">›</button><div class="dots"></div></div>
+    </div></section>`);
+  }
+  if (about){
+    sections.push(`<section><div class="wrap about ${img.you ? "" : "noimg"}">
+      ${img.you ? `<img class="reveal" src="${img.you}" alt="${esc(name)}">` : ""}
+      <div class="reveal"><h2>About me</h2>${para(about)}</div></div></section>`);
+  }
+  if (guarantee){
+    sections.push(`<section class="alt"><div class="wrap narrow"><div class="card reveal" style="border-left:5px solid var(--accent)"><h3>My promise to you</h3>${para(guarantee)}</div></div></section>`);
+  }
+  if (faq.length){
+    sections.push(`<section><div class="wrap narrow"><h2 class="reveal">Questions people ask</h2>${faq.map(f => `<details class="reveal"><summary>${esc(f.q)}</summary>${f.a.map(a => `<p>${esc(a)}</p>`).join("")}</details>`).join("")}</div></section>`);
+  }
+  sections.push(`<section class="final" id="contact"><div class="wrap narrow">
+    <h2>${esc(ctaText)}</h2>
+    ${end ? `<p>Available until ${esc(fmtDate(end))}.</p>` : sub ? `<p>${esc(sub)}</p>` : ""}
+    ${mainLink !== "#contact" ? btn() : ""}
+    ${contact ? `<p style="margin-top:22px">${esc(contact)}</p>` : ""}
+  </div></section>`);
+
+  const logo = img.logo ? `<img src="${img.logo}" alt="${esc(name)}">` : esc(name);
+  const html = `<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${esc(name)}</title>
+<meta name="description" content="${esc(sub || headline)}">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="${fonts}" rel="stylesheet">
+<style>${vars}
+${$("#site-css").textContent}</style>
+</head>
+<body>
+<header><div class="wrap"><a class="brand" href="#">${logo}</a>${btn()}</div></header>
+<main>
+${sections.join("\n")}
+</main>
+<div class="foot"><div class="wrap"><span>© ${new Date().getFullYear()} ${esc(name)}</span>${contact ? `<span>${esc(contact)}</span>` : ""}</div></div>
+<div class="sticky">${btn()}</div>
+<script type="application/json" id="site-data">${JSON.stringify(data).replace(/</g, "\\u003c")}<\/script>
+<script>${$("#site-js").textContent}<\/script>
+</body>
+</html>`;
+  return { html, name };
+}
+
+function parseFaq(s){
+  const out = []; let cur = null;
+  lines(s).forEach(l => { if (/\?$/.test(l)){ cur = { q:l, a:[] }; out.push(cur); } else if (cur) cur.a.push(l); });
+  return out.filter(x => x.a.length);
+}
+function parseProof(s){
+  return lines(s).map(l => { const m = l.match(/^(.*?)\s+[-–]\s+([^-–]{1,40})$/); return m ? { quote:m[1].replace(/^["“]|["”]$/g,""), who:m[2] } : { quote:l.replace(/^["“]|["”]$/g,""), who:"" }; });
+}
+
+function renderBuild(q){
+  return `<div class="build">
+    <button class="btn btn-primary" type="button" data-buildsite>Build my website</button>
+    <p class="gmsg" id="buildmsg" style="text-align:left"></p>
+    <div class="site-frame" id="siteFrameWrap" hidden>
+      <div class="frame-bar"><span>Preview</span><span><button type="button" class="linkbtn" data-viewport="100%">Computer</button> · <button type="button" class="linkbtn" data-viewport="390px">Phone</button></span></div>
+      <iframe id="siteFrame" title="Your website preview"></iframe>
+    </div>
+    <div class="btns" id="siteBtns" hidden style="display:flex;flex-wrap:wrap;gap:10px;margin-top:14px">
+      <button class="btn btn-primary" type="button" data-dlsite>Download my website</button>
+      <button class="btn btn-soft" type="button" data-go="pack">Download my OS pack too</button>
+    </div>
+    <details class="tip"><summary>How to put your website online</summary><div class="body">
+      <p>Your website downloads as one file with your pictures inside it. Here are three ways to get it online:</p>
+      <p><b>1. Drag and drop.</b> Rename the file to index.html, put it in a folder on its own, and drag that folder onto a free drag-and-drop hosting service such as Netlify Drop. You'll get a web address in about a minute.</p>
+      <p><b>2. A website builder.</b> If you already use Wix, Squarespace or similar, use your downloaded site as the blueprint: copy your words and pictures across, section by section.</p>
+      <p><b>3. Ask Alana.</b> Book a call and she can help you put it live with your own web address.</p>
+    </div></details>
+  </div>`;
+}
+let lastSite = null;
+async function buildSite(){
+  const msg = $("#buildmsg"); msg.textContent = "";
+  const r = await buildSiteHtml();
+  if (r.error){ msg.textContent = r.error; return; }
+  lastSite = r;
+  const frame = $("#siteFrame"); frame.srcdoc = r.html;
+  $("#siteFrameWrap").hidden = false; $("#siteBtns").hidden = false; $("#siteBtns").style.display = "flex";
+  state["site-build"] = { built: new Date().toLocaleDateString("en-GB", { day:"numeric", month:"long", year:"numeric" }) };
+  save("site-build"); refreshProgress();
+  $("#q-site-build").classList.add("strong");
+  frame.scrollIntoView({ behavior:"smooth", block:"start" });
+}
+function downloadSite(){
+  if (!lastSite) return;
+  const slug = lastSite.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "my";
+  const blob = new Blob([lastSite.html], { type:"text/html" });
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = slug + "-website.html";
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  toast("Website downloaded. Look in your Downloads folder.");
+}
+
+async function handleWebsiteClick(b){
+  if (b.dataset.usefrom){
+    const into = b.dataset.into; const v = val(b.dataset.usefrom);
+    const el = document.querySelector(`[data-text="${into}"]`); if (!el) return true;
+    el.value = el.value.trim() ? el.value.trim() + "\n" + v : v;
+    state[into] = el.value; save(into); updateMeter(QMAP[into]); refreshProgress();
+    el.focus(); toast("Copied in. Now trim it down to the best bit.");
+    return true;
+  }
+  if (b.dataset.askimg){ const p = $("#ask-" + b.dataset.askimg); p.hidden = !p.hidden; if (!p.hidden) $("#askt-" + b.dataset.askimg).focus(); return true; }
+  if (b.dataset.rmimg){ const id = b.dataset.rmimg; await IMGDB.del("img-" + id); slotState(id).has = false; save("site-images"); await updateSlots(QMAP["site-images"]); refreshProgress(); return true; }
+  if (b.dataset.copyimg){
+    const slot = QMAP["site-images"].slots.find(s => s.id === b.dataset.copyimg);
+    if (!(slotState(slot.id).ask || "").trim()) { toast("Describe the picture first."); return true; }
+    const t = imageBrief(slot);
+    const done = () => toast("Copied. Paste it into an AI image tool like the one in Canva or ChatGPT.");
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(done, () => fallbackCopy(t, done)); else fallbackCopy(t, done);
+    return true;
+  }
+  if (b.dataset.sendimg){
+    const slot = QMAP["site-images"].slots.find(s => s.id === b.dataset.sendimg);
+    const st = slotState(slot.id); const status = $("#askstatus-" + slot.id);
+    if ((st.ask || "").trim().length < 5){ status.textContent = "Tell us a little about the picture you'd like first."; return true; }
+    if (PREVIEW || !token){ status.textContent = "This is a preview, so requests aren't sent from here."; return true; }
+    b.disabled = true; status.textContent = "Sending…";
+    try {
+      const d = await api("image-request", { token, slot: slot.req, description: st.ask, business: val("site-name"), colours: siteColours().join(", ") });
+      if (d.ok){ st.sent = new Date().toLocaleDateString("en-GB", { day:"numeric", month:"long" }); save("site-images"); status.textContent = `Request sent to Alana on ${st.sent}.`; refreshProgress(); }
+      else if (d.status === 401 || d.status === 403) signedOut(d);
+      else status.textContent = d.error || "Couldn't send just now. Please try again.";
+    } catch(err){ status.textContent = "We couldn't reach the website. Please try again."; }
+    b.disabled = false;
+    return true;
+  }
+  if (b.hasAttribute("data-starterquiz")){
+    const v = quizState();
+    const filled = v.qs.some(x => (x.q || "").trim() || (x.a || []).some(a => (a || "").trim()));
+    if (filled && !confirm("Replace your quiz with the starting questions?")) return true;
+    v.on = true; v.qs = STARTER_QUIZ.map(x => ({ q:x.q, a:x.a.slice() }));
+    save("site-quiz"); fillQuizEditor(); refreshProgress();
+    toast("Starting quiz added. Now rewrite the answers in your buyer's words.");
+    return true;
+  }
+  if (b.hasAttribute("data-buildsite")){ await buildSite(); return true; }
+  if (b.hasAttribute("data-dlsite")){ downloadSite(); return true; }
+  if (b.dataset.viewport){ $("#siteFrame").style.width = b.dataset.viewport; return true; }
+  return false;
+}
+
+/* ------------------------------------------------------------------
+   PROGRESS + NAV
+------------------------------------------------------------------- */
+function refreshProgress(){
+  const all = MODULES.flatMap(allQs); const done = all.filter(answered).length;
+  const pct = Math.round(done / all.length * 100);
+  $("#overallBar").style.width = pct + "%"; $("#overallTxt").textContent = pct + "% built";
+  MODULES.forEach(m => {
+    const p = modProgress(m); const s = $("#sum-" + m.id);
+    if (s) s.textContent = p.done === p.total ? `All ${p.total} questions answered. That's a full ${m.name}. Brilliant work.` :
+      `${p.done} of ${p.total} questions answered so far. Unanswered questions show as "not answered yet" in your download, so you can see what's left.`;
+  });
+  const cur = currentId();
+  renderTabs(); markTab(cur);
+  renderModuleGrid(); renderPackGrid();
+}
+let current = null;
+function currentId(){ const h = location.hash.slice(1); const ok = ["start","pack",...MODULES.map(m=>m.id)]; return ok.includes(h) ? h : (current || "start"); }
+function markTab(id){ document.querySelectorAll(".tab").forEach(t => t.setAttribute("aria-selected", t.dataset.go === id ? "true" : "false")); }
+function show(id){
+  document.querySelectorAll("section.view").forEach(v => v.classList.toggle("active", v.id === "view-" + id));
+  markTab(id);
+  if (id === "website"){ refreshFrom(); Object.values(QMAP).forEach(q => { if (q.type === "colours") updateColours(q); }); }
+  const t = document.querySelector(`.tab[data-go="${id}"]`); if (t) t.scrollIntoView({inline:"center", block:"nearest"});
+  window.scrollTo(0,0);
+}
+
+/* ------------------------------------------------------------------
+   SIGN-IN AND SYNC
+   The questions are never in this page. The website only sends them once an
+   invited person has signed in with a code from their inbox.
+------------------------------------------------------------------- */
+const API = "/api/os/";
+const TOKEN_KEY = "bwy-token", EMAIL_KEY = "bwy-email", DIRTY_KEY = "bwy-dirty";
+const PREVIEW = !/^https?:$/.test(location.protocol);
+let QMAP = {};
+let token = lsGet(TOKEN_KEY);
+let accountSaving = false;
+let dirty = new Set(JSON.parse(lsGet(DIRTY_KEY) || "[]"));
+let syncing = false, syncTimer = null, lastSync = 0, started = false, pendingEmail = "";
+
+function lsGet(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }
+function lsSet(k, v){ try { if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch(e){} }
+const G = id => document.getElementById(id);
+
+async function api(path, body, opts){
+  const r = await fetch(API + path, {
+    method:"POST", headers:{"Content-Type":"application/json"},
+    body: JSON.stringify(body), keepalive: !!(opts && opts.keepalive), credentials:"same-origin"
+  });
+  let data = {};
+  try { data = await r.json(); } catch(e){}
+  data.status = r.status;
+  return data;
+}
+
+function gateShow(step){
+  ["gStart","gCode","gNotInvited","gLoading"].forEach(id => { G(id).hidden = id !== step; });
+  gMsg("");
+  document.body.classList.add("locked");
+}
+function gMsg(t){ G("gMsg").textContent = t || ""; }
+function busy(form, on){ const b = form.querySelector("button[type=submit]"); if (b){ b.disabled = on; b.style.opacity = on ? .6 : 1; } }
+
+async function requestCode(email){
+  const form = G("gStart");
+  busy(form, true);
+  try {
+    const d = await api("start", { email, marketingConsent: G("gConsent").checked, website: G("gWebsite").value });
+    if (d.ok){
+      pendingEmail = email; G("gSentTo").textContent = email;
+      gateShow("gCode"); G("gCodeIn").value = ""; G("gCodeIn").focus();
+    } else if (d.reason === "not-invited"){
+      G("gNoEmail").textContent = email; gateShow("gNotInvited");
+    } else gMsg(d.error || "Something went wrong. Please try again.");
+  } catch(err){ gMsg("We couldn't reach the website. Check your internet connection and try again."); }
+  busy(form, false);
+}
+
+G("gStart").addEventListener("submit", e => {
+  e.preventDefault();
+  const email = G("gEmail").value.trim().toLowerCase();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return gMsg("Please check your email address.");
+  requestCode(email);
+});
+G("gResend").addEventListener("click", () => { if (pendingEmail){ gateShow("gStart"); requestCode(pendingEmail); } });
+document.querySelectorAll("[data-gate-back]").forEach(b => b.addEventListener("click", () => { gateShow("gStart"); G("gEmail").focus(); }));
+
+G("gCode").addEventListener("submit", async e => {
+  e.preventDefault();
+  const code = G("gCodeIn").value.replace(/\D/g, "");
+  if (code.length !== 6) return gMsg("The code is 6 numbers long.");
+  const form = G("gCode"); busy(form, true);
+  try {
+    const d = await api("verify", { email: pendingEmail, code });
+    if (d.ok){
+      // Answers left on this device by someone else are never mixed in.
+      if (lsGet(EMAIL_KEY) && lsGet(EMAIL_KEY) !== d.email) clearLocal();
+      token = d.token; lsSet(TOKEN_KEY, token); lsSet(EMAIL_KEY, d.email);
+      accountSaving = !!d.accountSaving;
+      mergeAnswers(d.answers);
+      await openWorkbook(d.email);
+    } else if (d.reason === "not-invited"){
+      G("gNoEmail").textContent = pendingEmail; gateShow("gNotInvited");
+    } else gMsg(d.error || "Something went wrong. Please try again.");
+  } catch(err){ gMsg("We couldn't reach the website. Check your internet connection and try again."); }
+  busy(form, false);
+});
+
+// Account answers win, except anything changed on this device that hasn't
+// reached the account yet. If the account is empty, this device's answers go up.
+function mergeAnswers(server){
+  server = server || {};
+  const local = state;
+  const merged = Object.assign({}, server);
+  if (!Object.keys(server).length){
+    Object.keys(local).forEach(k => { merged[k] = local[k]; dirty.add(k); });
+  } else {
+    dirty.forEach(k => { if (k in local) merged[k] = local[k]; });
+  }
+  state = merged;
+  try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e){}
+  persistDirty();
+}
+
+async function openWorkbook(email){
+  gateShow("gLoading");
+  let d;
+  try { d = await api("content", { token }); } catch(err){ gateShow("gStart"); return gMsg("We couldn't reach the website. Check your internet connection and try again."); }
+  if (!d.ok){ return signedOut(d); }
+  MODULES = d.modules;
+  G("acctEmail").textContent = email;
+  startApp();
+  setSaveStatus(accountSaving ? "Saved ✓" : "Saved on this device");
+  if (dirty.size) scheduleSync(true);
+}
+
+function signedOut(d){
+  token = null; lsSet(TOKEN_KEY, null);
+  if (d && d.reason === "not-invited"){ G("gNoEmail").textContent = lsGet(EMAIL_KEY) || "this email"; gateShow("gNotInvited"); }
+  else { gateShow("gStart"); gMsg(d && d.status === 401 ? "Please sign in again." : (d && d.error) || ""); }
+}
+
+function clearLocal(){
+  state = {}; dirty = new Set(); IMGDB.clear();
+  try { localStorage.removeItem(KEY); } catch(e){}
+  lsSet(DIRTY_KEY, null); lsSet(EMAIL_KEY, null);
+}
+
+function persistDirty(){ lsSet(DIRTY_KEY, JSON.stringify([...dirty])); }
+function markDirty(id){
+  if (PREVIEW || !token) return;
+  dirty.add(id); persistDirty(); scheduleSync();
+  setSaveStatus(accountSaving ? "Saving…" : "Saved on this device");
+}
+function setSaveStatus(t){ const s = G("syncStatus"); if (s) s.textContent = t; }
+
+// At most one save every 20 seconds while someone is typing, so a long
+// session stays well inside the website's limits.
+function scheduleSync(soon){
+  if (PREVIEW || !token || !accountSaving) return;
+  if (syncTimer) return;
+  const wait = soon ? 1000 : Math.max(3000, 20000 - (Date.now() - lastSync));
+  syncTimer = setTimeout(() => { syncTimer = null; syncNow(); }, wait);
+}
+async function syncNow(opts){
+  if (syncing || !dirty.size || !token || !accountSaving) return;
+  syncing = true;
+  const batch = {}; let size = 0;
+  for (const k of dirty){
+    const v = state[k] === undefined ? null : state[k];
+    const s = JSON.stringify(v).length + k.length + 8;
+    if (size + s > 28000 && Object.keys(batch).length) break;
+    batch[k] = v; size += s;
+  }
+  try {
+    const d = await api("save", { token, changes: batch }, opts);
+    if (d.ok){
+      Object.keys(batch).forEach(k => {
+        const now = state[k] === undefined ? null : state[k];
+        if (JSON.stringify(now) === JSON.stringify(batch[k])) dirty.delete(k);
+      });
+      persistDirty();
+      setSaveStatus("Saved ✓");
+    } else if (d.status === 401 || d.status === 403){
+      syncing = false; return signedOut(d);
+    } else setSaveStatus("Saved here, retrying");
+  } catch(err){ setSaveStatus("Offline, saved here"); }
+  lastSync = Date.now(); syncing = false;
+  if (dirty.size) scheduleSync();
+}
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") syncNow({ keepalive:true }); });
+
+G("signOut").addEventListener("click", async () => {
+  if (PREVIEW){ location.reload(); return; }
+  await syncNow();
+  if (dirty.size && !confirm("Some answers haven't reached your account yet. Sign out anyway?")) return;
+  token = null; lsSet(TOKEN_KEY, null); clearLocal();
+  try { history.replaceState(null, "", location.pathname); } catch(e){}
+  location.reload();
+});
+
+/* ------------------------------------------------------------------
+   START THE WORKBOOKS (after sign-in)
+------------------------------------------------------------------- */
+function startApp(){
+  QMAP = {}; MODULES.forEach(m => allQs(m).forEach(q => QMAP[q.id] = q));
+  main.innerHTML = renderStart() + MODULES.map(renderModule).join("") + renderPack();
+  document.querySelectorAll("[data-text]").forEach(ta => { ta.value = state[ta.dataset.text] || ""; updateMeter(QMAP[ta.dataset.text]); markField(ta.dataset.text); });
+  document.querySelectorAll("textarea[data-note]").forEach(ta => { const v = state[ta.dataset.note]; ta.value = (v && v.note) || ""; });
+  Object.values(QMAP).forEach(q => {
+    if (q.type === "choice") updateChoice(q);
+    if (q.type === "dials" || q.type === "score") updateDials(q);
+    if (q.type === "colours") updateColours(q);
+    if (q.type === "images") updateSlots(q);
+    if (q.type === "quiz") fillQuizEditor();
+    if (q.type === "saving") fillSavingEditor();
+  });
+  refreshFrom();
+  document.body.classList.remove("locked");
+  if (!started){ started = true; wireEvents(); }
+  refreshProgress();
+  show(currentId());
+}
+
+function wireEvents(){
+  document.addEventListener("input", e => {
+    const t = e.target;
+    if (t.dataset.text){ state[t.dataset.text] = t.value; save(t.dataset.text); updateMeter(QMAP[t.dataset.text]);
+      const s = $("#saved-" + t.dataset.text); if (s){ s.classList.add("show"); clearTimeout(s._h); s._h = setTimeout(()=>s.classList.remove("show"), 1400); }
+      debounceProgress(); }
+    if (t.dataset.text && QMAP[t.dataset.text] && QMAP[t.dataset.text].type === "field") markField(t.dataset.text);
+    if (t.dataset.note){ const v = state[t.dataset.note] || {}; v.note = t.value; state[t.dataset.note] = v; save(t.dataset.note); }
+    if (t.dataset.colour){ const q = QMAP[t.dataset.colour]; const v = state[q.id] || { vals: siteColours().slice() };
+      v.vals = v.vals || siteColours().slice(); v.vals[+t.dataset.i] = t.value.toUpperCase(); v.touched = true; state[q.id] = v; save(q.id); updateColours(q); debounceProgress(); }
+    if (t.dataset.imgask){ slotState(t.dataset.imgask).ask = t.value; save("site-images"); }
+    if (t.dataset.quizq != null){ quizState().qs[+t.dataset.quizq].q = t.value; save("site-quiz"); fillQuizMark(); debounceProgress(); }
+    if (t.dataset.quiza){ const [i, j] = t.dataset.quiza.split(".").map(Number); quizState().qs[i].a[j] = t.value; save("site-quiz"); fillQuizMark(); debounceProgress(); }
+    if (t.dataset.saving){ savingState()[t.dataset.saving] = t.value; save("site-saving"); fillSavingMark(); debounceProgress(); }
+    if (t.dataset.dial){ const q = QMAP[t.dataset.dial]; const v = state[q.id] || {vals:q.dials.map(()=>3)};
+      v.vals = v.vals || q.dials.map(()=>3); v.vals[+t.dataset.i] = +t.value; v.touched = true; state[q.id] = v; save(q.id); updateDials(q); debounceProgress(); }
+  });
+  document.addEventListener("click", async e => {
+    const b = e.target.closest("button, a"); if (!b || b.closest("#gate")) return;
+    if (b.dataset.go){ e.preventDefault(); current = b.dataset.go; show(current); try { history.pushState(null, "", "#" + current); } catch(err){} return; }
+    if (await handleWebsiteClick(b)) return;
+    if (b.classList.contains("opt")){ const q = QMAP[b.dataset.q]; const v = state[q.id] || {}; v.pick = +b.dataset.i; state[q.id] = v; save(q.id); updateChoice(q); refreshProgress(); return; }
+    if (b.dataset.dl){ download(b.dataset.dl); return; }
+    if (b.dataset.copy){ copy(b.dataset.copy); return; }
+    if (b.dataset.print){ printDoc(b.dataset.print); return; }
+    if (b.id === "resetAll"){
+      if (!confirm("This deletes every answer in your account and on this device, for good. Have you downloaded a copy first?")) return;
+      if (token && !PREVIEW){
+        try { const d = await api("delete", { token }); if (!d.ok) return toast(d.error || "Couldn't delete just now. Please try again."); }
+        catch(err){ return toast("We couldn't reach the website. Please try again."); }
+      }
+      const email = lsGet(EMAIL_KEY); clearLocal(); lsSet(EMAIL_KEY, email);
+      try { history.replaceState(null, "", "#start"); } catch(err){} location.reload();
+    }
+  });
+  document.addEventListener("change", e => {
+    const t = e.target; if (!t.dataset) return;
+    if (t.dataset.upload) handleUpload(t);
+    if (t.hasAttribute("data-quizon")){ quizState().on = t.checked; save("site-quiz"); fillQuizMark(); refreshProgress(); }
+    if (t.hasAttribute("data-savingon")){ savingState().on = t.checked; save("site-saving"); fillSavingMark(); refreshProgress(); }
+  });
+  window.addEventListener("hashchange", () => { current = currentId(); show(current); });
+  window.addEventListener("popstate", () => { current = currentId(); show(current); });
+}
+function fillQuizMark(){ const c = $("#q-site-quiz"); if (c) c.classList.toggle("strong", !!memberQuiz()); }
+function fillSavingMark(){ const c = $("#q-site-saving"); if (c) c.classList.toggle("strong", !!memberSaving()); }
+function markField(id){ const q = QMAP[id]; if (!q || q.type !== "field") return; const c = $("#q-" + id); if (c) c.classList.toggle("strong", answered(q)); }
+let progTimer; function debounceProgress(){ clearTimeout(progTimer); progTimer = setTimeout(refreshProgress, 500); }
+
+/* ------------------------------------------------------------------
+   BOOT
+------------------------------------------------------------------- */
+(async function boot(){
+  if (PREVIEW){
+    // On Alana's computer only: the questions come from the preview file
+    // that sits next to this page in her OS-Builder folder.
+    gateShow("gStart");
+    G("gStart").hidden = true;
+    G("gPreview").hidden = false;
+    const s = document.createElement("script");
+    s.src = "build-whats-yours-preview.js";
+    s.onerror = () => gMsg("The preview file (build-whats-yours-preview.js) needs to be in the same folder as this page.");
+    document.head.appendChild(s);
+    G("gPreviewBtn").addEventListener("click", () => {
+      if (!window.OS_PREVIEW_CONTENT) return gMsg("The preview file (build-whats-yours-preview.js) needs to be in the same folder as this page.");
+      MODULES = window.OS_PREVIEW_CONTENT;
+      G("acctEmail").textContent = "Preview";
+      setSaveStatus("Preview: saved on this computer");
+      startApp();
+    });
+    return;
+  }
+  if (!token){ gateShow("gStart"); return; }
+  gateShow("gLoading");
+  try {
+    const d = await api("load", { token });
+    if (!d.ok) return signedOut(d);
+    accountSaving = !!d.accountSaving;
+    mergeAnswers(d.answers);
+    await openWorkbook(d.email);
+  } catch(err){
+    gateShow("gStart");
+    gMsg("We couldn't reach the website. Check your internet connection and try again.");
+  }
+})();
+</script>
+</body>
+</html>

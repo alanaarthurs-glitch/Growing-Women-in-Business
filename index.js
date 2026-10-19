@@ -993,6 +993,17 @@ const API_ROUTES = {
   "/api/scorecard": handleScorecard,
 };
 
+// Build What's Yours (/build-whats-yours): invite-only sign-in, the private
+// questions and saved answers. All of it lives in os-builder.js.
+const osBuilder = require("./os-builder").createOsBuilder({
+  env: process.env,
+  dataDir: DATA_DIR,
+  contentFile: path.join(__dirname, "private", "os-builder-content.js"),
+  newsletterDbId: NOTION_NEWSLETTER_DB_ID,
+  str, isEmail, sendJSON, notionRequest, resendSend, createNotionPage, upsertCrmContact, emailCapOk,
+});
+Object.assign(API_ROUTES, osBuilder.routes);
+
 // Every /api/* request runs these checks, in this order, before a handler
 // sees it: method, route, origin, rate limit, content type and size, JSON
 // shape, honeypot.
