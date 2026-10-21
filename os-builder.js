@@ -15,6 +15,13 @@
 // Access is re-checked against Notion (cached for a minute), so unticking
 // Allowed locks someone out within about a minute.
 //
+// Invite links: /build-whats-yours?invite=<code> lets people add themselves.
+// The code must match a row in the Notion "Build What's Yours: Invite Links"
+// table with Active ticked. Someone new who signs in through a link is added
+// to the Invite List (Allowed ticked, "How they got in" = Invite link). Anyone
+// already on the Invite List with Allowed unticked stays out, link or not.
+// Unticking Active switches a link off within about a minute.
+//
 // Answers are only kept on the server when there's somewhere permanent to
 // keep them: a Railway volume (RAILWAY_VOLUME_MOUNT_PATH, set by Railway
 // when a volume is attached) or OS_BUILDER_DIR. Without one, Railway wipes
@@ -27,6 +34,7 @@
 //   OS_BUILDER_SECRET        signs session tokens (defaults to a hash of the keys)
 //   OS_BUILDER_DIR           where answers are saved (defaults to the volume)
 //   OS_BUILDER_IMAGES_DB_ID  the image requests database (defaults to the one below)
+//   OS_BUILDER_INVITES_DB_ID the invite links database (defaults to the one below)
 // ---------------------------------------------------------------------------
 "use strict";
 
@@ -36,6 +44,10 @@ const crypto = require("crypto");
 
 const DEFAULT_ACCESS_DB_ID = "1b0f16c620f1412295d92fab84821687";
 const DEFAULT_IMAGES_DB_ID = "860004a52d8648b1a2974b51314034c1";
+const DEFAULT_INVITES_DB_ID = "1a4c83223d0047eba31bfbd747323369";
+// Link codes are long and random (24 letters and numbers). Shorter codes in
+// the table are ignored, so a weak one can never open the door.
+const INVITE_PATTERN = /^[a-z0-9]{16,64}$/;
 const IMAGE_SLOTS = ["Logo", "Photo of you", "Top of the page", "Work photo", "Other"];
 const CODE_TTL_MS = 10 * 60 * 1000;
 const SESSION_TTL_MS = 30 * 24 * 60 * 60 * 1000;
@@ -60,6 +72,7 @@ function createOsBuilder(deps) {
 
   const ACCESS_DB_ID = env.OS_BUILDER_ACCESS_DB_ID || DEFAULT_ACCESS_DB_ID;
   const IMAGE_DB_ID = env.OS_BUILDER_IMAGES_DB_ID || DEFAULT_IMAGES_DB_ID;
+  const INVITES_DB_ID = env.OS_BUILDER_INVITES_DB_ID || DEFAULT_INVITES_DB_ID;
   const MODE = String(env.OS_BUILDER_MODE || "invite").toLowerCase() === "open" ? "open" : "invite";
   const onRailway = !!(env.RAILWAY_ENVIRONMENT || env.RAILWAY_ENVIRONMENT_NAME || env.RAILWAY_PROJECT_ID);
   const permanentDir = env.OS_BUILDER_DIR ||
@@ -99,9 +112,55 @@ function createOsBuilder(deps) {
     const allowedRow = rows.find((r) => r.properties && r.properties.Allowed && r.properties.Allowed.checkbox === true);
     const result = {
       allowed: MODE === "open" || !!allowedRow,
+      listed: rows.length > 0,
       pageId: (allowedRow || rows[0] || {}).id || null,
       at: now(),
     };
+    accessCache.set(email, result);
+    return result;
+  }
+
+  // ---- Invite links (the Notion invite links table) ------------------------
+  let linkCache = null;
+  function plainText(prop) {
+    const parts = (prop && (prop.rich_text || prop.title)) || [];
+    return parts.map((p) => p.plain_text || (p.text && p.text.content) || "").join("");
+  }
+  async function activeLinks() {
+    if (linkCache && now() - linkCache.at < ACCESS_CACHE_MS) return linkCache.links;
+    if (!env.NOTION_API_KEY) return [];
+    const data = await notionRequest(`https://api.notion.com/v1/databases/${INVITES_DB_ID}/query`, "POST", {
+      filter: { property: "Active", checkbox: { equals: true } },
+      page_size: 100,
+    });
+    const links = ((data && data.results) || [])
+      .filter((r) => r.properties && r.properties.Active && r.properties.Active.checkbox === true)
+      .map((r) => ({ name: plainText(r.properties.Name).trim() || "Invite link", code: plainText(r.properties.Code).trim().toLowerCase() }))
+      .filter((l) => INVITE_PATTERN.test(l.code));
+    linkCache = { at: now(), links };
+    return links;
+  }
+  // The active link matching this code, or null. Compared in constant time.
+  async function matchInvite(raw) {
+    const code = str(raw).toLowerCase();
+    if (!INVITE_PATTERN.test(code)) return null;
+    const want = crypto.createHash("sha256").update(code).digest();
+    let hit = null;
+    for (const l of await activeLinks()) {
+      if (crypto.timingSafeEqual(want, crypto.createHash("sha256").update(l.code).digest())) hit = l;
+    }
+    return hit;
+  }
+  // Puts someone who came in through a link on the Invite List.
+  async function addFromInvite(email, link) {
+    const page = await createNotionPage(ACCESS_DB_ID, {
+      Name: { title: [{ text: { content: email } }] },
+      Email: { email },
+      Allowed: { checkbox: true },
+      "How they got in": { select: { name: "Invite link" } },
+      Notes: { rich_text: [{ text: { content: `Joined with the invite link "${link.name}" on ${new Date(now()).toISOString().slice(0, 10)}` } }] },
+    });
+    const result = { allowed: true, listed: true, pageId: (page && page.id) || null, at: now() };
     accessCache.set(email, result);
     return result;
   }
@@ -226,7 +285,17 @@ function createOsBuilder(deps) {
       console.error("OS builder access check failed:", err.message);
       return sendJSON(res, 503, { ok: false, error: "We can't check your invite right now. Try again in a few minutes." });
     }
-    if (!access.allowed) return sendJSON(res, 403, { ok: false, reason: "not-invited" });
+    let link = null;
+    if (!access.allowed) {
+      // A link only lets in people who aren't on the list yet: anyone Alana
+      // has unticked stays out.
+      if (!body.invite || access.listed) return sendJSON(res, 403, { ok: false, reason: "not-invited" });
+      try { link = await matchInvite(body.invite); } catch (err) {
+        console.error("OS builder invite link check failed:", err.message);
+        return sendJSON(res, 503, { ok: false, error: "We can't check your invite right now. Try again in a few minutes." });
+      }
+      if (!link) return sendJSON(res, 403, { ok: false, reason: "invite-ended" });
+    }
 
     const sends = recentSends(email);
     if (sends.length >= CODES_PER_HOUR) {
@@ -237,7 +306,7 @@ function createOsBuilder(deps) {
     }
 
     const code = String(crypto.randomInt(0, 1000000)).padStart(6, "0");
-    codes.set(email, { hash: hashCode(email, code), expires: now() + CODE_TTL_MS, tries: 0, consent: body.marketingConsent === true });
+    codes.set(email, { hash: hashCode(email, code), expires: now() + CODE_TTL_MS, tries: 0, consent: body.marketingConsent === true, invite: link ? str(body.invite).toLowerCase() : null });
     sends.push(now());
 
     const msg = codeEmail(code);
@@ -274,7 +343,18 @@ function createOsBuilder(deps) {
       console.error("OS builder access check failed:", err.message);
       return sendJSON(res, 503, { ok: false, error: "We can't check your invite right now. Try again in a few minutes." });
     }
-    if (!access.allowed) return sendJSON(res, 403, { ok: false, reason: "not-invited" });
+    if (!access.allowed) {
+      if (!entry.invite || access.listed) return sendJSON(res, 403, { ok: false, reason: "not-invited" });
+      try {
+        // Checked again, in case the link was switched off in the last ten minutes.
+        const link = await matchInvite(entry.invite);
+        if (!link) return sendJSON(res, 403, { ok: false, reason: "invite-ended" });
+        access = await addFromInvite(email, link);
+      } catch (err) {
+        console.error("OS builder invite sign-up failed:", err.message);
+        return sendJSON(res, 503, { ok: false, error: "We couldn't finish signing you up just now. Ask for a new code in a few minutes." });
+      }
+    }
 
     const rec = accountSaving ? readRecord(email) : { answers: {}, updatedAt: null };
     sendJSON(res, 200, { ok: true, token: makeToken(email), email, answers: rec.answers, updatedAt: rec.updatedAt, accountSaving });
@@ -408,4 +488,4 @@ function createOsBuilder(deps) {
   };
 }
 
-module.exports = { createOsBuilder, DEFAULT_ACCESS_DB_ID };
+module.exports = { createOsBuilder, DEFAULT_ACCESS_DB_ID, DEFAULT_INVITES_DB_ID };

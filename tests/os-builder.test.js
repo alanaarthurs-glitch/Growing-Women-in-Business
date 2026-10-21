@@ -7,8 +7,9 @@ const assert = require("node:assert");
 const fs = require("fs");
 const os = require("os");
 const path = require("path");
-const { createOsBuilder } = require("../os-builder");
+const { createOsBuilder, DEFAULT_INVITES_DB_ID } = require("../os-builder");
 
+const LINK = "k3v9q2m7x8w4r6t1y5u0p8zb";
 function str(x) { return typeof x === "string" ? x.trim() : ""; }
 function isEmail(e) { return /^[^\s@<>"']+@[^\s@<>"']+\.[^\s@<>"']+$/.test(e); }
 function fakeRes() {
@@ -26,6 +27,7 @@ function setup(opts) {
   const notionCalls = [];
   const pages = [];
   const invite = o.invite || [{ email: "Amy@Example.com", allowed: true }];
+  const links = o.links || [{ name: "Trial link", code: LINK, active: true }];
   let clock = 1_000_000;
   const builder = createOsBuilder({
     env: Object.assign({ NOTION_API_KEY: "k", RESEND_API_KEY: "r", RESEND_FROM_EMAIL: "a@b.co", OS_BUILDER_DIR: dir }, o.env || {}),
@@ -35,19 +37,28 @@ function setup(opts) {
     str, isEmail, sendJSON,
     notionRequest: async (url, method, payload) => {
       notionCalls.push({ url, method, payload });
+      if (url.includes(DEFAULT_INVITES_DB_ID)) {
+        if (o.linksFail) throw new Error("Notion is down");
+        return { results: links.map((l, i) => ({ id: "link" + i, properties: {
+          Name: { title: [{ plain_text: l.name }] }, Code: { rich_text: [{ plain_text: l.code }] }, Active: { checkbox: l.active } } })) };
+      }
       if (url.endsWith("/query")) {
         return { results: invite.map((r, i) => ({ id: "page" + i, properties: { Email: { email: r.email }, Allowed: { checkbox: r.allowed } } })) };
       }
       return {};
     },
     resendSend: async (msg) => { sent.push(msg); return true; },
-    createNotionPage: async (db, props) => { pages.push({ db, props }); return {}; },
+    createNotionPage: async (db, props) => {
+      pages.push({ db, props });
+      if (props.Allowed) invite.push({ email: props.Email.email, allowed: true });
+      return { id: "new" + pages.length };
+    },
     upsertCrmContact: async () => {},
     emailCapOk: () => true,
   });
   const call = async (route, body) => { const res = fakeRes(); await builder.routes["/api/os/" + route]({}, res, body); return res; };
   const codeFrom = () => sent[sent.length - 1].subject.match(/(\d{6})/)[1];
-  return { builder, call, sent, notionCalls, pages, codeFrom, dir, tick: (ms) => { clock += ms; } };
+  return { builder, call, links, sent, notionCalls, pages, codeFrom, dir, tick: (ms) => { clock += ms; } };
 }
 
 async function signIn(t, email) {
@@ -193,4 +204,81 @@ test("an image request needs a description, and an unknown slot becomes Other", 
   assert.strictEqual((await t.call("image-request", { token: body.token, slot: "Logo", description: "" })).status, 400);
   await t.call("image-request", { token: body.token, slot: "<script>", description: "Something nice" });
   assert.strictEqual(t.pages.pop().props["Image for"].select.name, "Other");
+});
+
+// ---- Invite links -----------------------------------------------------------
+
+test("a new person with an active invite link gets a code and is added to the list", async () => {
+  const t = setup();
+  const start = await t.call("start", { email: "New@Person.co.uk", invite: LINK });
+  assert.strictEqual(start.status, 200);
+  assert.strictEqual(t.sent.length, 1);
+  assert.strictEqual(t.pages.length, 0, "nobody is added until the code is right");
+  const res = await t.call("verify", { email: "new@person.co.uk", code: t.codeFrom() });
+  assert.strictEqual(res.status, 200);
+  assert.ok(res.body.token);
+  const row = t.pages.find((p) => p.props.Allowed);
+  assert.strictEqual(row.props.Email.email, "new@person.co.uk");
+  assert.strictEqual(row.props["How they got in"].select.name, "Invite link");
+  assert.match(row.props.Notes.rich_text[0].text.content, /Trial link/);
+  const content = await t.call("content", { token: res.body.token });
+  assert.strictEqual(content.status, 200, "they can open the workbooks straight away");
+});
+
+test("the link code works typed in capitals too", async () => {
+  const t = setup();
+  const res = await t.call("start", { email: "new@person.co.uk", invite: LINK.toUpperCase() });
+  assert.strictEqual(res.status, 200);
+});
+
+test("a wrong or switched-off link gets invite-ended and no email", async () => {
+  const t = setup();
+  const wrong = await t.call("start", { email: "new@person.co.uk", invite: LINK.slice(0, -1) + "z" });
+  assert.strictEqual(wrong.status, 403);
+  assert.strictEqual(wrong.body.reason, "invite-ended");
+  const off = setup({ links: [{ name: "Old", code: LINK, active: false }] });
+  const res = await off.call("start", { email: "new@person.co.uk", invite: LINK });
+  assert.strictEqual(res.body.reason, "invite-ended");
+  assert.strictEqual(t.sent.length + off.sent.length, 0);
+});
+
+test("short codes in the table never work", async () => {
+  const t = setup({ links: [{ name: "Weak", code: "abc123", active: true }] });
+  const res = await t.call("start", { email: "new@person.co.uk", invite: "abc123" });
+  assert.strictEqual(res.status, 403);
+  assert.strictEqual(t.sent.length, 0);
+});
+
+test("someone unticked on the invite list stays out, even with the link", async () => {
+  const t = setup({ invite: [{ email: "amy@example.com", allowed: false }] });
+  const res = await t.call("start", { email: "amy@example.com", invite: LINK });
+  assert.strictEqual(res.status, 403);
+  assert.strictEqual(res.body.reason, "not-invited");
+  assert.strictEqual(t.sent.length, 0);
+});
+
+test("a link switched off between the code and signing in stops the sign-up", async () => {
+  const t = setup();
+  await t.call("start", { email: "new@person.co.uk", invite: LINK });
+  t.links[0].active = false;
+  t.tick(61 * 1000); // past the one-minute cache
+  const res = await t.call("verify", { email: "new@person.co.uk", code: t.codeFrom() });
+  assert.strictEqual(res.status, 403);
+  assert.strictEqual(res.body.reason, "invite-ended");
+  assert.strictEqual(t.pages.length, 0);
+});
+
+test("if Notion can't be reached, the link says try again rather than letting anyone in", async () => {
+  const t = setup({ linksFail: true });
+  const res = await t.call("start", { email: "new@person.co.uk", invite: LINK });
+  assert.strictEqual(res.status, 503);
+  assert.strictEqual(t.sent.length, 0);
+});
+
+test("people already invited don't get a second row when they use the link", async () => {
+  const t = setup();
+  await t.call("start", { email: "amy@example.com", invite: LINK });
+  const res = await t.call("verify", { email: "amy@example.com", code: t.codeFrom() });
+  assert.strictEqual(res.status, 200);
+  assert.strictEqual(t.pages.filter((p) => p.props.Allowed).length, 0);
 });

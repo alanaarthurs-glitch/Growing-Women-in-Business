@@ -251,9 +251,9 @@ body.locked #gate{display:flex}
 <section id="gate" aria-label="Sign in">
   <div class="card gate-card">
     <span class="logo">Build What's <span>Yours</span></span>
-    <p class="eyebrow" style="color:var(--berry);margin:18px 0 0">Invite only</p>
+    <p class="eyebrow" id="gEyebrow" style="color:var(--berry);margin:18px 0 0">Invite only</p>
     <h1>Build what's <em>yours.</em></h1>
-    <p class="muted" style="margin:0">Sign in with the email address Alana invited.</p>
+    <p class="muted" id="gIntro" style="margin:0">Sign in with the email address Alana invited.</p>
 
     <div class="preview-note" id="gPreview" hidden>
       <b>Preview on your computer.</b> Sign-in only works once this page is on your website. Until then you can open the workbooks here to check them.
@@ -1463,6 +1463,24 @@ function lsGet(k){ try { return localStorage.getItem(k); } catch(e){ return null
 function lsSet(k, v){ try { if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch(e){} }
 const G = id => document.getElementById(id);
 
+// An invite link (?invite=...) lets someone add themselves. The code is kept
+// on this device and taken out of the address bar, so it isn't copied about.
+const INVITE_KEY = "bwy-invite";
+const INVITE = (function(){
+  let v = "";
+  try { v = (new URLSearchParams(location.search).get("invite") || "").trim().toLowerCase(); } catch(e){}
+  if (/^[a-z0-9]{16,64}$/.test(v)){
+    lsSet(INVITE_KEY, v);
+    try { history.replaceState(null, "", location.pathname + location.hash); } catch(e){}
+    return v;
+  }
+  return lsGet(INVITE_KEY) || "";
+})();
+if (INVITE){
+  G("gEyebrow").textContent = "You're invited";
+  G("gIntro").textContent = "Pop in your email and we'll send you a code to sign in. No password needed.";
+}
+
 async function api(path, body, opts){
   const r = await fetch(API + path, {
     method:"POST", headers:{"Content-Type":"application/json"},
@@ -1486,12 +1504,14 @@ async function requestCode(email){
   const form = G("gStart");
   busy(form, true);
   try {
-    const d = await api("start", { email, marketingConsent: G("gConsent").checked, website: G("gWebsite").value });
+    const d = await api("start", { email, marketingConsent: G("gConsent").checked, website: G("gWebsite").value, invite: INVITE || undefined });
     if (d.ok){
       pendingEmail = email; G("gSentTo").textContent = email;
       gateShow("gCode"); G("gCodeIn").value = ""; G("gCodeIn").focus();
     } else if (d.reason === "not-invited"){
       G("gNoEmail").textContent = email; gateShow("gNotInvited");
+    } else if (d.reason === "invite-ended"){
+      gMsg("This invite link isn't working any more. Ask Alana for a new one.");
     } else gMsg(d.error || "Something went wrong. Please try again.");
   } catch(err){ gMsg("We couldn't reach the website. Check your internet connection and try again."); }
   busy(form, false);
@@ -1516,12 +1536,14 @@ G("gCode").addEventListener("submit", async e => {
     if (d.ok){
       // Answers left on this device by someone else are never mixed in.
       if (lsGet(EMAIL_KEY) && lsGet(EMAIL_KEY) !== d.email) clearLocal();
-      token = d.token; lsSet(TOKEN_KEY, token); lsSet(EMAIL_KEY, d.email);
+      token = d.token; lsSet(TOKEN_KEY, token); lsSet(EMAIL_KEY, d.email); lsSet(INVITE_KEY, null);
       accountSaving = !!d.accountSaving;
       mergeAnswers(d.answers);
       await openWorkbook(d.email);
     } else if (d.reason === "not-invited"){
       G("gNoEmail").textContent = pendingEmail; gateShow("gNotInvited");
+    } else if (d.reason === "invite-ended"){
+      gateShow("gStart"); gMsg("This invite link isn't working any more. Ask Alana for a new one.");
     } else gMsg(d.error || "Something went wrong. Please try again.");
   } catch(err){ gMsg("We couldn't reach the website. Check your internet connection and try again."); }
   busy(form, false);
