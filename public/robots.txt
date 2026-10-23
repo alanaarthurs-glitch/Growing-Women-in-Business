@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /give
 
 Sitemap: https://www.growingwomeninbusiness.com/sitemap.xml
