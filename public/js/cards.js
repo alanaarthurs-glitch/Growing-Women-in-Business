@@ -361,8 +361,6 @@
       action: "Write down the one part of your business you'd never change, then spend ten minutes imagining you've been forced to." }
   ];
 
-  window.FUTURE_DECK = { pep: PEP, fear: FEAR, lift: LIFT, break: BREAK, promptFor: promptFor };
-
   var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var HALF_TURN_MS = reduceMotion ? 0 : 420;
   var FULL_TURN_MS = reduceMotion ? 0 : 860;
