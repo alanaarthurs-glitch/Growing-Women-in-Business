@@ -86,6 +86,9 @@ h1 em,h2 em,h3 em{font-family:var(--serif);font-style:italic;font-weight:400;let
 }
 
 /* Bento */
+.in-short{padding:8px 0 16px}
+.in-short-box{max-width:46em;border-left:3px solid var(--sage);padding-left:20px}
+.in-short h2{font-size:1.25rem;margin-bottom:.5rem}
 #grid{padding:24px 0 72px}
 .bento{display:grid;grid-template-columns:1fr;gap:24px}
 .tile{padding:28px;border-radius:8px;text-align:left;min-width:0}
