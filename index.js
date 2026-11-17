@@ -831,6 +831,8 @@ const LOWEST_TIER = SCORECARD_TIERS[SCORECARD_TIERS.length - 1].name;
 // dropped.
 const SCORECARD_CATEGORIES = ["Can they find you?", "Is there one thing to buy?", "Do you show up?"];
 
+// Where /call sends people: the "Book a call" Calendly event.
+const BOOK_A_CALL_URL = "https://calendly.com/alana-arthurs/book-a-call?utm_source=website&utm_medium=menu&utm_campaign=book-a-call";
 const CALL_URL = "https://calendly.com/alana-arthurs/findable-call?utm_source=scorecard-email&utm_medium=email&utm_campaign=findable-score";
 
 function clampPercent(x) {
@@ -1104,6 +1106,14 @@ function handleRequest(req, res) {
     if (urlPath.indexOf("\0") !== -1) {
       res.writeHead(400, { "Content-Type": "text/plain; charset=utf-8" });
       res.end("Bad request");
+      return;
+    }
+
+    // Short branded link for the Book a call button. A temporary (302) redirect,
+    // so the target can change later without browsers remembering the old one.
+    if ((req.method === "GET" || req.method === "HEAD") && urlPath === "/call") {
+      res.writeHead(302, { Location: BOOK_A_CALL_URL, "Cache-Control": "no-store" });
+      res.end();
       return;
     }
 

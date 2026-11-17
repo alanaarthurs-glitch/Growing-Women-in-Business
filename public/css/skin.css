@@ -137,3 +137,6 @@ html{scroll-padding-bottom:80px}
 .quiz-box h2,.quiz-box .quiz-question h2{font-size:clamp(1.3rem,3vw,1.7rem);line-height:1.2;letter-spacing:-.01em;text-align:left;margin-bottom:1rem}
 .quiz-box{max-width:640px;margin-left:0;text-align:left}
 .newsletter-panel .newsletter-panel-form{margin-left:0!important;margin-right:auto;justify-content:flex-start}
+
+/* Book a call button in the top menu (added 17 Nov 2026) */
+.site-nav a.nav-call{display:inline-block;border:2px solid currentColor;border-radius:999px;padding:6px 16px;font-weight:700}

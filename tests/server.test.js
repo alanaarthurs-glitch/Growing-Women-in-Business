@@ -247,3 +247,10 @@ test("unknown page is a 404 with the 404 page", async () => {
   assert.strictEqual(r.status, 404);
   assert.match(r.body, /That page isn't here/);
 });
+
+test("/call redirects (302, not permanent) to the Book a call Calendly event", async () => {
+  const r = await request("GET", "/call");
+  assert.strictEqual(r.status, 302);
+  assert.ok(r.headers.location.startsWith("https://calendly.com/alana-arthurs/book-a-call"));
+  assert.ok(r.headers.location.includes("utm_campaign=book-a-call"));
+});
