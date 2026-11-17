@@ -19,7 +19,7 @@
   <link rel="stylesheet" href="/css/site.css" />
   <link rel="stylesheet" href="/css/home.css" />
   <link rel="stylesheet" href="/css/skin.css" />
-  <link rel="stylesheet" href="/css/cards.css?v=20261009f" />
+  <link rel="stylesheet" href="/css/cards.css?v=20261117a" />
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -58,12 +58,13 @@
         <p class="subhead">The Future Deck is four decks for the days you need a nudge. The Daily Pep gives you a card for today. The Fear Buddy is there whenever something scares you. The Lift is for passing good energy on to someone else. Break the Pattern gets you unstuck. Every card has one easy action on it and something true to hold on to.</p>
         <p class="subhead"><strong>Pushing yourself into greatness is a daily ritual.</strong> You can come back every day. Just save this page to your favourites.</p>
         <a href="#decks" class="btn">Open the Future Deck</a>
-        <span class="small-line">Free · nothing to sign up for</span>
+        <span class="small-line">Free · one card a day, and three more decks with your email</span>
       </div>
     </header>
 
     <section class="oracle-table" id="decks" aria-label="The four decks">
       <div class="hero-blobs" aria-hidden="true"><span class="sparks"></span></div>
+      <p class="deck-note" id="deck-note" role="status" tabindex="-1" hidden></p>
       <div class="oracle-decks">
 
         <div class="deck" id="daily-pep" data-deck="pep">
@@ -282,6 +283,23 @@
         </div>
 
       </div>
+
+      <div class="deck-gate" id="deck-gate" hidden>
+        <video class="gate-video" src="/videos/future-deck.mp4" autoplay muted loop playsinline preload="metadata" aria-label="The Future Deck: four decks of cards turning over"></video>
+        <div class="gate-copy">
+          <span class="eyebrow">Three more decks</span>
+          <h2>Open the Fear Buddy, The Lift and Break the Pattern</h2>
+          <p>Pop your email in and I'll send you a personal link. Tap it and all three open, on any phone or computer, any time you like.</p>
+          <form class="deck-gate-form" id="deck-gate-form">
+            <label for="deck-gate-email" class="visually-hidden">Email address</label>
+            <input id="deck-gate-email" type="email" name="email" placeholder="you@email.com" required autocomplete="email" />
+            <label class="gate-check"><input type="checkbox" id="deck-gate-waitlist" name="waitlist" /> <span>Also put me on the waiting list for my newsletter, The Only Way Is Up. It starts in January.</span></label>
+            <button type="submit" class="btn">Send me my link</button>
+          </form>
+          <p class="gate-small">Already joined? Enter the same email and I'll send your link again.</p>
+        </div>
+      </div>
+
       <p class="decks-next"><a href="#keep-going">Keep going: join The Circle or the newsletter</a></p>
     </section>
 
@@ -337,6 +355,6 @@
 
   <script src="/js/nav.js"></script>
   <script src="/js/newsletter-panel.js"></script>
-  <script src="/js/cards.js?v=20261009f"></script>
+  <script src="/js/cards.js?v=20261117a"></script>
 </body>
 </html>

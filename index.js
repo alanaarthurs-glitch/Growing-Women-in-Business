@@ -3,6 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const zlib = require("zlib");
 const crypto = require("crypto");
+const dns = require("dns");
 
 const PORT = process.env.PORT || 3000;
 const PUBLIC_DIR = path.join(__dirname, "public");
@@ -94,7 +95,7 @@ const ARCHETYPE_PDF_KEYS = {
 const KNOWN_SOURCES = [
   "Home Quiz", "Circle Welcome", "Cohort Welcome", "Free Newsletter Card",
   "Push Waitlist", "Cohort Waitlist", "Webinar Waitlist", "Newsletter Panel", "Findable Scorecard", "Draw a Card",
-  "Free Prompts",
+  "Free Prompts", "Future Deck",
 ];
 
 const KNOWN_APPLY_CATEGORIES = ["Pricing", "Visibility", "The Avoided Conversation"];
@@ -114,6 +115,7 @@ const MIME_TYPES = {
   ".xml": "application/xml; charset=utf-8",
   ".txt": "text/plain; charset=utf-8",
   ".pdf": "application/pdf",
+  ".mp4": "video/mp4",
 };
 
 // Types that are worth gzipping. Anything not in this list (in particular
@@ -199,6 +201,37 @@ function sendEntry(req, res, entry, statusCode) {
     res.writeHead(304, headers);
     res.end();
     return;
+  }
+
+  // iPhones and iPads will not play a video unless the server answers byte
+  // range requests, so serve 206 slices for any ungzipped file.
+  if (!entry.gz) headers["Accept-Ranges"] = "bytes";
+  const rangeMatch = statusCode === 200 && !entry.gz && /^bytes=(\d*)-(\d*)$/.exec((req.headers.range || "").trim());
+  if (rangeMatch && (rangeMatch[1] !== "" || rangeMatch[2] !== "")) {
+    const size = entry.raw.length;
+    let start;
+    let end;
+    if (rangeMatch[1] === "") {
+      start = Math.max(0, size - parseInt(rangeMatch[2], 10));
+      end = size - 1;
+    } else {
+      start = parseInt(rangeMatch[1], 10);
+      end = rangeMatch[2] === "" ? size - 1 : Math.min(parseInt(rangeMatch[2], 10), size - 1);
+    }
+    if (start >= size) {
+      res.writeHead(416, { "Content-Range": `bytes */${size}` });
+      res.end();
+      return;
+    }
+    // A backwards range such as 5-2 is invalid, so it is ignored and the whole file is sent.
+    if (start <= end) {
+      headers["Content-Range"] = `bytes ${start}-${end}/${size}`;
+      headers["Content-Length"] = end - start + 1;
+      res.writeHead(206, headers);
+      if (req.method === "HEAD") res.end();
+      else res.end(entry.raw.subarray(start, end + 1));
+      return;
+    }
   }
 
   const acceptEncoding = req.headers["accept-encoding"] || "";
@@ -464,7 +497,11 @@ function createSendGuard(options) {
     return true;
   }
 
-  return { claim, prune, size: () => sent.size };
+  function release(kind, email) {
+    sent.delete(kind + ":" + email.toLowerCase());
+  }
+
+  return { claim, release, prune, size: () => sent.size };
 }
 
 const apiLimiter = createRateLimiter({ capacity: 60, windowMs: 10 * 60 * 1000, maxKeys: 10000 });
@@ -813,6 +850,167 @@ async function handleNewsletter(req, res, body) {
   sendJSON(res, 200, { ok: true });
 }
 
+// ---------------------------------------------------------------------------
+// The Future Deck (/cards). The Daily Pep is free. The other three decks open
+// from a personal link emailed to the visitor, which proves the address is
+// real and lets them reopen the decks on any device, any time. The signup is
+// only saved once the link is used (double opt-in).
+// ---------------------------------------------------------------------------
+
+// Set DECK_SECRET in Railway so the links people keep never stop working. If
+// it is missing, the secret falls back to a hash of the API keys, and with no
+// keys at all the deck links are switched off rather than made forgeable.
+const DECK_SECRET_READY = !!(process.env.DECK_SECRET || RESEND_API_KEY || NOTION_API_KEY);
+const DECK_SECRET = process.env.DECK_SECRET || crypto.createHash("sha256")
+  .update("future-deck|" + RESEND_API_KEY + "|" + NOTION_API_KEY).digest("hex");
+const deckLinkGuard = createSendGuard({ ttlMs: 5 * 60 * 1000, maxKeys: 20000 });
+// Five link requests an hour per visitor, and its own hourly ceiling so the
+// deck can never use up the cap the welcome and scorecard emails share.
+const deckIpLimiter = createRateLimiter({ capacity: 5, windowMs: 60 * 60 * 1000, maxKeys: 10000 });
+const DECK_EMAIL_HOURLY_CAP = parseInt(process.env.DECK_EMAIL_HOURLY_CAP || "100", 10);
+let deckWindowStart = Date.now();
+let deckWindowCount = 0;
+function deckCapOk() {
+  const now = Date.now();
+  if (now - deckWindowStart >= 60 * 60 * 1000) { deckWindowStart = now; deckWindowCount = 0; }
+  if (deckWindowCount >= DECK_EMAIL_HOURLY_CAP) return false;
+  deckWindowCount += 1;
+  return true;
+}
+setInterval(() => deckIpLimiter.prune(), 10 * 60 * 1000).unref();
+
+function deckToken(email, waitlist) {
+  // A trailing "\nw" in the signed text records whether the waiting-list box was ticked.
+  const payload = Buffer.from(email.toLowerCase() + (waitlist ? "\nw" : ""), "utf8").toString("base64url");
+  const sig = crypto.createHmac("sha256", DECK_SECRET).update("deck|" + payload).digest("base64url");
+  return payload + "." + sig;
+}
+
+// Returns { email, waitlist } for a valid token, or null for anything else.
+function deckTokenParts(token) {
+  if (!DECK_SECRET_READY) return null;
+  const parts = token.split(".");
+  if (parts.length !== 2 || !parts[0] || !parts[1] || token.length > 600) return null;
+  const expected = crypto.createHmac("sha256", DECK_SECRET).update("deck|" + parts[0]).digest("base64url");
+  const a = Buffer.from(parts[1]);
+  const b = Buffer.from(expected);
+  if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) return null;
+  const decoded = Buffer.from(parts[0], "base64url").toString("utf8");
+  const waitlist = decoded.endsWith("\nw");
+  const email = waitlist ? decoded.slice(0, -2) : decoded;
+  return isEmail(email) ? { email, waitlist } : null;
+}
+
+// True if the part after the @ can receive mail. A DNS hiccup does not block
+// a real person; only a domain that clearly does not exist does.
+async function emailDomainCanReceive(email) {
+  const domain = email.slice(email.lastIndexOf("@") + 1).toLowerCase();
+  const timeout = new Promise((_, reject) => {
+    setTimeout(() => reject(Object.assign(new Error("DNS timeout"), { code: "ETIMEOUT" })), 3000).unref();
+  });
+  try {
+    const mx = await Promise.race([dns.promises.resolveMx(domain), timeout]);
+    return Array.isArray(mx) && mx.length > 0;
+  } catch (err) {
+    if (err && (err.code === "ENOTFOUND" || err.code === "ENODATA")) {
+      try {
+        const a = await Promise.race([dns.promises.resolve4(domain), timeout]);
+        return a.length > 0;
+      } catch (e) {
+        return false;
+      }
+    }
+    return true;
+  }
+}
+
+function deckEmailHtml(link, waitlist) {
+  return `<p>Hi,</p>` +
+    `<p>Thanks for asking for the Future Deck. Tap the button and the Fear Buddy, The Lift and Break the Pattern open straight away.</p>` +
+    `<p><a href="${escapeHtml(link)}" style="background:#9b3d4a;color:#ffffff;padding:12px 22px;border-radius:999px;text-decoration:none;display:inline-block;font-weight:bold">Open my Future Deck</a></p>` +
+    `<p>Keep this email. Tap the button on any phone or computer, any time, and the decks open again.</p>` +
+    (waitlist
+      ? `<p>You also asked to join the waiting list for my newsletter, The Only Way Is Up. It starts in January, and I will email you once, when it launches. To come off the list, email hi@growingwomeninbusiness.co.uk.</p>`
+      : "") +
+    `<p>Alana</p>`;
+}
+
+async function handleDeckAccess(req, res, body) {
+  const email = str(body.email).toLowerCase();
+  if (!email) return sendJSON(res, 400, { ok: false, error: "Missing email" });
+  if (!isEmail(email)) return sendJSON(res, 400, { ok: false, error: "Invalid email" });
+  if (!(await emailDomainCanReceive(email))) {
+    return sendJSON(res, 400, { ok: false, error: "Invalid email" });
+  }
+
+  if (!DECK_SECRET_READY || !RESEND_API_KEY || !RESEND_FROM_EMAIL) {
+    return sendJSON(res, 503, { ok: false, error: "Email is not set up" });
+  }
+  const ipLimit = deckIpLimiter.take(clientIp(req));
+  if (!ipLimit.ok) {
+    return sendJSON(res, 429, { ok: false, error: "Too many requests. Try again later." },
+      { "Retry-After": String(ipLimit.retryAfter) });
+  }
+  // Asked again within five minutes: say the same thing, send nothing more.
+  if (!deckLinkGuard.claim("deck-link", email)) return sendJSON(res, 200, { ok: true });
+  if (!deckCapOk()) {
+    deckLinkGuard.release("deck-link", email);
+    return sendJSON(res, 503, { ok: false, error: "Busy, try again later" });
+  }
+
+  const waitlist = body.waitlist === true;
+  const link = `${SITE_ORIGIN}/cards?deck=${encodeURIComponent(deckToken(email, waitlist))}#decks`;
+  try {
+    await resendSend({
+      from: RESEND_FROM_EMAIL,
+      to: email,
+      subject: "Your Future Deck is ready",
+      html: deckEmailHtml(link, waitlist),
+    });
+  } catch (err) {
+    deckLinkGuard.release("deck-link", email);
+    console.error("Deck link email failed:", err.message);
+    return sendJSON(res, 502, { ok: false, error: "Could not send" });
+  }
+  sendJSON(res, 200, { ok: true });
+}
+
+async function handleDeckVerify(req, res, body) {
+  const parts = deckTokenParts(str(body.token));
+  if (!parts) return sendJSON(res, 400, { ok: false, error: "Invalid link" });
+  const email = parts.email;
+  // The decks open for everyone with a real link. Only people who ticked the
+  // box go on the newsletter waiting list (the newsletter starts in January).
+  if (!parts.waitlist) return sendJSON(res, 200, { ok: true, waitlist: false });
+
+  // Save the signup once. The CRM row says whether they are already listed.
+  try {
+    let existing = null;
+    if (NOTION_API_KEY && NOTION_CRM_DB_ID) {
+      existing = await findNotionPageByEmail(NOTION_CRM_DB_ID, email);
+    }
+    const alreadyListed = !!(existing && existing.properties["Newsletter Subscribed"] &&
+      existing.properties["Newsletter Subscribed"].checkbox);
+    if (!alreadyListed) {
+      appendLocalLead("newsletter.jsonl", { email, archetype: "Not from quiz", source: "Future Deck", waitlist: true, signedUpAt: new Date().toISOString() });
+      if (NOTION_API_KEY && NOTION_NEWSLETTER_DB_ID) {
+        await createNotionPage(NOTION_NEWSLETTER_DB_ID, {
+          "Email": { title: [{ text: { content: email } }] },
+          "Quiz Archetype": { select: { name: "Not from quiz" } },
+          "Source": { select: { name: "Future Deck" } },
+        });
+      }
+      // Never overwrite where an existing contact first came from.
+      await upsertCrmContact(email, existing
+        ? { "Newsletter Subscribed": { checkbox: true } }
+        : { "Newsletter Subscribed": { checkbox: true }, "Source": { select: { name: "Future Deck" } } });
+    }
+  } catch (err) {
+    console.error("Deck signup save failed:", err.message);
+  }
+  sendJSON(res, 200, { ok: true, waitlist: true });
+}
+
 
 // ---------------------------------------------------------------------------
 // The findable scorecard (/scorecard). Saves every finished scorecard,
@@ -993,6 +1191,8 @@ const API_ROUTES = {
   "/api/newsletter": handleNewsletter,
   "/api/first-action": handleFirstAction,
   "/api/scorecard": handleScorecard,
+  "/api/deck-access": handleDeckAccess,
+  "/api/deck-verify": handleDeckVerify,
 };
 
 // Build What's Yours (/build-whats-yours): invite-only sign-in, the private

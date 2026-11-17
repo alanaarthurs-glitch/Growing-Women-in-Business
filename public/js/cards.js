@@ -624,5 +624,106 @@
         showNext(brk);
       });
     }
+
+    // The Daily Pep is free. The other three decks open with an email.
+    var KEY = 'gwib-decks-unlocked';
+    var gate = document.getElementById('deck-gate');
+    var table = document.querySelector('.oracle-decks');
+    var locked = [fear, lift, brk].filter(Boolean);
+    var unlocked = false;
+    try { unlocked = localStorage.getItem(KEY) === '1'; } catch (e) {}
+
+    function setLocked(on) {
+      locked.forEach(function (d) { d.hidden = on; });
+      if (table) table.classList.toggle('is-locked', on);
+      if (gate) gate.hidden = !on;
+    }
+
+    if (gate && locked.length && !unlocked) setLocked(true);
+
+    var note = document.getElementById('deck-note');
+    function say(text) {
+      if (!note) return;
+      note.textContent = text;
+      note.hidden = false;
+    }
+
+    // Step 1: they ask for a link. Nothing opens until the link in their
+    // inbox is used, which proves the address is real.
+    var gateForm = document.getElementById('deck-gate-form');
+    if (gateForm) {
+      gateForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var input = gateForm.querySelector('input[type="email"]');
+        var box = gateForm.querySelector('input[type="checkbox"]');
+        var wantsList = !!(box && box.checked);
+        var button = gateForm.querySelector('button[type="submit"]');
+        var label = button.textContent;
+        button.disabled = true;
+        button.textContent = 'Sending…';
+
+        function problem(text) {
+          button.disabled = false;
+          button.textContent = label;
+          var msg = gateForm.querySelector('.form-error');
+          if (!msg) {
+            msg = document.createElement('p');
+            msg.className = 'form-error';
+            msg.setAttribute('role', 'alert');
+            gateForm.appendChild(msg);
+          }
+          msg.textContent = text;
+        }
+
+        fetch('/api/deck-access', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: input.value, waitlist: wantsList })
+        })
+          .then(function (r) { return r.json(); })
+          .then(function (data) {
+            if (data && data.ok) {
+              var done = document.createElement('p');
+              done.className = 'confirm';
+              done.setAttribute('role', 'status');
+              done.tabIndex = -1;
+              done.textContent = "Check your inbox. Tap the link in my email and your three decks open. If it isn't there in a few minutes, look in your spam or promotions folder." + (wantsList ? " Once you tap it, you will also be on the newsletter waiting list, which starts in January." : "");
+              gateForm.replaceWith(done);
+              done.focus();
+            } else {
+              problem(/email/i.test((data && data.error) || '')
+                ? "That email doesn't look right. Mind checking it?"
+                : "That didn't go through. Mind trying again in a moment?");
+            }
+          })
+          .catch(function () { problem("That didn't go through. Mind trying again in a moment?"); });
+      });
+    }
+
+    // Step 2: they tap the link in the email.
+    var token = '';
+    try { token = new URLSearchParams(location.search).get('deck') || ''; } catch (e) {}
+    if (token && gate) {
+      fetch('/api/deck-verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: token })
+      })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          if (data && data.ok) {
+            try { localStorage.setItem(KEY, '1'); } catch (e) {}
+            setLocked(false);
+            say("You're in. All four decks are open. Tap the link in your email any time to open them again." + (data.waitlist ? " You are on the newsletter waiting list too. It starts in January." : ""));
+            try { history.replaceState(null, '', location.pathname + '#decks'); } catch (e) {}
+            if (fear) fear.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          } else {
+            say("That link didn't work. Pop your email in below and I'll send you a fresh one.");
+          }
+        })
+        .catch(function () {
+          say("That link didn't work. Pop your email in below and I'll send you a fresh one.");
+        });
+    }
   });
 })();

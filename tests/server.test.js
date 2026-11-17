@@ -254,3 +254,19 @@ test("/call redirects (302, not permanent) to the Book a call Calendly event", a
   assert.ok(r.headers.location.startsWith("https://calendly.com/alana-arthurs/book-a-call"));
   assert.ok(r.headers.location.includes("utm_campaign=book-a-call"));
 });
+
+test("Future Deck: bad email and bad link are refused, and nothing is saved", async () => {
+  const bad = await postJson("/api/deck-access", JSON.stringify({ email: "not-an-email", waitlist: true }));
+  assert.strictEqual(bad.status, 400);
+  const link = await postJson("/api/deck-verify", JSON.stringify({ token: "nope.nope" }));
+  assert.strictEqual(link.status, 400);
+  const empty = await postJson("/api/deck-verify", JSON.stringify({}));
+  assert.strictEqual(empty.status, 400);
+});
+
+test("Future Deck video is served in slices (iPhones need this)", async () => {
+  const r = await request("GET", "/videos/future-deck.mp4", { headers: { Range: "bytes=0-99" } });
+  assert.strictEqual(r.status, 206);
+  assert.ok(/^bytes 0-99\//.test(r.headers["content-range"]));
+  assert.strictEqual(r.headers["content-type"], "video/mp4");
+});
